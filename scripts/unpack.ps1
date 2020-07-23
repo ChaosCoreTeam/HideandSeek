@@ -1,4 +1,4 @@
-﻿#$ErrorActionPreference= 'silentlycontinue' 
+﻿$ErrorActionPreference= 'silentlycontinue' 
 
 $fileNamePK3 = "hns.pk3"
 $fileNameZip = "hns.zip"
