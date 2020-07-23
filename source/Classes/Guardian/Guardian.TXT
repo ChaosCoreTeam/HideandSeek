@@ -1,0 +1,78 @@
+ACTOR GuardianArmor : BlueArmor
+{
+	Armor.SaveAmount 300
+}
+
+ACTOR GuardianClass : PlayerPawn
+{
+	Speed 1
+	Health 200
+	Radius 16
+	Height 56
+	Mass 100
+	PainChance 255
+	Player.ColorRange 112, 127
+	Player.DisplayName "Guardian"
+	Player.SoundClass "Guardian"
+	Player.CrouchSprite "RKTC"
+	player.startitem "Shield", 1
+	player.startitem "lowVanishingPool", 35
+	player.startitem "GuardianArmor", 1
+	player.startitem "GuardianPower", 500
+	player.startitem "Vanishing", 125
+	Species "Hider"
+	damagefactor "rocket", 0
+	limitedtoteam 0
+	+NOSKIN
+	States
+	{
+	Spawn:
+		AGRD A 0
+		AGRD A 35
+		AGRD A 0 A_JumpIf (health>=50, 2)
+		AGRD A 0 ACS_NamedExecute("regenHealth",0)
+		AGRD A 0 A_JumpIfInventory("GuardianPower", 500, "Spawn")
+		AGRD A 35
+		AGRD A 0 ACS_NamedExecute("rechargeWeapon",0,2)
+	Loop
+	See:
+		AGRD ABCD 6 
+	Goto Spawn
+	Missile:
+		AGRD E 12 
+	Goto Spawn
+	Melee:
+		AGRD O 6 BRIGHT
+	Goto Missile
+	Pain:
+		AGRD G 4 
+		AGRD G 4 A_Pain
+	Goto Spawn
+	Death:
+		AGRD H 10
+		AGRD I 10 A_PlayerScream
+		AGRD J 10 A_NoBlocking
+		AGRD KLM 10
+		AGRD N -1
+	Stop
+	XDeath:
+		PLAY O 0 A_Stop
+		AGRD O 5 A_SpawnItemEx ("HumanGibs",0,0,0,0,0,0,0,128)
+		BRSP O 0 A_SkullPop("BlueHeadGib")
+		AGRD P 5 A_XScream
+		AGRD Q 5 A_NoBlocking
+		AGRD RSTUV 5
+		AGRD W -1
+    Stop
+	FadeIn:
+		PLAY O 0 A_SetTranslucent(0.25, 1)
+	Goto Spawn
+	FadeOut:
+		PLAY O 0 A_SetTranslucent(0.15, 1)
+	Goto Spawn
+	Visible:
+		PLAY O 0 A_SetTranslucent(1, 0)
+	Goto Spawn
+	}
+}
+

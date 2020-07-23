@@ -1,0 +1,52 @@
+ACTOR Vanishing : Ammo
+{
+  Game Doom
+  Inventory.PickupMessage "Vanishing"
+  Inventory.Amount 1
+  Inventory.MaxAmount 125
+  Ammo.BackpackAmount 1
+  Ammo.BackpackMaxAmount 100
+  Inventory.Icon "JETPA0"
+  States
+  {
+  Spawn:
+    JETP A -1
+    Stop
+  }
+}
+
+
+ACTOR medVanishingPool : Ammo
+{
+  Game Doom
+  Inventory.PickupMessage "Vanishing"
+  Inventory.Amount 1
+  Inventory.MaxAmount 90
+  Ammo.BackpackAmount 1
+  Ammo.BackpackMaxAmount 65
+  Inventory.Icon "JETPA0"
+  States
+  {
+  Spawn:
+    JETP A -1
+    Stop
+  }
+}
+
+ACTOR lowVanishingPool : Ammo
+{
+  Game Doom
+  Inventory.PickupMessage "Vanishing"
+  Inventory.Amount 1
+  Inventory.MaxAmount 75
+  Ammo.BackpackAmount 1
+  Ammo.BackpackMaxAmount 35
+  Inventory.Icon "JETPA0"
+  States
+  {
+  Spawn:
+    JETP A -1
+    Stop
+  }
+}
+

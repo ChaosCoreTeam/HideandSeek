@@ -1,0 +1,127 @@
+ACTOR BerserkerClass : PlayerPawn
+{
+  Speed 1
+  Health 100
+  Radius 16
+  Height 56
+  Mass 75
+  PainChance 255
+  Player.ColorRange 112, 127
+  Player.DisplayName "Berserker"
+  Player.CrouchSprite "BSRC"
+  player.startitem "BerserkerFists", 1
+  player.startitem "greenarmor", 1
+  Player.ForwardMove 0.50, 1.25
+  Player.SideMove 0.50, 1.25
+  Player.JumpZ 12
+  limitedtoteam 1
+  damagefactor "rocket", 0
+  +NOSKIN
+  States
+  {
+  Spawn:
+	BRSP A 0
+	BRSP A 35
+	BRSP A 0 A_JumpIf (health>=50, 2)
+	BRSP A 0 ACS_Execute(110,0)
+	BRSP A 0
+	Loop
+  See:
+	TNT1 A 0
+	TNT1 A 0 A_JumpIfInventory("Step",1,4)
+	BRSP A 6 A_SpawnItemEx ("FootStep", 0, 0, 0, 0, 0, -1, 0,0, 0)
+	BRSP B 6
+	TNT1 A 0 A_GiveInventory("Step",1)
+	BRSP C 6 A_SpawnItemEx ("FootStep", 0, 0, 0, 0, 0, -1, 0,0, 0)
+	BRSP D 6
+	TNT1 A 0 A_TakeInventory("Step",1)
+	Goto Spawn
+  Missile:
+    BRSP E 12 
+    Goto Spawn
+  Melee:
+    BRSP F 6 BRIGHT
+    Goto Missile
+  Pain:
+    BRSP G 4 
+    BRSP G 4 //A_Pain? WHAT IS THIS A_PAIN?! BERSERKERS DO NOT NEED A_PAIN!!!!
+    Goto Spawn
+  Death:
+	BRSP H 0 A_StopSoundEx("SoundSlot6")
+    BRSP H 10
+    BRSP I 10 A_PlayerScream
+    BRSP J 10 A_NoBlocking
+    BRSP KLM 10
+    BRSP N -1
+    Stop
+  XDeath:
+	BRSP O 0 A_Stop
+	BRSP O 0 A_StopSoundEx("SoundSlot6")
+    BRSP O 5 A_SpawnItemEx ("HumanGibs",0,0,0,0,0,0,0,128)
+	BRSP O 0 A_SkullPop("HeadGib")
+    BRSP P 5 A_XScream
+    BRSP Q 5 A_NoBlocking
+    BRSP RSTUV 5
+    BRSP W -1
+    Stop
+  Scream:
+	BRSP D 3
+  	BRSP A 0 A_PlaysoundEx("Scream","SoundSlot6",1,0)
+	BRSP D 3
+	Goto Spawn
+  OldScream:
+	BRSP D 3
+  	BRSP A 0 A_PlaysoundEx("OldScream","SoundSlot6",1,0)
+	BRSP D 3
+	Goto Spawn
+  Silent:
+	BRSP D 3
+  	BRSP A 0 A_StopSoundEx("SoundSlot6")
+	BRSP D 3
+	Goto Spawn
+  }
+}
+
+actor BerserkerFists : Weapon
+{
+  +WEAPON.WIMPY_WEAPON
+  +WEAPON.MELEEWEAPON
+  +WEAPON.NOALERT
+  Obituary "%o felt %k's berserker rage!!!!!!!!!!!!!!!!!!!!!"
+  States
+  {
+  Ready:
+    PUNG A 1 A_WeaponReady
+    loop
+  Deselect:
+    PUNG A 1 A_Lower
+    loop
+  Select: 
+    PUNG A 1 A_Raise
+    loop
+  Fire:
+	PUNG A 0 A_JumpIfInventory("FalconPunch",1,9)
+	PUNG BCD 1
+	PUNG E 1 A_CustomPunch(500,0,0,"BulletPuff",0)
+	PUNG FGH 2
+	PUNG A 2 A_GiveInventory("FalconPunch",1)
+	Goto Ready
+	PUNG IJK 1
+	PUNG L 1 A_CustomPunch(500,0,0,"BulletPuff",0)
+	PUNG MNO 2
+	PUNG A 2 A_TakeInventory("FalconPunch",1)
+	Goto Ready
+  }
+}
+
+ACTOR FalconPunch : Ammo
+{
+Inventory.Amount 0
+Inventory.MaxAmount 1
+States
+{
+Spawn:
+TNT1 A -1
+Loop
+}
+}

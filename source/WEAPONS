@@ -1,0 +1,140 @@
+#library "WEAPONS"
+#include "zcommon.acs"
+#define ALL_OF_IT 0x7FFFFFFF
+#define GAMETICKS_PER_SEC 35
+
+#define CLASS_BANSHEE 0
+#define CLASS_BLAZER 1
+#define CLASS_GUARDIAN 2
+#define CLASS_ILLUSIONIST 3
+#define CLASS_ROCKETEER 4
+#define CLASS_TELEPORTER 5
+#define CLASS_HUNTER 6
+#define CLASS_SCOUTER 7
+#define CLASS_BERSERKER 8
+#define CLASS_TERMINATOR 9
+#define CLASS_POLYMORPHIST 10
+#define CLASS_TACTICIAN 11
+
+#define teamPlayer_id 0
+#define teamPlayer_distance 1
+#define MAXPLAYERS 64
+
+int pteam[MAXPLAYERS];
+int healIden[MAXPLAYERS][2];
+int aIndex = 0;
+int trackNum;
+
+function int FixedDistance (int tid1, int tid2)
+{
+	int len;
+	int y = getactory(tid1) - getactory(tid2);
+	int x = getactorx(tid1) - getactorx(tid2);
+	int ang = vectorangle(x,y);
+	if(((ang+0.125)%0.5) > 0.25) len = fixeddiv(y, sin(ang));
+	else len = fixeddiv(x, cos(ang));
+	return len;
+}
+
+script "StoreHealable" Enter
+{
+	int pIndex = 0;
+	
+	while (pIndex < PlayerCount())
+	{
+		int currentTeam = GetPlayerInfo(pIndex, PLAYERINFO_TEAM);
+		if (currentTeam == 0 && PlayerClass(pIndex) == 0)
+		{ 
+			healIden[aIndex][teamPlayer_id] = pIndex;
+			aIndex++;
+		}
+		pIndex++;
+	}
+}
+
+script "GiveHealth" (void)
+{
+	int pDistance;
+	for (int x = 0; x < aIndex; x++)
+	{
+		int currentId = healIden[x][teamPlayer_id];
+		
+		pDistance =(fixeddistance(0,currentId) >> 20);
+		if ((pDistance <= 48 * 1/2) && (GetActorProperty(currentId,APROP_Health) > 0))
+		{
+			GiveActorInventory(currentId, "Health", 5);
+		}
+	}
+}
+
+/* ************************************************** */
+/* END BANSHEE SCRIPTS ; START TELEPORTER SHIT */
+/* ************************************************** */
+
+Script "identifyPlayer" (void)
+//Returns a trackable number across multiple scripts so we know which player triggered it
+{
+	trackNum=playernumber();
+}
+
+Script "changeProjId" (void)
+//Changes the projectile to be tied to the player via TID stuff then resets the variable for the next player
+{
+	thing_changetid(1999,trackNum+2000);
+	trackNum=0;
+}
+
+Script "spawnDestination" (void)
+//Executed by a projectile impact to spawn a teleporter at it's current location
+{
+	int ProjectileTID;
+	int ProjectileOwner;
+	int NewTeleporterTID;
+	int SpawnZCoord;
+
+	ProjectileTID = ActivatorTID();
+	ProjectileOwner = (ProjectileTID - 1000);
+	if(ProjectileTID < 2000)
+	{
+		Terminate;
+	}
+
+	NewTeleporterTID = (1000 + (ProjectileTID));
+
+	if((GetActorCeilingZ(ProjectileTID) - GetActorFloorZ(ProjectileTID)) < 56.0)
+	{
+		Terminate; //Not enough room to teleport.
+	}
+
+	SpawnZCoord = (GetActorZ(ProjectileTID)+8) - 28.0;
+
+	if(((GetActorZ(ProjectileTID)+8) - GetActorFloorZ(ProjectileTID)) < 28.0)
+	{
+		SpawnZCoord = GetActorFloorZ(ProjectileTID);
+	}
+
+	if((GetActorCeilingZ(ProjectileTID) - (GetActorZ(ProjectileTID)+8)) < 28.0)
+	{
+		SpawnZCoord = GetActorCeilingZ(ProjectileTID) - 56.0;
+	}
+
+	Spawn("TeleporterDestination", GetActorX(ProjectileTID), GetActorY(ProjectileTID), SpawnZCoord, NewTeleporterTID, 0);
+}
+
+Script "teleportPlayer" (void)
+//Executed by a teleporter to bring the player there
+{
+	int FinalTeleporterTID;
+	int PlayerTID;
+	
+	FinalTeleporterTID = ActivatorTID();
+	PlayerTID = (FinalTeleporterTID - 2000);
+
+	SetActorPosition(PlayerTID, GetActorX(FinalTeleporterTID), GetActorY(FinalTeleporterTID), GetActorZ(FinalTeleporterTID), 0);
+	TakeActorInventory(PlayerTID, "TeleporterAmmo", 1);
+	Thing_Remove(FinalTeleporterTID);
+}
+
+/* ************************************************** */
+/* END TELEPORTER SCRIPTS 							  */
+/* ************************************************** */

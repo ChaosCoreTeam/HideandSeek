@@ -1,0 +1,537 @@
+//
+// * Bullet Glowy Decal Fade Effects
+//
+
+fader GoAway
+{
+	DecayStart	0.5
+	DecayTime	1.0
+}
+
+decal BulletChip1
+{
+	pic CHIP1
+	translucent 0.85
+	shade "00 00 00"
+	x-scale 0.8
+	y-scale 0.8
+	randomflipx
+	randomflipy
+}
+
+decal BulletChip2
+{
+	pic CHIP2
+	translucent 0.85
+	shade "00 00 00"
+	x-scale 0.8
+	y-scale 0.8
+	randomflipx
+	randomflipy
+}
+
+decal BulletChip3
+{
+	pic CHIP3
+	translucent 0.85
+	shade "00 00 00"
+	x-scale 0.8
+	y-scale 0.8
+	randomflipx
+	randomflipy
+}
+
+decal BulletChip4
+{
+	pic CHIP4
+	translucent 0.85
+	shade "00 00 00"
+	x-scale 0.8
+	y-scale 0.8
+	randomflipx
+	randomflipy
+}
+
+decal BulletChip5
+{
+	pic CHIP5
+	translucent 0.85
+	shade "00 00 00"
+	x-scale 0.8
+	y-scale 0.8
+	randomflipx
+	randomflipy
+}
+
+decal Bullet1
+{
+	pic CHIP1
+	shade "FF C8 00"
+	fullbright
+	x-scale 0.4
+	y-scale 0.4
+	lowerdecal BulletChip
+	animator GoAway
+}
+
+decal Bullet2
+{
+	pic CHIP2
+	shade "FF C8 00"
+	fullbright
+	x-scale 0.4
+	y-scale 0.4
+	lowerdecal BulletChip
+	animator GoAway
+}
+
+decal Bullet3
+{
+	pic CHIP3
+	shade "FF C8 00"
+	fullbright
+	x-scale 0.4
+	y-scale 0.4
+	lowerdecal BulletChip
+	animator GoAway
+}
+
+decal Bullet4
+{
+	pic CHIP4
+	shade "FF C8 00"
+	fullbright
+	x-scale 0.4
+	y-scale 0.4
+	lowerdecal BulletChip
+	animator GoAway
+}
+
+decal Bullet5
+{
+	pic CHIP5
+	shade "FF C8 00"
+	fullbright
+	x-scale 0.4
+	y-scale 0.4
+	lowerdecal BulletChip
+	animator GoAway
+}
+
+//Decalgroups pick a random decal when called
+decalgroup Bullet
+{
+	Bullet1	1
+	Bullet2	1
+	Bullet3	1
+	Bullet4	1
+	Bullet5	1
+}
+
+decalgroup BulletChip
+{
+	BulletChip1	1
+	BulletChip2	1
+	BulletChip3	1
+	BulletChip4	1
+	BulletChip5	1
+}
+
+//This stuff tells what weapon leaves what mark
+generator HunterShotgun Bullet
+generator HunterChaingun Bullet
+generator ScoutPistol Bullet
+generator TerminatorPlasmaBall PlasmaScorch
+
+//
+// * Blood Decal Effects
+//
+
+slider BSlide1
+{
+	DistY -40
+	SlideStart 0
+	SlideTime 9
+}
+
+stretcher BStretch1
+{
+	GoalX 0.5
+	GoalY 1.5
+	StretchStart 0
+	StretchTime 9
+}
+
+slider BSlide2
+{
+	DistY -36
+	SlideStart 0
+	SlideTime 12
+}
+
+stretcher BStretch2
+{
+	GoalX 0.5
+	GoalY 1.2
+	StretchStart 0
+	StretchTime 12
+}
+
+combiner BloodSlide1
+{
+	BSlide1
+	BStretch1
+}
+
+combiner BloodSlide2
+{
+	BSlide2
+	BStretch2
+}
+
+//Red Blood Splats (For Walls)
+decal BloodSplat01
+{
+	animator BloodSlide1
+	pic BSPLAT01
+	shade "60 00 00"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BloodSplat02
+{
+	animator BloodSlide2
+	pic BSPLAT02
+	shade "60 00 00"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BloodSplat03
+{
+	animator BloodSlide1
+	pic BSPLAT03
+	shade "60 00 00"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BloodSplat04
+{
+	animator BloodSlide2
+	pic BSPLAT04
+	shade "60 00 00"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BloodSplat05
+{
+	animator BloodSlide1
+	pic BSPLAT05
+	shade "60 00 00"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BloodSplat06
+{
+	animator BloodSlide2
+	pic BSPLAT06
+	shade "60 00 00"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BloodSplat07
+{
+	animator BloodSlide1
+	pic BSPLAT07
+	shade "60 00 00"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BloodSplat08
+{
+	animator BloodSlide2
+	pic BSPLAT08
+	shade "60 00 00"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BloodSplat09
+{
+	animator BloodSlide1
+	pic BSPLAT09
+	shade "60 00 00"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BloodSplat10
+{
+	animator BloodSlide2
+	pic BSPLAT10
+	shade "60 00 00"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BloodSplat11
+{
+	animator BloodSlide1
+	pic BSPLAT11
+	shade "60 00 00"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BloodSplat12
+{
+	animator BloodSlide2
+	pic BSPLAT12
+	shade "60 00 00"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BloodSplat13
+{
+	animator BloodSlide1
+	pic BSPLAT13
+	shade "60 00 00"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BloodSplat14
+{
+	animator BloodSlide2
+	pic BSPLAT14
+	shade "60 00 00"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+//Blue Blood Splats (For Walls)
+decal BlueBloodSplat01
+{
+	animator BloodSlide1
+	pic BSPLAT01
+	shade "00 00 60"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BlueBloodSplat02
+{
+	animator BloodSlide2
+	pic BSPLAT02
+	shade "00 00 60"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BlueBloodSplat03
+{
+	animator BloodSlide1
+	pic BSPLAT03
+	shade "00 00 60"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BlueBloodSplat04
+{
+	animator BloodSlide2
+	pic BSPLAT04
+	shade "00 00 60"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BlueBloodSplat05
+{
+	animator BloodSlide1
+	pic BSPLAT05
+	shade "00 00 60"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BlueBloodSplat06
+{
+	animator BloodSlide2
+	pic BSPLAT06
+	shade "00 00 60"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BlueBloodSplat07
+{
+	animator BloodSlide1
+	pic BSPLAT07
+	shade "00 00 60"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BlueBloodSplat08
+{
+	animator BloodSlide2
+	pic BSPLAT08
+	shade "00 00 60"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BlueBloodSplat09
+{
+	animator BloodSlide1
+	pic BSPLAT09
+	shade "00 00 60"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BlueBloodSplat10
+{
+	animator BloodSlide2
+	pic BSPLAT10
+	shade "00 00 60"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BlueBloodSplat11
+{
+	animator BloodSlide1
+	pic BSPLAT11
+	shade "00 00 60"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BlueBloodSplat12
+{
+	animator BloodSlide2
+	pic BSPLAT12
+	shade "00 00 60"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BlueBloodSplat13
+{
+	animator BloodSlide1
+	pic BSPLAT13
+	shade "00 00 60"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+decal BlueBloodSplat14
+{
+	animator BloodSlide2
+	pic BSPLAT14
+	shade "00 00 60"
+	x-scale 0.5
+	y-scale 0.5
+	randomflipx
+	randomflipy
+}
+
+//Now that the decals themselves are defined, here's the randomizer!
+decalgroup BloodSplat
+{
+	BloodSplat01 6
+	BloodSplat02 6
+	BloodSplat03 6
+	BloodSplat04 6
+	BloodSplat05 6
+	BloodSplat06 6
+	BloodSplat07 6
+	BloodSplat08 6
+	BloodSplat09 6 
+	BloodSplat10 6
+	BloodSplat11 6 
+	BloodSplat12 6
+	BloodSplat13 6
+	BloodSplat14 6
+}
+
+decalgroup BlueBloodSplat
+{
+	BlueBloodSplat01 6
+	BlueBloodSplat02 6
+	BlueBloodSplat03 6
+	BlueBloodSplat04 6
+	BlueBloodSplat05 6
+	BlueBloodSplat06 6
+	BlueBloodSplat07 6
+	BlueBloodSplat08 6
+	BlueBloodSplat09 6 
+	BlueBloodSplat10 6
+	BlueBloodSplat11 6 
+	BlueBloodSplat12 6
+	BlueBloodSplat13 6
+	BlueBloodSplat14 6
+}

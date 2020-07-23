@@ -1,0 +1,71 @@
+//Duh
+clearplayerclasses
+addplayerClass BansheeClass
+addplayerclass BlazerClass
+addplayerclass GuardianClass
+addplayerclass IllusionistClass
+addplayerclass RocketeerClass
+addplayerclass TeleporterClass
+addplayerclass HunterClass
+addplayerclass ScouterClass
+addplayerclass BerserkerClass
+addplayerclass TerminatorClass
+addplayerclass PolymorphistClass
+addplayerclass TacticianClass
+
+
+//What are you doing here go away!!!!!!!
+weaponsection HideAndSeek
+setslot 1 VanisherFist BerserkerFists ScoutKnife TerminatorGrenade HunterChaingun NoDamageRocketLauncher TeleportGun
+setslot 2 ScoutPistol TerminatorPlasmaRifle HunterShotgun
+setslot 3 HunterHook
+
+
+
+// ====================================
+// in-game bindings
+// ====================================
+//Assenfucken
+
+addkeysection "Hide & Seek" HideAndSeek
+addmenukey "Toggle Radar" ToggleRadarHNSOff
+alias ToggleRadarHNSOn "HNS_ShowRadar 1; echo Radar On!; rebind ToggleRadarHNSOff"
+alias ToggleRadarHNSOff "HNS_ShowRadar 2; echo Radar Off!; rebind ToggleRadarHNSOn"
+defaultbind Q ToggleRadarHNSOff
+addmenukey "Toggle Berserker Scream" ToggleOldScream
+alias ToggleNewScream "HNS_Scream 1; echo Get Angry!!!!; rebind ToggleOldScream"
+alias ToggleOldScream "HNS_Scream 2; echo Get Serious!!!!; rebind ToggleNewScream"
+defaultbind E ToggleOldScream
+
+
+// ====================================
+// Hider bindings
+// ====================================
+
+//Taunt
+addmenukey "Taunt" HNS_Taunts
+alias HNS_Taunts "pukename HNS_Taunt $cl_hidertaunt $cl_seekertaunt"
+defaultbind Y HNS_Taunts
+
+//Vanishing Toggle
+addmenukey "Toggle Vanishing" +HNS_Vanish
+alias +HNS_Vanish "pukename HNS_Vanish; rebind -HNS_Vanish"
+alias -HNS_Vanish "pukename HNS_Visible; rebind +HNS_Vanish"
+defaultbind V +HNS_Vanish
+
+//Class Abilities
+addmenukey "Activate First Ability" HNS_PrimaryAbility
+alias HNS_PrimaryAbility "pukename HNS_PrimaryAbility"
+defaultbind 1 HNS_PrimaryAbility
+
+addmenukey "Activate Second Ability" HNS_SecondAbility
+alias HNS_SecondAbility "pukename HNS_SecondAbility"
+defaultbind 2 HNS_SecondAbility
+
+addmenukey "Class Description" HNS_ClassDescriptions
+alias +HNS_ClassDescriptions "pukename HNS_ClassDescription; -HNS_ClassDescriptions $cl_description"
+alias -HNS_ClassDescriptions "pukename HNS_ClassDescriptionOff; rebind +HNS_ClassDescriptions"
+defaultbind . HNS_ClassDescriptions
+
+//setup alias
+alias setup "DMFlags 807940; DMFlags2 0; ZADMFlags 2049; CompatFlags 0; ZACompatFlags 0; sv_defaultdmflags false; teamlms 1; map hns01"

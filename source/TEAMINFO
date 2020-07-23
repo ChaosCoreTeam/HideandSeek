@@ -1,0 +1,42 @@
+//Clears Existing Teams
+ClearTeams
+
+//Hiding Team Definition
+Team "Hiding Team"
+{
+	PlayerColor "66 66 66"
+	TextColor "Black"
+	RailColor "00 00 00"
+	FlagItem "BlueFlag"
+	SkullItem "BlueSkullST"
+	PlayerStartThingNumber 0
+	SmallFlagHUDIcon "STFLA1"
+	SmallSkullHUDIcon "STKEYS3"
+	LargeFlagHUDIcon "BFLASMAL"
+	LargeSkullHUDIcon "BSKUA0"
+	WinnerTheme "D_DM2TTL"
+	LoserTheme "D_LOSE"
+	WinnerPic "HIDEWIN"
+	LoserPic "HIDELOSE"
+	PlayerStartThingNumber 5080 // Blue Team Start
+}
+
+//Seeking Team Definition
+Team "Seeking Team"
+{
+	PlayerColor "FF FF 00"
+	TextColor "Gold"
+	RailColor "FF FF 00"
+	FlagItem "RedFlag"
+	SkullItem "RedSkullST"
+	PlayerStartThingNumber 0
+	SmallFlagHUDIcon "STFLA2"
+	SmallSkullHUDIcon "STKEYS5"
+	LargeFlagHUDIcon "RFLASMAL"
+	LargeSkullHUDIcon "RSKUA0"
+	WinnerTheme "D_DM2TTL"
+	LoserTheme "D_LOSE"
+	WinnerPic "SEEKWIN"
+	LoserPic "SEEKLOSE"
+	PlayerStartThingNumber 5081 // Red Team Start
+}

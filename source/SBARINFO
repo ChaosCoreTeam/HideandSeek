@@ -1,0 +1,355 @@
+Base Doom;
+MonospaceFonts False, "0";
+Height 32;
+StatusBar Normal
+{
+	drawimage "STBAR", 0, 168;
+	DrawNumber 3, HUDFONT_DOOM, Black, Health, DrawShadow, 90, 171, 0;
+	DrawNumber 3, HUDFONT_DOOM, Gold, Health, WhenNotZero, 90, 171, 0, Red, 26, Green, 51;
+	DrawNumber 3, HUDFONT_DOOM, Black, Armor, DrawShadow, 221, 171, 0;
+	DrawNumber 3, HUDFONT_DOOM, Gold, Armor, WhenNotZero, 221, 171, 0, Red, 26, Green, 51;
+	DrawString STATUSFONT, white, "%", 103, 171;
+	DrawString STATUSFONT, white, "%", 234, 171;
+	
+	DrawNumber 3, HUDFONT_DOOM, Black, Ammo1, DrawShadow, 44, 171, 0;
+	
+	IsSelected NoDamageRocketLauncher
+	{
+		DrawNumber 3, HUDFONT_DOOM, Gold, Ammo1, WhenNotZero, 44, 171, 0, Red, 6, Green, 12;
+	}
+	
+	IsSelected PolyShotgun
+	{
+		DrawNumber 3, HUDFONT_DOOM, Gold, Ammo1, WhenNotZero, 44, 171, 0, Red, 12, Green, 26;
+	}
+	
+	IsSelected HunterChaingun
+	{
+		DrawNumber 3, HUDFONT_DOOM, Gold, Ammo1, WhenNotZero, 44, 171, 0, Red, 50, Green, 101;
+	}
+	
+	IsSelected HunterShotgun
+	{
+		DrawNumber 3, HUDFONT_DOOM, Gold, Ammo1, WhenNotZero, 44, 171, 0, Red, 12, Green, 26;
+	}
+	
+	IsSelected TerminatorPlasmaRifle
+	{
+		DrawNumber 3, HUDFONT_DOOM, Gold, Ammo1, WhenNotZero, 44, 171, 0, Red, 75, Green, 151;
+	}
+	
+	IsSelected TerminatorGrenade
+	{
+		DrawNumber 3, HUDFONT_DOOM, Gold, Ammo1, WhenNotZero, 44, 171, 0, Red, 7, Green, 16;
+	}
+
+	
+	IsSelected TeleporterGun
+	{
+		DrawNumber 3, HUDFONT_DOOM, Gold, Ammo1, WhenNotZero, 44, 171, 0, Red, 1, Green, 4;
+	}
+	
+	IsSelected ScoutPistol
+	{
+		DrawNumber 3, HUDFONT_DOOM, Gold, Ammo1, WhenNotZero, 44, 171, 0, Red, 6, Green, 13;
+	}
+
+	//Weapons
+	drawnumber 3, INDEXFON, gold, ammo Clip, 288, 173;
+	drawnumber 3, INDEXFON, gold, ammo Shell, 288, 179;
+	drawnumber 3, INDEXFON, gold, ammo RocketAmmo, 288, 185;
+	drawnumber 3, INDEXFON, gold, ammo Cell, 288, 191;
+
+	drawnumber 3, INDEXFON, gold, ammocapacity Clip, 314, 173;
+	drawnumber 3, INDEXFON, gold, ammocapacity Shell, 314, 179;
+	drawnumber 3, INDEXFON, gold, ammocapacity RocketAmmo, 314, 185;
+	drawnumber 3, INDEXFON, gold, ammocapacity Cell, 314, 191;
+
+	gamemode deathmatch, teamgame
+	{
+		drawnumber 2, HUDFONT_DOOM, orange, frags, 138, 171;
+	}
+	gamemode cooperative, singleplayer
+	{
+		drawimage "STARMS", 104, 168;
+		drawswitchableimage weaponslot 2, "STGNUM2", "STYSNUM2", 111, 172; 
+		drawswitchableimage weaponslot 3, "STGNUM3", "STYSNUM3", 123, 172;
+		drawswitchableimage weaponslot 4, "STGNUM4", "STYSNUM4", 135, 172;
+		drawswitchableimage weaponslot 5, "STGNUM5", "STYSNUM5", 111, 182;
+		drawswitchableimage weaponslot 6, "STGNUM6", "STYSNUM6", 123, 182;
+		drawswitchableimage weaponslot 7, "STGNUM7", "STYSNUM7", 135, 182;
+	}
+	gamemode cooperative, deathmatch, teamgame
+	{
+		drawimage "STPB1", 143, 169;
+	}
+	drawselectedinventory alternateonempty, INDEXFON, 143, 168
+	{
+		drawmugshot "STF", 5, 143, 168;
+	}
+}
+
+StatusBar FullScreen, FullScreenOffsets, ForceScaled
+{
+	//Bottom Left - Health+Armor
+	DrawImage "hudleft", 0, -33;
+	DrawImage "hudabil", 176, -18;
+	DrawImage "hudabil", 96, -18;
+	
+	PlayerClass Banshee
+	{
+		//Health+Armor Icons
+		DrawImage "hudmdkit", 0, -14;
+		DrawImage "hudblue", 0, -28;
+		//Bottom Right - Ammo
+		DrawImage "hudritgg", -79, -33;
+		//Health+Armor Display Readouts
+		DrawNumber 3, HNS_HUD_FONT, Black, Health, DrawShadow, 42, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Health, WhenNotZero, 42, -10, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -10; DrawNumber 3, HNS_HUD_FONT, Green, 200, DrawShadow, 68, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Black, Armor, DrawShadow, 42, -24, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Armor, WhenNotZero, 42, -24, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -24; DrawNumber 3, HNS_HUD_FONT, Green, 200, DrawShadow, 68, -24, 0;
+		//Ammo Readouts - Lolz Blazer & Vanisher Have No Weapons!!!
+		DrawString HNS_HUD_FONT, Black, "N", 263, -24, 0; DrawImage "hnsslash", 269, -24; DrawString HNS_HUD_FONT, Black, "A", 288, -24, 0;
+		DrawBar "hudbar12", "hudbar02", Vanishing, Horizontal, 247, -27;
+		DrawBar "hudbar11", "hudbar01", Ammo1, Horizontal, 247, -14;
+		DrawBar "hudbar13", "hudbar03", BansheeFirstCooldown, Horizontal, 116, -12;
+		DrawBar "hudbar14", "hudbar04", BansheeSecondCooldown, Horizontal, 196, -12;
+		
+	}
+	PlayerClass Blazer
+	{
+		//Health+Armor Icons
+		DrawImage "hudmdkit", 0, -14;
+		DrawImage "hudblue", 0, -28;
+		//Bottom Right - Ammo
+		DrawImage "hudritbb", -79, -33;
+		//Health+Armor Display Readouts
+		DrawNumber 3, HNS_HUD_FONT, Black, Health, DrawShadow, 42, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Health, WhenNotZero, 42, -10, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -10; DrawNumber 3, HNS_HUD_FONT, Green, 200, DrawShadow, 68, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Black, Armor, DrawShadow, 42, -24, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Armor, WhenNotZero, 42, -24, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -24; DrawNumber 3, HNS_HUD_FONT, Green, 200, DrawShadow, 68, -24, 0;
+		//Ammo
+		DrawBar "hudbar13", "hudbar03", BlazerFirstCooldown, Horizontal, 116, -12;
+		DrawBar "hudbar14", "hudbar04", BlazerSecondCooldown, Horizontal, 196, -12;
+		DrawNumber 1, HNS_HUD_FONT, Black, Dashes, DrawShadow, -59, -24, 0;
+		DrawImage "hnsslash", -51, -24;
+		DrawNumber 1, HNS_HUD_FONT, Green, 3, DrawShadow, -32, -24, 0;
+		DrawNumber 1, HNS_HUD_FONT, Gold, Dashes, WhenNotZero, -59, -24, 0, Red, 1, Green, 3;
+	    DrawBar "hudbar11", "hudbar01", BlazerEnergy, Horizontal, -73, -12;
+		//-60 -321
+	}
+	PlayerClass Guardian
+	{
+		//Health+Armor Icons
+		DrawImage "hudmdkit", 0, -14;
+		DrawImage "hudblue", 0, -28;
+		//Bottom Right - Ammo
+		DrawImage "hudritgg", -79, -33;
+		//Health+Armor Display Readouts
+		DrawNumber 3, HNS_HUD_FONT, Black, Health, DrawShadow, 42, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Health, WhenNotZero, 42, -10, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -10; DrawNumber 3, HNS_HUD_FONT, Green, 200, DrawShadow, 68, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Black, Armor, DrawShadow, 42, -24, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Armor, WhenNotZero, 42, -24, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -24; DrawNumber 3, HNS_HUD_FONT, Green, 200, DrawShadow, 68, -24, 0;
+		//Ammo
+		DrawBar "hudbar13", "hudbar03", GuardianFirstCooldown, Horizontal, 116, -12;
+		DrawBar "hudbar14", "hudbar04", GuardianSecondCooldown, Horizontal, 196, -12;
+	    DrawBar "hudbar11", "hudbar01", GuardianPower, Horizontal, -73, -12;
+		DrawBar "hudbar12", "hudbar02", Vanishing, Horizontal, -73, -27;
+		//
+		DrawImage "hudsmoke", -377, -12;
+	}
+	PlayerClass Teleporter, Rocketeer
+	{
+		//Health+Armor Icons
+		DrawImage "hudmdkit", 0, -14;
+		DrawImage "hudblue", 0, -28;
+		//Bottom Right - Ammo
+		DrawImage "hudritgb", -79, -33;
+		//Health+Armor Display Readouts
+		DrawNumber 3, HNS_HUD_FONT, Black, Health, DrawShadow, 42, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Health, WhenNotZero, 42, -10, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -10; DrawNumber 3, HNS_HUD_FONT, Green, 200, DrawShadow, 68, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Black, Armor, DrawShadow, 42, -24, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Armor, WhenNotZero, 42, -24, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -24; DrawNumber 3, HNS_HUD_FONT, Green, 200, DrawShadow, 68, -24, 0;
+	}
+	PlayerClass Berserker, Hunter, Terminator
+	{
+		//Health+Armor Icons
+		DrawImage "hudmdkit", 0, -14;
+		DrawImage "hudgreen", 0, -28;
+		//Bottom Right - Ammo
+		DrawImage "hudritgb", -79, -33;
+		//Health+Armor Display Readouts
+		DrawNumber 3, HNS_HUD_FONT, Black, Health, DrawShadow, 42, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Health, WhenNotZero, 42, -10, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -10; DrawNumber 3, HNS_HUD_FONT, Green, 100, DrawShadow, 68, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Black, Armor, DrawShadow, 42, -24, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Armor, WhenNotZero, 42, -24, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -24; DrawNumber 3, HNS_HUD_FONT, Green, 100, DrawShadow, 68, -24, 0;
+	}
+	PlayerClass Polymorphist
+	{
+		//
+		//
+		DrawBar "hudbar12", "hudbar02", Ammo1, Horizontal, 247, -27;
+		//
+		//
+		//Health+Armor Icons
+		
+		DrawImage "hudmdkit", 0, -14;
+		DrawImage "hudgreen", 0, -28;
+		DrawImage "hudafrit", 76, -26;
+		
+		DrawImage "hudmin", 220, -26;
+		//Bottom Right - Ammo
+		DrawImage "hudritgb", -79, -33;
+		//Health+Armor Display Readouts
+		DrawNumber 3, HNS_HUD_FONT, Black, Health, DrawShadow, 42, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Health, WhenNotZero, 42, -10, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -10; DrawNumber 3, HNS_HUD_FONT, Green, 100, DrawShadow, 68, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Black, Armor, DrawShadow, 42, -24, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Armor, WhenNotZero, 42, -24, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -24; DrawNumber 3, HNS_HUD_FONT, Green, 100, DrawShadow, 68, -24, 0;
+	}
+	
+	PlayerClass Scouter
+	{
+		//Health+Armor Icons
+		DrawImage "hudmdkit", 0, -14;
+		DrawImage "hudgreen", 0, -28;
+		//Bottom Right - Ammo
+		DrawImage "hudritbb", -79, -33;
+		//Health+Armor Display Readouts
+		DrawNumber 3, HNS_HUD_FONT, Black, Health, DrawShadow, 42, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Health, WhenNotZero, 42, -10, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -10; DrawNumber 3, HNS_HUD_FONT, Green, 100, DrawShadow, 68, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Black, Armor, DrawShadow, 42, -24, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Armor, WhenNotZero, 42, -24, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -24; DrawNumber 3, HNS_HUD_FONT, Green, 100, DrawShadow, 68, -24, 0;
+	}
+
+	IsSelected ScoutKnife
+	{
+		//Ammo or Weapon Icon
+		DrawImage "hudknife", -24, -14;
+		DrawImage "hudjetpk", -24, -28;
+		DrawString HNS_HUD_FONT, Untranslated, "INFINITE", 293, -10, 0;
+		DrawString HNS_HUD_FONT, Black, "N", 263, -24, 0; DrawImage "hnsslash", 269, -24; DrawString HNS_HUD_FONT, Black, "A", 288, -24, 0;
+		//Jetpack Fuel Display Readout
+		DrawBar "hudbar12", "hudbar02", Ammo1, Horizontal, 247, -27;
+	}
+	IsSelected BerserkerFists
+	{
+		//Ammo or Weapon Icon
+		DrawImage "hudbserk", -24, -14;
+		DrawString HNS_HUD_FONT, Untranslated, "INFINITE", 293, -10, 0;
+		DrawString HNS_HUD_FONT, Black, "N", 263, -24, 0; DrawImage "hnsslash", 269, -24; DrawString HNS_HUD_FONT, Black, "A", 288, -24, 0;
+	}
+	IsSelected NoDamageRocketLauncher
+	{
+		//Ammo or Weapon Icon
+		DrawImage "hudrockt", -24, -14;
+		//Ammo Display Readout
+		DrawNumber 2, HNS_HUD_FONT, Black, Ammo1, DrawShadow, 264, -10, 0;
+		DrawImage "hnsslash", 269, -10;
+		DrawNumber 2, HNS_HUD_FONT, Green, 25, DrawShadow, 291, -10, 0;
+		DrawNumber 2, HNS_HUD_FONT, Gold, Ammo1, WhenNotZero, 264, -10, 0, Red, 7, Green, 13;
+		//Alt Ammo Display Readout
+		DrawBar "hudbar12", "hudbar02", Ammo2, Horizontal, 247, -27;
+	}
+	IsSelected TeleporterGun
+	{
+		//Ammo or Weapon Icon
+		DrawImage "hudcell", -24, -14;
+		//Ammo Display Readout
+		DrawNumber 1, HNS_HUD_FONT, Black, Ammo1, DrawShadow, 261, -10, 0;
+		DrawImage "hnsslash", 269, -10;
+		DrawNumber 1, HNS_HUD_FONT, Green, 5, DrawShadow, 288, -10, 0;
+		DrawNumber 1, HNS_HUD_FONT, Gold, Ammo1, WhenNotZero, 261, -10, 0, Red, 1, Green, 4;
+		//Alt Ammo Display Readout
+		DrawBar "hudbar12", "hudbar02", Ammo2, Horizontal, 247, -27;
+	}
+	IsSelected ScoutPistol
+	{
+		//Ammo or Weapon Icon
+		DrawImage "hudclip", -24, -14;
+		DrawImage "hudjetpk", -24, -28;
+		//Ammo Display Readout
+		DrawNumber 2, HNS_HUD_FONT, Black, Ammo1, DrawShadow, 264, -10, 0;
+		DrawImage "hnsslash", 269, -10;
+		DrawNumber 2, HNS_HUD_FONT, Green, 25, DrawShadow, 291, -10, 0;
+		DrawNumber 2, HNS_HUD_FONT, Gold, Ammo1, WhenNotZero, 264, -10, 0, Red, 6, Green, 13;
+		//Jetpack Fuel Display Readout
+		DrawBar "hudbar12", "hudbar02", Ammo2, Horizontal, 247, -27;
+	}
+	IsSelected HunterShotgun
+	{
+		//Ammo or Weapon Icon
+		DrawImage "hudshbox", -24, -14;
+		//Ammo Display Readout
+		DrawNumber 2, HNS_HUD_FONT, Black, Ammo1, DrawShadow, 264, -10, 0;
+		DrawImage "hnsslash", 269, -10;
+		DrawNumber 2, HNS_HUD_FONT, Green, 50, DrawShadow, 291, -10, 0;
+		DrawNumber 2, HNS_HUD_FONT, Gold, Ammo1, WhenNotZero, 264, -10, 0, Red, 12, Green, 26;
+		//Alt Ammo Display Readout
+		DrawString HNS_HUD_FONT, Black, "N", 263, -24, 0; DrawImage "hnsslash", 269, -24; DrawString HNS_HUD_FONT, Black, "A", 288, -24, 0;
+	}
+	IsSelected PolyShotgun
+	{
+		//Ammo or Weapon Icon
+		DrawImage "hudshbox", -24, -14;
+		DrawImage "hudchick", -24, -28;
+		//Ammo Display Readout
+		DrawNumber 2, HNS_HUD_FONT, Black, Ammo1, DrawShadow, 264, -10, 0;
+		DrawImage "hnsslash", 269, -10;
+		DrawNumber 2, HNS_HUD_FONT, Green, 50, DrawShadow, 291, -10, 0;
+		DrawNumber 2, HNS_HUD_FONT, Gold, Ammo1, WhenNotZero, 264, -10, 0, Red, 12, Green, 26;
+		//Alt Ammo Display Readout
+		DrawNumber 2, HNS_HUD_FONT, Black, Ammo2, DrawShadow, 264, -24, 0;
+		DrawImage "hnsslash", 269, -24;
+		DrawNumber 2, HNS_HUD_FONT, Green, 2, DrawShadow, 291, -24, 0;
+		DrawNumber 2, HNS_HUD_FONT, Gold, Ammo2, WhenNotZero, 264, -24, 0, Red, 0, Green, 2;
+	}
+	IsSelected HunterChaingun //THE CHAINGUN!!!
+	{
+		//Ammo or Weapon Icon
+		DrawImage "hudammo", -24, -14;
+		//Ammo Display Readout
+		DrawNumber 3, HNS_HUD_FONT, Black, Ammo1, DrawShadow, 267, -10, 0;
+		DrawImage "hnsslash", 269, -10;
+		DrawNumber 3, HNS_HUD_FONT, Green, 200, DrawShadow, 293, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Ammo1, WhenNotZero, 267, -10, 0, Red, 50, Green, 101;
+		//Alt Ammo Display Readout
+		DrawString HNS_HUD_FONT, Black, "N", 263, -24, 0; DrawImage "hnsslash", 269, -24; DrawString HNS_HUD_FONT, Black, "A", 288, -24, 0;
+	}
+		IsSelected HunterHook
+	{
+		//Ammo or Weapon Icon
+		DrawImage "hudhook", -30, -20;
+		//Ammo Display Readout
+		DrawNumber 3, HNS_HUD_FONT, Black, Ammo1, DrawShadow, 267, -10, 0;
+		DrawImage "hnsslash", 269, -10;
+		DrawNumber 3, HNS_HUD_FONT, Green, 5, DrawShadow, 293, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Ammo1, WhenNotZero, 267, -10, 0, Red, 2, Green, 5;
+		//Alt Ammo Display Readout
+		DrawString HNS_HUD_FONT, Black, "N", 263, -24, 0; DrawImage "hnsslash", 269, -24; DrawString HNS_HUD_FONT, Black, "A", 288, -24, 0;
+	}
+	IsSelected TerminatorPlasmaRifle
+	{
+		//Ammo or Weapon Icon
+		DrawImage "hudcellp", -24, -14;
+		//Ammo Display Readout
+		DrawNumber 3, HNS_HUD_FONT, Black, Ammo1, DrawShadow, 267, -10, 0;
+		DrawImage "hnsslash", 269, -10;
+		DrawNumber 3, HNS_HUD_FONT, Green, 300, DrawShadow, 293, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Ammo1, WhenNotZero, 267, -10, 0, Red, 75, Green, 151;
+		//Alt Ammo Display Readout
+		DrawString HNS_HUD_FONT, Black, "N", 263, -24, 0; DrawImage "hnsslash", 269, -24; DrawString HNS_HUD_FONT, Black, "A", 288, -24, 0;
+	}
+	IsSelected TerminatorGrenade
+	{
+		//Ammo or Weapon Icon
+		DrawImage "hudgren", -24, -14;
+		DrawImage "hudthrow", -24, -28;
+		//Ammo Display Readout
+		DrawNumber 2, HNS_HUD_FONT, Black, Ammo1, DrawShadow, 264, -10, 0;
+		DrawImage "hnsslash", 269, -10;
+		DrawNumber 2, HNS_HUD_FONT, Green, 30, DrawShadow, 291, -10, 0;
+		DrawNumber 2, HNS_HUD_FONT, Gold, Ammo1, WhenNotZero, 264, -10, 0, Red, 7, Green, 16;
+		//Grenade Throw Strength
+		DrawBar "hudbar11", "hudbar01", Ammo2, Horizontal, 247, -27;
+	}
+}

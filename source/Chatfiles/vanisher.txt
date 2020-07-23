@@ -1,0 +1,45 @@
+[IntroStrings]
+"..."
+"Well then, let's begin."
+"Heh."
+
+[RareRoamingStrings]
+"Do I hear footsteps...?"
+"I shouldn't stay here..."
+"Ever tried using Scouter's radar?"
+
+[FragStrings]
+"Heh."
+"You aren't very bright, hrm?"
+"Keep your eyes open, next time."
+
+[KilledStrings]
+"Oh."
+"..."
+"That's disappointing..."
+"You saw me?"
+"Must have been a fluke."
+
+[RoamingStrings]
+"..."
+"Where's a good hiding spot..."
+"Here?"
+"Damn Scouter..."
+
+[EnragedStrings]
+"Hmm..."
+"Ah, fuck off."
+
+[DemoralizedStrings]
+"*Sigh*"
+"I'm losing to a blind fellow."
+
+[WinStrings]
+"Keep your eyes peeled, or this will happen again."
+"Oh, you didn't see me?"
+"Heh."
+
+[LoseStrings]
+"Blazer should stop giving away my position."
+"I don't like it when people see me."
+"Well, I guess I wasn't transparent enough."

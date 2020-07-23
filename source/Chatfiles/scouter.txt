@@ -1,0 +1,45 @@
+[IntroStrings]
+"I'll find em, boss!"
+"Rocketeer, I'll catch you this time."
+"You can't hide from me, faggots!"
+
+[RareRoamingStrings]
+"Now, now, where are you?"
+"Could I get a map of the place, please?"
+"Do you think I'll miss with my railpistol when I find you?"
+"God damn you wussy faggots."
+
+[FragStrings]
+"Eat that."
+"Thought you could hide from me, didn't you?"
+"Yeah. Right."
+"You've got nothing on me, morons."
+
+[KilledStrings]
+"Wait, what?"
+"Thanks for watching my back, dude..."
+"That's not right."
+
+[RoamingStrings]
+"Ping? Pong!"
+"Pinga pinga pinga..."
+"Hmm..."
+"I need a compass."
+
+[EnragedStrings]
+"Okay, I've had it."
+
+[DemoralizedStrings]
+"..."
+"This just is not cool."
+
+[WinStrings]
+"I'm taking all the credit for flushing you out."
+"Did you enjoy that? I did!"
+"No. Just stop talking. You lost. End of story."
+"Haha!"
+
+[LoseStrings]
+"I don't understand how I didn't find them..."
+"This hasn't happened before!"
+"It's a fluke, I swear."

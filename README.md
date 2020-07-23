@@ -1,2 +1,0 @@
-# HideandSeek
-Hide and Seek

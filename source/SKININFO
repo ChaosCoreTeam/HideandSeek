@@ -1,0 +1,11 @@
+{
+Name = "Shotgun Hunter"
+Sprite = HNP1
+CrouchSprite = HNC1
+}
+
+{
+Name = "Chaingun Hunter"
+Sprite = HNP2
+CrouchSprite = HNC2
+}

@@ -1,0 +1,1 @@
+ACTOR isSeeker : Inventory { }

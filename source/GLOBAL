@@ -1,0 +1,673 @@
+#library "Global"
+#include "zcommon.acs"
+
+// [Cata] Definitions.
+#define MAXPLAYERS 64 // If Zandro supports more than 64 players, change this. Nothing else needs to be done.
+
+int pteam[MAXPLAYERS];
+int radarteam[MAXPLAYERS];
+int NumPlayers = 0;
+int WoahWhat;
+int buttons;
+int nobuttons;
+int FadeInValue = 0;
+int FadeOutValue = 0;
+
+/*
+		 			TID ASSIGNMENTS
+
+		 10001031 - Players
+		 1050-1081 - Spectating/Disconnected Players
+		 2050-2081 - Teleporter Projectiles
+		 3000-3031 - Teleporter Portals
+*/
+
+/* ************************************************** */
+/*               START UNIVERSAL SCRIPTS              */
+/* ************************************************** */
+
+Script "hudTimer" open //Timer
+{	
+	if (GetCVar("timelimit") == 0) { Terminate; }
+	int Time = GetCVar("hns_timelimitseconds");
+	Time--;
+	Until(Time == 0)
+	{
+		SetFont("BIGFONT");
+		if (Time <= 60)
+			HudMessageBold(s:"Round Ends In: \cg", d:Time/60, s:":", d:(Time%60)/10, d:Time%10; HUDMSG_PLAIN, 2, CR_WHITE, 0.03, 0.85, 3.5);
+		else if (Time > 60 && Time <= 180)
+			HudMessageBold(s:"Round Ends In: \ck", d:Time/60, s:":", d:(Time%60)/10, d:Time%10; HUDMSG_PLAIN, 2, CR_WHITE, 0.03, 0.85, 3.5);
+		else if (Time > 180)
+			HudMessageBold(s:"Round Ends In: \cd", d:Time/60, s:":", d:(Time%60)/10, d:Time%10; HUDMSG_PLAIN, 2, CR_WHITE, 0.03, 0.85, 3.5);
+		delay(35);
+		Time--;
+		
+	}
+	for(int i=0;i<MAXPLAYERS;i++)
+	{
+		SetFont("BIGFONT");
+		HudMessageBold(s:"Round Ends In: \cm0:00"; HUDMSG_PLAIN, 2, CR_WHITE, 0.03, 0.85, 5);
+		if(pteam[i]==1) thing_damage(1000+i,999,0);
+	}
+}
+
+script "playerEnter" enter //Sets TIDs, HUD Scaling for our custom HUD, and executes the scripts!!
+{
+	thing_changetid(0,playernumber()+1000);
+	pteam[playernumber()]=playerteam();
+	Acs_ExecuteAlways(117, 0, 0, 0, 0); //Scouter Radar
+	delay(1);
+	Acs_ExecuteAlways(118, 0, 0, 0, 0); //Scouter Jetpack & Vanisher Visibility Fades
+}
+
+script "playerRespawn" respawn //Sets TIDs, HUD Scaling for our custom HUD, and executes the scripts!!
+{
+	thing_changetid(0,playernumber()+1000);
+	pteam[playernumber()]=playerteam();
+	Acs_ExecuteAlways(117, 0, 0, 0, 0); //Scouter Radar
+	delay(1);
+	Acs_ExecuteAlways(118, 0, 0, 0, 0); //Scouter Jetpack & Vanisher Visibility Fades
+}
+
+Script "playerDisconnect" (int gone) disconnect
+// Hopefully gets rid of anyone trying to abuse scripts when spectating
+{
+	Thing_ChangeTID(gone, 1050+gone);
+}
+
+Script "playerDeath" death
+//Should change the TID of anyone who freakin' died.
+{
+	Thing_ChangeTID(1000+PlayerNumber(), 1050+PlayerNumber());
+}
+
+script 103 (int active, int inactive, int misc) net //State control, misc is wildcard checker
+{
+	if(active == 1)
+	{
+			if (misc == 5) // Jetpack GO!
+			{
+				SetActorState(1000 + PlayerNumber(), "Jetpack", true);
+			}
+			if (misc == 15) //Jetpack state switch after firing
+			{
+				SetActorState(1000 + PlayerNumber(), "JetpackHasFired", true);
+			}
+			if (misc == 20)
+			{
+				Delay(1);
+				TakeInventory("JetFuel",1);
+			}
+			if (misc == 6) //Scream
+			{
+				SetActorState(1000 + PlayerNumber(), "Scream", true);
+			}
+			if (misc == 7) //Old Scream
+			{
+				SetActorState(1000 + PlayerNumber(), "OldScream", true);
+			}
+			if (misc == 9) //Fade In
+			{
+				SetActorState(1000 + PlayerNumber(), "FadeIn", true);
+			}
+			if (misc == 10) //Visible
+			{
+				SetActorState(1000 + PlayerNumber(), "Visible", true);
+			}
+
+	}
+	if(inactive == 1)
+	{
+			if (misc == 3) //Jetpack disengaging
+			{
+				SetActorState(1000 + PlayerNumber(), "NoJetpack", true);
+			}
+			if (misc == 4) //Silence
+			{
+				SetActorState(1000 + PlayerNumber(), "Silent", true);
+			}
+			if (misc == 8) //Fade out
+			{
+				SetActorState(1000 + PlayerNumber(), "FadeOut", true);
+			}
+	}
+}
+
+/* ************************************************** */
+/*  END UNIVERSAL SCRIPTS ; START TELEPORTER SCRIPTS  */
+/* ************************************************** */
+
+
+Script 105 (void)
+//Returns a trackable number across multiple scripts so we know which player triggered it
+{
+	WoahWhat=playernumber();
+}
+
+Script 106 (void)
+//Changes the projectile to be tied to the player via TID stuff then resets the variable for the next player
+{
+	thing_changetid(1999,WoahWhat+2000);
+	WoahWhat=0;
+}
+
+Script 107 (void)
+//Executed by a projectile impact to spawn a teleporter at it's current location
+{
+	int ProjectileTID;
+	int ProjectileOwner;
+	int NewTeleporterTID;
+	int SpawnZCoord;
+
+	ProjectileTID = ActivatorTID();
+	ProjectileOwner = (ProjectileTID - 1000);
+	if(ProjectileTID < 2000)
+	{
+		Terminate;
+	}
+
+	NewTeleporterTID = (1000 + (ProjectileTID));
+
+	if((GetActorCeilingZ(ProjectileTID) - GetActorFloorZ(ProjectileTID)) < 56.0)
+	{
+		Terminate; //Not enough room to teleport.
+	}
+
+	SpawnZCoord = (GetActorZ(ProjectileTID)+8) - 28.0;
+
+	if(((GetActorZ(ProjectileTID)+8) - GetActorFloorZ(ProjectileTID)) < 28.0)
+	{
+		SpawnZCoord = GetActorFloorZ(ProjectileTID);
+	}
+
+	if((GetActorCeilingZ(ProjectileTID) - (GetActorZ(ProjectileTID)+8)) < 28.0)
+	{
+		SpawnZCoord = GetActorCeilingZ(ProjectileTID) - 56.0;
+	}
+
+	Spawn("TeleporterDestination", GetActorX(ProjectileTID), GetActorY(ProjectileTID), SpawnZCoord, NewTeleporterTID, 0);
+}
+
+Script 108 (void)
+//Executed by a teleporter to bring the player there
+{
+	int FinalTeleporterTID;
+	int PlayerTID;
+	
+	FinalTeleporterTID = ActivatorTID();
+	PlayerTID = (FinalTeleporterTID - 2000);
+
+	SetActorPosition(PlayerTID, GetActorX(FinalTeleporterTID), GetActorY(FinalTeleporterTID), GetActorZ(FinalTeleporterTID), 0);
+	TakeActorInventory(PlayerTID, "TeleporterAmmo", 1);
+	Thing_Remove(FinalTeleporterTID);
+}
+
+
+/* ************************************************** */
+/* END TELEPORTER SCRIPTS ; START CLASS SPECIFIC SHIT */
+/* ************************************************** */
+
+
+Script 109 respawn CLIENTSIDE
+//Information on player class upon spawning!
+{
+	if(consoleplayernumber() != playernumber()) terminate;
+	
+	if(PlayerClass(PlayerNumber())==2) //Blazer
+	{
+		HudMessage(s:"\ccCLASS : \cuBlazer\n\n\ccWEAPONS : \crNone\n\ccABILITY : \ciExtreme Speed \cc( \cdRun Around! \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+	}
+	if(PlayerClass(PlayerNumber())==5) //Rocketeer
+	{
+		HudMessage(s:"\ccCLASS : \cuRocketeer\n\n\ccWEAPONS : \crNo-Damage Rocket Launcher\n\ccABILITY : \ciRocket Jumping \cc( \cdJump + Fire At Ground \cc)\n\ccABILITY : \ciAmmo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+	}
+	if(PlayerClass(PlayerNumber())==6) //Teleporter
+	{
+		HudMessage(s:"\ccCLASS : \cuTeleporter\n\n\ccWEAPONS : \crAutomatic-Relocation Transmission Rifle\n\ccABILITY : \ciRadiation Shield \cc( \cdNo melty-melty! \cc)\n\ccABILITY : \ciAmmo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+	}
+	if(PlayerClass(PlayerNumber())==7) //Hunter
+	{
+		HudMessage(s:"\ccCLASS : \ckHunter\n\n\ccWEAPONS : \crCombat Shotgun \cc, \crRapid-Fire Chaingun\n\ccABILITY : \ciAmmo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+	}
+	if(PlayerClass(PlayerNumber())==8) //Scouter
+	{
+		HudMessage(s:"\ccCLASS : \ckScouter\n\n\ccWEAPONS : \crRail Pistol \cc, \crCombat Knife\n\ccABILITY : \ciRadar \cc( \cdLocate Hiders within a short radius \cc)\n\ccABILITY : \ciJetpack \cc( \cdDouble-Jump to enable \cc)\n\ccABILITY : \ciAmmo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+	}
+	if(PlayerClass(PlayerNumber())==9) //Berserker
+	{
+		HudMessage(s:"\ccCLASS : \ckBerserker\n\n\ccWEAPONS : \crMighty Fists\n\ccABILITY : \ciDrug-Induced Insane Speed \cc( \cdRun Around! \cc)\n\ccABILITY : \ciScream Loudly \cc( \cdAAAAAAAHHHHHHHHH \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+	}
+	if(PlayerClass(PlayerNumber())==10) //Terminator
+	{
+		HudMessage(s:"\ccCLASS : \ckTerminator\n\n\ccWEAPONS : \crPlasma Rifle \cc, \crFragmentation Grenades\n\ccABILITY : \ciGrenade Throw Strength \cc( \cdHold Down Fire Button To Charge \cc)\n\ccABILITY : \ciPlasma Rifle Ammo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+	}
+}
+
+Script 110 (void)
+//Health Regen Script
+{
+	LocalAmbientSound("misc/i_pkup",127);
+	GiveInventory("HSRegen",2);
+	fadeto(0, 0, 255, 0.03, 0.0);
+	Delay(5);
+	fadeto(0, 0, 255, 0.0, 0.0);
+}
+
+Script 111 death
+//Should change the TID of anyone who freakin' died.
+{
+	Thing_ChangeTID(1000+PlayerNumber(), 1050+PlayerNumber());
+}
+
+/* ************************************************** */
+/*  END CLASS SPECIFIC SHIT ; START COMPLICATED SHIT  */
+/* ************************************************** */
+
+
+function int FixedDistance (int tid1, int tid2)
+{
+	int len;
+	int y = getactory(tid1) - getactory(tid2);
+	int x = getactorx(tid1) - getactorx(tid2);
+	int ang = vectorangle(x,y);
+	if(((ang+0.125)%0.5) > 0.25) len = fixeddiv(y, sin(ang));
+	else len = fixeddiv(x, cos(ang));
+	return len;
+}
+
+function int GetTargetAngle (int tid1, int tid2)
+{
+    int x, y;
+    x = GetActorX(tid2) - GetActorX(tid1);
+    y = GetActorY(tid2) - GetActorY(tid1);
+    return VectorAngle(x, y);
+}
+
+function int abs (int x)
+{
+    if (x < 0)
+        return -x;
+
+    return x;
+}
+
+#define ASPECT_4_3 1.3
+#define ASPECT_5_4 1.25
+#define ASPECT_16_9 1.7
+#define ASPECT_16_10 1.6
+
+function int getaspectratio(void)
+{
+	int width = getcvar("vid_defwidth");
+	int height = getcvar("vid_defheight");
+	int nowidescreen = getcvar("vid_nowidescreen");
+	int tft = getcvar("vid_tft");
+	if(nowidescreen)
+	{
+		if(!tft)
+			return ASPECT_4_3;
+		if(fixedmul(height<<16, fixeddiv(5.0, 4.0)) == width<<16)
+			return ASPECT_5_4;
+		else
+			return ASPECT_4_3;
+	}
+	if(abs((abs(fixedmul(height<<16, fixeddiv(16.0, 9.0)))>>16) - width) < 10)
+	{
+		return ASPECT_16_9;
+	}
+	if(abs((abs(fixedmul(height<<16, fixeddiv(16.0, 10.0)))>>16) - width) < 60)
+	{
+		if((width == 320 && height == 200) || (width == 640 && height == 400))
+			return ASPECT_4_3;
+		return ASPECT_16_10;
+	}
+	if(fixedmul(height<<16, fixeddiv(5.0, 4.0))>>16 == width && tft)
+	{
+		return ASPECT_5_4;
+	}
+	return ASPECT_4_3;
+}
+
+Script 117 (void) clientside
+//Radar for Scouter. Detection radius range is 1024 units by default, fine tuned to 1/2: 512 units
+{
+	if(consoleplayernumber() != playernumber()) terminate;
+	radarteam[playernumber()]=playerteam();
+	delay(1);
+	if(PlayerClass(PlayerNumber())==7) //Alive Scouter
+	{
+		int P,PT,PN,PX,PY,PD,PA;
+		SetHudSize(640,400,1);
+		while (GetActorProperty(1000 + PlayerNumber(),APROP_Health) > 0 && GetCVar("hns_togglevanish")==1)
+		{
+			P=1000; PT=0; PN=PlayerNumber();
+			while (P<1000+MAXPLAYERS)
+			{
+				PD=(fixeddistance(0,P) >> 20);
+				if ((PD <= 64 * 1/2) && (GetActorProperty(P,APROP_Health) > 0))
+				{
+					PA=(((16384 + GetActorAngle(0) - ((114688 + 16384 + GetTargetAngle(0,P)) % 65536) + 65536) % 65536));
+					PX=((cos(PA) * PD) * 2/1 >> 16);
+					PY=((sin(PA) * PD) * 2/1 >> 16);
+					//Aspect Ratio Correction Block for 4:3
+					if(GetAspectRatio() == ASPECT_4_3 && GetCVar("hns_showradar")==1)
+					{
+						SetFont("HudRadar");
+						HudMessage(s:"A"; HUDMSG_FADEOUT, 3000, CR_UNTRANSLATED, 561.0, 79.0, 5.0, 1.0);
+						if(radarteam[PT]==1 && PN != PT)
+						{
+							SetFont("RADAB0");
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (569.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+						}else if(radarteam[PT]==0 && PN != PT){
+							if(GetActorVelX(P) != 0 || GetActorVelY(P) != 0 || PlayerClass(PT) == 1){
+								SetFont("RADAC0");
+								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (569.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+							}
+						}else if(radarteam[PT]!=0){
+							SetFont("RADBA0");
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (569.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+						}
+					}
+					//Aspect Ratio Correction Block for 5:4
+					if(GetAspectRatio() == ASPECT_5_4 && GetCVar("hns_showradar")==1)
+					{
+						SetFont("HudRadar");
+						HudMessage(s:"A"; HUDMSG_FADEOUT, 3000, CR_UNTRANSLATED, 562.0, 66.0, 5.0, 1.0);
+						if(radarteam[PT]==1 && PN != PT)
+						{
+							SetFont("RADAB0");
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (570.0 - (PX * 1.0)), (58.0 - (PY * 1.0)), 1.0, 1.0);
+						}else if(radarteam[PT]==0 && PN != PT){
+							if(GetActorVelX(P) != 0 || GetActorVelY(P) != 0 || PlayerClass(PT) == 1){
+								SetFont("RADAC0");
+								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (570.0 - (PX * 1.0)), (58.0 - (PY * 1.0)), 1.0, 1.0);
+							}
+						}else if(radarteam[PT]!=0){
+							SetFont("RADBA0");
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (570.0 - (PX * 1.0)), (58.0 - (PY * 1.0)), 1.0, 1.0);
+						}
+					}
+					//Aspect Ratio Correction Block for 16:9
+					if(GetAspectRatio() == ASPECT_16_9 && GetCVar("hns_showradar")==1)
+					{
+						SetFont("HudRadar");
+						HudMessage(s:"A"; HUDMSG_FADEOUT, 3000, CR_UNTRANSLATED, 668.0, 79.0, 5.0, 1.0);
+						if(radarteam[PT]==1 && PN != PT)
+						{
+							SetFont("RADAB0");
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (676.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+						}else if(radarteam[PT]==0 && PN != PT){
+							if(GetActorVelX(P) != 0 || GetActorVelY(P) != 0 || PlayerClass(PT) == 1){
+								SetFont("RADAC0");
+								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (676.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+							}
+						}else if(radarteam[PT]!=0){
+							SetFont("RADBA0");
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (676.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+						}
+					}
+					//Aspect Ratio Correction Block for 16:10
+					if(GetAspectRatio() == ASPECT_16_10 && GetCVar("hns_showradar")==1)
+					{
+						SetFont("HudRadar");
+						HudMessage(s:"A"; HUDMSG_FADEOUT, 3000, CR_UNTRANSLATED, 625.0, 79.0, 5.0, 1.0);
+						if(radarteam[PT]==1 && PN != PT)
+						{
+							SetFont("RADAB0");
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (633.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+						}else if(radarteam[PT]==0 && PN != PT){
+							if(GetActorVelX(P) != 0 || GetActorVelY(P) != 0 || PlayerClass(PT) == 1){
+								SetFont("RADAC0");
+								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (633.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+							}
+						}else if(radarteam[PT]!=0){
+							SetFont("RADBA0");
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (633.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+						}
+					}
+				}
+				P++;
+				PT++;
+			}
+			if(GetCVar("hns_showradar")==1)LocalAmbientSound("Radar",128);
+			delay(175);
+		}
+	}
+}
+
+Script 118 (void) clientside
+//Jumpin Jetpacks Lots of notes cause this shit confuses The Xen.
+{
+	if(consoleplayernumber() != playernumber()) terminate;
+
+	int HnSVariable;
+	int HnSVariabl3;
+	if(PlayerClass(PlayerNumber())==7) //Scouter check
+	{
+		while (GetActorProperty(1000 + PlayerNumber(),APROP_Health) > 0)
+		{
+			buttons = GetPlayerInput(-1, INPUT_BUTTONS);
+			nobuttons = GetPlayerInput(-1, INPUT_OLDBUTTONS);
+			if (buttons & BT_JUMP)
+			{
+				if (nobuttons & BT_JUMP)
+				{
+					if (nobuttons & BT_ATTACK && HnSVariable == 1)
+					{
+						RequestScriptpuke(103, 1, 0, 20);
+						//This is what happens when you hold down the fire button. Basically for fuel bullshit.
+					}
+					if (buttons & BT_ATTACK && HnSVariable == 1)
+					{
+						RequestScriptpuke(103, 1, 0, 15);
+						//If our great jetpack champion fires and changes his state, he is promptly reverted back so the jetpack flames and smoke don't vanish!
+					}
+				}
+				else
+				{
+					if ((GetActorZ(0) - GetActorFloorZ(0)) > 24.0 && (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0))
+					{
+						HnSVariable = 1;
+						RequestScriptpuke(103, 1, 0, 5);
+						//If the player presses Jump while at a reasonable height and isn't DEAD, their jetpack kicks in!
+					}
+				}
+			}
+			else
+			{
+				if (nobuttons & BT_JUMP && HnSVariable == 1)
+				{
+					HnSVariable = 0;
+						RequestScriptpuke(103, 0, 1, 3);
+					//Release the Jump button and down to Earth you go!
+				}
+				else
+				{
+					//And do absolutely nothing while you're not pressing Jump at all!
+				}
+			}
+		delay(1);
+		}
+	}
+	if(PlayerClass(PlayerNumber()) < 6) //Hider check
+	{
+		while (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0)
+		{
+			while (isVanished(1000 + PlayerNumber()) == true)
+			{
+				TakeActorInventory(PlayerNumber() + 1000, "Vanishing", 1);
+				if (CheckActorInventory(1000 + PlayerNumber(), "Vanishing") == 0)
+				{
+					ACS_NamedExecuteAlways("HNS_NoVanish", 0);
+				}
+				delay(15);
+			}
+			buttons = GetPlayerInput(-1, INPUT_BUTTONS);
+			nobuttons = GetPlayerInput(-1, INPUT_OLDBUTTONS);
+				//For people with running on
+				if (GetCVar("CL_Run")==1 && isVanished(1000 + PlayerNumber()) == true)
+				{
+					if (HnSVariabl3 == 0) { HnSVariabl3 = 2; }
+					if (buttons & BT_SPEED)
+					{
+						if (nobuttons & BT_SPEED)
+							{
+								//Continue to be walking invisibly~
+								if (HnSVariabl3 == 1)
+								{
+									HnSVariabl3 = 2;
+									RequestScriptpuke(103, 0, 1, 8);
+									//Unless you transition from walking while holding down shift, thena you go invisible.
+								}
+							}
+							else
+							{
+								if (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0)
+								{
+									HnSVariable = 1;
+									RequestScriptpuke(103, 0, 1, 8);
+									//Become invisible when walking.
+								}
+							}
+					}
+					else if (buttons & (BT_FORWARD | BT_BACK | BT_MOVELEFT | BT_MOVERIGHT | BT_ATTACK))
+					{
+						if (nobuttons & (BT_FORWARD | BT_BACK | BT_MOVELEFT | BT_MOVERIGHT | BT_ATTACK))
+						{
+							//Stay visible while holding keys down.
+							if (HnSVariable == 1)
+							{
+								HnSVariable = 0;
+								RequestScriptpuke(103, 1, 0, 9);
+								//Become visible if going from walking to running!
+							}
+							if (HnSVariabl3 == 1)
+							{
+								HnSVariable = 0;
+								HnSVariabl3 = 2;
+								RequestScriptpuke(103, 1, 0, 9);
+								//Toggling CL_Run won't get you very far.
+							}
+						}
+						else
+						{
+							if (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0)
+							{
+								HnSVariable = 0;
+								HnSVariabl3 = 2;
+								RequestScriptpuke(103, 1, 0, 9);
+								//If the player isn't dead and is running around turn visible!
+							}
+						}
+					}
+					else 
+					{
+						if (nobuttons & (BT_FORWARD | BT_BACK | BT_MOVELEFT | BT_MOVERIGHT | BT_ATTACK))
+						{
+							RequestScriptpuke(103, 0, 1, 8);
+							//Release the movement keys and you are the invisible man.
+						}
+						else
+						{
+							//And do absolutely nothing while you're not moving at all!
+						}
+					}
+				}
+				if (GetCVar("CL_Run")==0 && isVanished(1000 + PlayerNumber()) == true)
+				//For people with running off (however few there are!)
+				{
+				if (HnSVariabl3 == 0) { HnSVariabl3 = 1; }
+					if (buttons & BT_SPEED)
+					{
+						if (nobuttons & BT_SPEED)
+						{
+							//Continue to be running around invisible...Unless...
+							if (HnSVariabl3 == 2)
+							{
+								HnSVariabl3 = 1;
+								RequestScriptpuke(103, 1, 0, 9);
+								//Unless you transition from running while holding down shift, then you stay visible.
+							}
+						}
+						else
+						{
+							if (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0)
+							{
+								HnSVariable = 1;
+								RequestScriptpuke(103, 1, 0, 9);
+								//Turn visible while running!
+							}
+						}
+					}
+					else if (buttons & (BT_FORWARD | BT_BACK | BT_MOVELEFT | BT_MOVERIGHT | BT_ATTACK))
+					{
+						if (nobuttons & (BT_FORWARD | BT_BACK | BT_MOVELEFT | BT_MOVERIGHT | BT_ATTACK))
+						{
+							//Keep walking invisibly when the movement keys are held down.
+							if (HnSVariable == 1)
+							{
+								HnSVariable = 0;
+								RequestScriptpuke(103, 0, 1, 8);
+								//Start walking invisibly if going from running to walking.
+							}
+							if (HnSVariabl3 == 2)
+							{
+								HnSVariable = 0;
+								HnSVariabl3 = 1;
+								RequestScriptpuke(103, 0, 1, 8);
+								//Toggling CL_Run won't get you very far.
+							}
+						}
+						else
+						{
+							if (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0)
+							{
+								HnSVariable = 0;
+								HnSVariabl3 = 1;
+								RequestScriptpuke(103, 0, 1, 8);
+								//If the player isn't dead and is walking around then don't turn visible.
+							}
+						}
+					}
+					else 
+					{
+						if (nobuttons & (BT_FORWARD | BT_BACK | BT_MOVELEFT | BT_MOVERIGHT | BT_ATTACK | BT_SPEED))
+						{
+							RequestScriptpuke(103, 0, 1, 8);
+							//Release the movement keys and you are the invisible man.
+						}
+						else
+						{
+							//And do absolutely nothing while you're not moving at all!
+						}
+					}
+				}
+				//print(s:"running");
+			delay(1);
+		}
+	}
+}
+
+Script 119 (void)
+//Set a reduced speed for the jetpacking player while enabling use of his jetpack.
+{
+	SetActorProperty(0, APROP_Speed, 0.75);
+}
+
+Script 120 (void)
+//After he's done jetpacking, give him back his original speed.
+{
+	SetActorProperty(0, APROP_Speed, 1.00);
+}
+
+
+function bool isVanished(int pNumber)
+{	
+	if (GetActorProperty(pNumber, APROP_Alpha) < 1.0)
+	{
+		return true;
+	}
+		return false;
+}
+

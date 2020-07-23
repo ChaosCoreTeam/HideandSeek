@@ -1,0 +1,151 @@
+{
+name = "\cc[HnS]\cuBlazer"
+script = DFULTBOT
+chatlump = Chatfiles/blazer.txt
+gender = male
+color = "00 00 00"
+railcolor = "black"
+skin = "base"
+class = "blazer"
+revealed = true
+chatfrequency = 25
+accuracy = 4
+intelect = 4
+evade = 4
+anticipation = 4
+reactiontime = 4
+perception = 4
+} 
+
+{
+name = "\cc[HnS]\cuVanisher"
+script = DFULTBOT
+chatlump = Chatfiles/vanisher.txt
+gender = male
+color = "00 00 00"
+railcolor = "black"
+skin = "base"
+class = "vanisher"
+revealed = true
+chatfrequency = 25
+accuracy = 4
+intelect = 4
+evade = 4
+anticipation = 4
+reactiontime = 4
+perception = 4
+} 
+
+{
+name = "\cc[HnS]\cuTeleporter"
+script = DFULTBOT
+chatlump = Chatfiles/teleporter.txt
+gender = male
+color = "00 00 00"
+railcolor = "black"
+skin = "base"
+class = "teleporter"
+revealed = true
+chatfrequency = 25
+accuracy = 4
+intelect = 4
+evade = 4
+anticipation = 4
+reactiontime = 4
+perception = 4
+} 
+
+{
+name = "\cc[HnS]\cuRocketeer"
+script = DFULTBOT
+chatlump = Chatfiles/rocketeer.txt
+gender = male
+color = "00 00 00"
+railcolor = "black"
+skin = "base"
+class = "rocketeer"
+revealed = true
+chatfrequency = 25
+accuracy = 4
+intelect = 4
+evade = 4
+anticipation = 4
+reactiontime = 4
+perception = 4
+} 
+
+{
+name = "\cc[HnS]\cfScouter"
+script = DFULTBOT
+chatlump = Chatfiles/scouter.txt
+gender = male
+color = "FF FF 00"
+railcolor = "gold"
+skin = "base"
+class = "scouter"
+revealed = true
+chatfrequency = 25
+accuracy = 4
+intelect = 4
+evade = 4
+anticipation = 4
+reactiontime = 4
+perception = 4
+} 
+
+{
+name = "\cc[HnS]\cfHunter"
+script = DFULTBOT
+chatlump = Chatfiles/hunter.txt
+gender = male
+color = "FF FF 00"
+railcolor = "gold"
+skin = "base"
+class = "hunter"
+revealed = true
+chatfrequency = 25
+accuracy = 4
+intelect = 4
+evade = 4
+anticipation = 4
+reactiontime = 4
+perception = 4
+} 
+
+{
+name = "\cc[HnS]\cfTerminator"
+script = DFULTBOT
+chatlump = Chatfiles/terminator.txt
+gender = male
+color = "FF FF 00"
+railcolor = "gold"
+skin = "base"
+class = "terminator"
+revealed = true
+chatfrequency = 25
+accuracy = 4
+intelect = 4
+evade = 4
+anticipation = 4
+reactiontime = 4
+perception = 4
+} 
+
+{
+name = "\cc[HnS]\cfBerserker"
+script = DFULTBOT
+chatlump = Chatfiles/berserker.txt
+gender = male
+color = "FF FF 00"
+railcolor = "gold"
+skin = "base"
+class = "berserker"
+revealed = true
+chatfrequency = 25
+accuracy = 4
+intelect = 4
+evade = 4
+anticipation = 4
+reactiontime = 4
+perception = 4
+} 

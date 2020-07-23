@@ -1,0 +1,51 @@
+map hns01 "Underground Storage Facility"
+next hns02
+music d_hns01
+sky1 sky1 0.1
+
+map hns02 "Stormy Night"
+next hns03
+music d_hns02
+sky1 sky1 0.1
+
+map hns03 "December Everyday"
+next hns04
+music d_hns03
+sky1 stsky9 0.1
+
+map hns04 "Petrified City"
+next hns05
+music d_hns04
+sky1 tntsky 0.0
+
+map hns05 "Hell's Atrophy"
+next hns06
+music d_hns05
+sky1 tntsky 0.0
+
+map hns06 "Hazardous Factory"
+next hns07
+music d_hns06
+sky1 stsky5 0.2
+
+map hns07 "Construction Yard"
+next hns08
+music d_hns07
+sky1 stsky5 0.2
+clipmidtextures
+
+map hns08 "Capt.J3's City"
+next hns09
+music d_hns08
+sky1 stsky9 0.1
+
+
+map hns09 "Samara"
+next hns10
+music d_hns09
+sky1 stsky9 0.0
+
+map hns10 "Strife Town"
+next hns01
+music d_hns10
+sky1 stsky14 0.0

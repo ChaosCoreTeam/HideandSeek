@@ -1,0 +1,45 @@
+[IntroStrings]
+"Can you keep up?"
+"Let's do this!"
+"Bring it on."
+
+[RareRoamingStrings]
+"Teleporter is a cocky dick."
+"Too bad these rockets can't do damage..."
+"So, where's a good spot where I can rocketjump to?"
+"I hate guns. Explosives are the way to go."
+
+[FragStrings]
+"Hahahaha!"
+"You suck, boy."
+
+[KilledStrings]
+"Shit."
+"I need more armor next time."
+"Why didn't anyone tell me they were going to attack me?"
+"Fucking jerk."
+
+[RoamingStrings]
+"Don't find me!"
+"Hey if you hear a rocket launcher go off, ignore it, please."
+"Maybe I can push you away if you find me."
+"Terminator is probably a girl."
+
+[EnragedStrings]
+"ARGH!!!!"
+"FUCK OFF!!!!"
+
+[DemoralizedStrings]
+"Stop it!"
+"Okay, so you're good. What of it?"
+
+[WinStrings]
+"Can't catch me, son!"
+"Maybe next time, you should try giving up to save yourself the trouble."
+"Hahaha, loser."
+"Take that!"
+
+[LoseStrings]
+"That's not fair."
+"Shut the \cgFUCK \c-up, Blazer!"
+"Fucking idiots, you got us all killed!

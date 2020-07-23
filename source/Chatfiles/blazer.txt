@@ -1,0 +1,48 @@
+[IntroStrings]
+"Hah, you'll never catch me!"
+"Going for the checkered flag!"
+"Let the race begin!"
+"Hey there. You ready to lose?"
+"You can't stop me!"
+"I welcome you to try and stop me."
+
+[RareRoamingStrings]
+"I shouldn't have taken those 'roids..."
+"Delicious gibs."
+"I need my doctor. These drugs aren't makin' me go fast enough!"
+"Vanisher is a pussy."
+
+[FragStrings]
+"Holy damn! I killed someone without even trying!"
+"Haha, loser!"
+
+[KilledStrings]
+"You caught me...? No one ever catches The Blazer!!!!!"
+"Oh god damnit."
+"Guess that wasn't a good spot to hide."
+"I should run instead of hide, next time."
+
+[RoamingStrings]
+"I want to be like The Flash someday."
+"Zoom!"
+"Go speed racer go!"
+"Should I slow down?"
+"I've got a need for speed!"
+
+[EnragedStrings]
+"STOP FUCKING FOLLOWING ME!"
+
+[DemoralizedStrings]
+"Can't you just leave an old racer alone?"
+"I'll win next time!"
+"I blame all of this on Teleporter..."
+
+[WinStrings]
+"We ran circles around 'em, boys!"
+"#1"
+"Haha, need a pitstop to catch your breath?"
+
+[LoseStrings]
+"Guess I'll have to open up my Turbosphere..."
+"Damn."
+"I had a good run."

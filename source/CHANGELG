@@ -1,0 +1,156 @@
+Version 1.5.1 (Early Alpha Build):
+* Revamped Berserker with new Sprites, Sounds, and Decorate (Agaures, finalized by RoSKing)
+
+Catastrophe Fixes:
+* 64 Player support.
+* All cvars have been moved to CVARINFO.
+* Because of the above, all cvars have the "hns_" prefix now. See the CVARINFO file for all of them.
+* Removed all instances of console command.
+* Added a new command called "setup", run with with rcon to set all dmflags for hns. Check the alias in KEYCONF if you need to change flags.
+* Properly clientsided a bunch of scripts
+* No longer messes up the players settings (ie forcing hud_scale)
+* No more ghost players when dying
+
+Version 1 (Final):
+* Finished a spankin' set of maps, HNS01 to HNS10, that are specifically designed for HNS play! You can still play any other map with HNS, too!
+* Created a new method for the Vanisher fading that doesn't involve A_FadeOut, which seemed to be the cause of the crashes.
+* Dying, respawning and then jetpacking as a Scouter no longer 'resurrects' your corpse.
+* Fine-tuned the Rocketeer's rockets to behave closer to the Doom rockets.
+* Tweaked the Hunter's shotgun to be slightly more powerful but with longer firing delay.
+* Buffed the Vanisher's fade slightly while also reducing the radius of the Radar, balancing the relationship between the two.
+* Adjusted the jump heights for various classes.
+* Reduced the Rocketeer's total rockets to 25.
+* Fixed an exploit in the Berserker scream where a player could press attack and the scream would not trigger.
+* Fixed several potential expoits in the Berserker and Vanisher coding that could be triggered by toggling cl_run.
+* Added an option in the controls menu to let you switch between the new Berserker scream and the old one.
+* We've started on implementing crouching sprites for various classes! Hopefully we'll get this done sometime. (TODO: Vanisher, Teleporter, Terminator (both weapons), Scouter (both weapons))
+* Started implementing sprites for classes that show their currently equipped weapon. Hopefully we'll get this done sometime. (TODO: Scouter Knife, Terminator Grenade)
+
+Version 1 (Core 2):
+* Made several big scripts clientside so hopefully we won't have crashes out the ass anymore.
+* Added an option in the controls menu to bind a key to a dummy mod-specific CVAR (cl_showradar) to allow users to toggle the radar on and off.
+* Fixed aspect ratio positioning of Scouter's Radar in an online setting.
+* Scouter's Radar will now not detect Hiders that are standing still, except for the Vanisher, whose cloaking field gets detected all the time.
+* Teleporter's gun now has significantly less firing delay, as well as the projectile being invisible and hopefully being able to maneuver through tight spaces better.
+* Created an incremental bar for terminator grenade throw strength and jetpack fuel.
+* Scouter's Jetpack has a finite amount of fuel that recharges like other ammo does.
+* Scouter is now 'bright' when using his Jetpack.
+* Made the Berserker Scream stop when standing still.
+* Hunter and Scouter's recharge functions improved so that multiple types of ammo (or in Scouters case, ammo + fuel) can recharge at once.
+* Vanisher now moves at standard Doomguy speed again.
+* Tweaked the Vanisher's visibility levels.
+* Tweaked the Scouter's Knife attack time.
+* Gave the Teleporter's sprites and gun sprites a fresh coat of paint.
+* Fixed the jetpack 'jumpiness' and made it more responsive.
+* Fixed the 'Infinite Jetpack'.
+* Done a few little graphical tweaks to the hud.
+* Made the hud scale correctly, well...hopefully.
+* Made it so player names don't display when you place the crosshair over them.
+
+Version 1 (Core):
+* New HNS-only map created by HeavenWraith! This map occupies the slot HNS04 and is our first venture into mod-specific maps. Give it testing!
+* New graphics for the titlepic, credit screen, in-game help screen (F1), and intermission screens, including custom music!
+* New custom-made full-screen HUD based off the one from Ultimate Simplicity! Thank Agent Spork for his kindness! (The standard status bar has new behavior as well)
+* New sprites and sounds for many weapons, featuring new designs as well as smoother animation.
+* Along with the new HUD comes a brand new tool, the Team Radar! This is exclusive to the Scouter, and lets him briefly locate within a short radius where both teammates and enemies are.
+* Scouter is given a jetpack instead an abnormally high jump. No altfire shenanigans here, simply hit jump button again while at the peak of your normal jump!
+* Additional and better optimized gore effects for those who love gibs. (Who doesn't?!)
+* Rocketeer, Scouter and Terminator have new sprites.
+* Rocketeer's rocket explosions can now push away Seekers.
+* Teleporter now only loses a Teleport Charge (read: ammo) if the teleportation was successful.
+* Blazer now has a turbosphere-esque fade when he moves.
+* Buffed Vanisher's invisibility slightly at the cost of speed, as well as added a fade that appears when he walks, making him significantly more visible as he moves.
+* Berserker, along with having a much cooler animation for his...Ahem, berserkering, now attacks at a faster rate, and it's easier to time his punches. He also um, screams louder.
+* Scouter's Knife has been completely revamped and redone.
+* Scouter's Pistol has been modified to become a Rail Pistol. Rail Pistol features a low damage railgun shot that helps teammates identify where he is firing to locate Hiders.
+* Removed the Scouter's light amplification goggles in favor of his Team Radar advantage.
+* Rocketeer now gains more momentum when rocket jumping.
+* Terminator's Grenade now explodes after three bounces, bounces on water, and can hurt the Terminator.
+* Teleporter Projectile now explodes when it hits the sky, teleporting the player, as well as some tweaks to hopefully make it more reliable.
+* Teleporter now has a permanent radiation suit.
+* Improved method of ammo and health regeneration.
+* Improved footstep collision detection.
+* The timer is even more flexible than before, processing floating value timelimits, instead of only integers.
+~ For this reason, you may add '.18' on the end of your timelimit value, as is recommended to compensate for the 10 second delay in the official maps.
+* Removed anti-cheating scripts, mostly because I am tired of changing clients' settings. Instead, server owners will have to rely on some CVARs to dictate exactly what settings must be maintained. Recommended server settings as of Version 1:
+~ SV_UseTeamStartsInDM 1
+~ SV_ForceAlpha 1
+~ SV_ForceGLDefaults 1
+~ SV_NoCrouch 1
+
+Beta 8:
+* Health Regen now correctly displays the right health information in an online setting
+* Footstep effect now is heard correctly online
+* Tuned the anti-cheat script to further hinder those who wanna be retarded and not play the mod the way it should be
+* Fixed a bug that would make the vanisher less transparent every time he stood still
+* Increased vertical spread by 100% and horizontal spread by 15% on Hunter's Shotgun
+* Increased damage of Hunter's Chaingun by 33%
+* Increased damage of Scout's Knife by 15%
+
+Beta 7:
+* Gib effects now decay at a faster rate, but STOP CHOOSING MAPS WITH 4 SPAWNS FOR FUCKS SAKE (There will be an Enhanced Gore addon patch later!)
+* Method of hacking the Vanisher's display of translucency now prevented. Nice try.
+
+Beta 6:
+* Added CHANGELG and CREDINFO lumps to the pk3!
+* New graphics for the status bar!
+* New blood, gore, bullet and other effects!
+* All Seeker classes except Berserker have movement sounds, like footsteps and liquid splashes
+* Gave minor health regen to all classes, 2hp every second while standing still up to 50hp
+* Gave green armor to all Seeker classes
+* Gave the Scouter a pair of Light Amplification Goggles on spawn, lasts 2 minutes
+* Rocketeer now has 50 rockets, regens 5 rockets per second per standing still
+* Altered invisibility type of Vanisher class, instead of Translucent it is now Additive
+* Fixed radius damage of Terminator's Grenades
+* Increased damage of Terminator's Grenades by 50%
+* Increased speed of Blazer's movement by 10%, making it the fastest class
+* Increased speed of Teleporter class to normal speed
+* Increased Teleporter Gun projectile speed by 100%
+* Increased maximum Teleporter Gun ammo from 3 to 4
+* Increased Plasma Rifle projectile speed by 60%
+* Tightened Plasma Rifle spread by 50%
+
+Beta 5:
+* Reduced damage of Scout's Knife and Pistol by 20%
+* Reduced ammo usage of Scout's pistol from 4 bullets per shot to 2
+* Reduced max ammo of Terminator's Grenades to from 50 to 30
+* Increased damage of Terminator's Plasma Rifle by 25%
+* Added obituary for being killed by a Berserker
+
+Beta 4:
+* Brief descriptions of classes to appear when you are playing as a class, to help new players who haven't read the first post
+* Methods to eliminate cheating for finding Vanisher players unfairly
+* Updated Timer to fix a glitch where the Timer would refuse to display
+* Blazer and Vanisher now have a fist graphic so players can tell which class they're playing as better
+* Teleporter's Teleporter Gun now recharges faster
+* Terminator's Plasma Rifle now uses less ammo and recharges quicker
+* Terminator's Grenades now do not go through solid walls
+* Assigned team starts for Hiders (Blue Team Start) and Seekers (Red Team Start) for future maps
+* Chat bubble and console icon removed to better conceal talking Hiders
+
+Beta 3:
+* A new, updated timer that also displays color in the numbers to better help players realize just how much time is left
+* Hunter's Shotgun and Chaingun do more damage in exchange for more spread
+* Terminator's Grenades and Plasma Rifle do more damage
+* Hunter and Terminator now move faster
+* Jump heights corrected on all classes
+* Scout's Combat Knife now slices at a faster rate at a sacrifice of some damage, but does more damage overall
+* Scout's Pistol now does slightly less damage but is more accurate
+
+Beta 2:
+* Released to the public!
+* Teleporter given a fully-working, netplay-compatible Teleport Gun
+* Sprite changes to Hunter, Scout, Terminator, Rocketeer and Teleporter to reflect new changes
+* Terminator given a spread-fire Plasma Rifle and Fragmentation Grenades that player can adjust throw speed
+* Hunter given a Shotgun and Chaingun
+* Scouter given a Knife and Pistol
+* Chaingunner renamed to Scouter
+* Shotgunner renamed to Hunter
+* Plasma Marine renamed to Terminator
+* Speedy renamed to Blazer
+* Rocket Jumper renamed to Rocketeer
+* Invisibility renamed to Vanisher
+* Berserker given a scream sound when moving
+
+Beta 1:
+* Internal project started (NOTE FROM XEN: I dont know what to put here since I only got the project at this stage)

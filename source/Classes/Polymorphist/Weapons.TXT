@@ -1,0 +1,260 @@
+actor PolyShotgun : Weapon 22911
+{
+  Weapon.SelectionOrder 1200
+  Weapon.AmmoUse1 1
+  Weapon.AmmoUse2 1
+  Weapon.AmmoGive1 8
+  Weapon.AmmoGive2 1
+  Weapon.AmmoType1 "Shell"
+  Weapon.AmmoType2 "MorphAmmo"
+  +ALT_AMMO_OPTIONAL
+  Inventory.PickupMessage "You got the Winchester Yellowboy!"
+  Obituary "%o chewed on %k's yellowboy."
+  States
+  {
+  Ready:
+    WINC A 1 A_WeaponReady
+    Loop
+  Deselect:
+    WINC A 1 A_Lower
+    Loop
+  Select:
+    WINC A 1 A_Raise
+    Loop
+  Fire:
+    WINC A 3
+    WINC B 0 A_FireBullets (4, 4, 4, 12, "BulletPuff")
+    WINC B 0 A_PlayWeaponSound ("Polymorphist/Weapons/Fire")
+    WINC B 7 A_GunFlash
+    WINC CDEFGH 1
+    WINC I 0 A_Playsound ("Polymorphist/Weapons/Cock")
+    WINC IJKJI 2
+    WINC HGFEDC 1
+    WINC A 3
+    WINC A 7 A_ReFire
+    Goto Ready
+  AltFire:
+	WINC A 0 A_JumpIfNoAmmo("NoAmmo")
+	WINC A 0 A_GiveInventory("fireAlt", 1)
+    WINC A 7 A_GunFlash
+	Goto Ready
+	NoAmmo:
+	WINC A 0 A_PlayWeaponSound("Polymorphist/Abilities/Nopower")
+	WINC A 1 ACS_NamedExecute("poly_nopower")
+	Goto Ready
+  Flash:
+  	WHIT A 0 A_JumpIfInventory("fireAlt", 1, 3)
+    LAMZ A 3 Bright A_Light1
+    LAMZ B 4 Bright A_Light2
+	Goto LightDone
+	WHIT ABC 2 bright
+	WHIT A 0  A_PlayWeaponSound("Polymorphist/Abilities/Polymorph")
+	WHIT A 0  A_Jump(128,3)
+	WHIT A 0  A_FireCustomMissile("MorphShot2",0,1,0,4)
+	WHIT A 0  A_Jump(255,2)
+	WHIT A 0  A_FireCustomMissile("MorphShot3",0,1,0,4)
+	WHIT DE 2 bright
+	WHIT EFEF 1 bright
+	WHIT CBA 1 bright
+	WHIT A 0 A_TakeInventory("fireAlt", 1)
+    Goto LightDone
+  Spawn:
+    WHCE A -1
+    Stop
+  }
+}
+
+ACTOR fireAlt : Ammo
+{
+Inventory.Amount 0
+Inventory.MaxAmount 1
+States
+{
+Spawn:
+TNT1 A -1
+Loop
+}
+}
+
+ACTOR MorphAmmo : Ammo
+{
+    Inventory.Amount 2
+    Inventory.MaxAmount 2
+    Ammo.BackpackAmount 2
+    Ammo.BackpackMaxAmount 2
+    Inventory.PickupMessage "You obtained another charge of Polymorph"
+    Inventory.Icon PLSCA0
+    States
+    {
+    Spawn:
+       PLSC AAAAABBBBCCCCDDDDEEEEEDDCCBB 1 Bright
+       Loop
+    }
+}
+
+ACTOR MorphShot
+{
+    Radius 10
+    Height 10
+    Speed 25
+    Damage 0
+    Scale 0.5
+    PROJECTILE
+    RENDERSTYLE ADD
+    ALPHA 0.67
+    States
+    {
+    Spawn:
+       POLP ABCD 2 Bright
+       Loop
+    Death:
+       POLD ABCDEF 4 Bright
+       Stop
+    }
+}
+
+ACTOR MorphShot2 : EggFX
+{
+	Radius 10
+    Height 10
+    Speed 25
+    Scale 0.5
+	RENDERSTYLE ADD
+	ALPHA 0.67
+	Deathsound "Polymorphist/Abilities/Polymorph"
+	MorphProjectile.MorphStyle MRF_UNDOBYTOMEOFPOWER|MRF_UNDOBYCHAOSDEVICE
+	MorphProjectile.MorphFlash "ChickenShrinkSpawner"
+	MorphProjectile.UnMorphFlash "ChickenGrowSpawner"
+	States
+	{
+	Spawn:
+		POLP ABCD 2 Bright
+        Loop
+	Death:
+		POLD ABCD 4 Bright
+        Stop
+	}
+}
+
+ACTOR MorphShot3 : PorkFX
+{
+	Radius 10
+    Height 10
+    Speed 25
+    Scale 0.5
+	RENDERSTYLE ADD
+	ALPHA 0.67
+	Deathsound "Polymorphist/Abilities/Polymorph"
+	MorphProjectile.MorphFlash "PorkShrinkSpawner"
+	MorphProjectile.UnMorphFlash "PorkGrowSpawner"
+	States
+	{
+	Spawn:
+		POLP ABCD 2 Bright
+        Loop
+	Death:
+		POLD ABCD 4 Bright
+        Stop
+	}
+}
+//Pork FX=======================================================================
+Actor PorkShrinkSpawner
+{
++NOINTERACTION	+NOBLOCKMAP	+NOGRAVITY
+States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 AAAAA 1 A_SpawnItemEx("PorkShrinkFX")
+        Stop
+	}
+}
+
+Actor PorkShrinkFX : PorkShrinkSpawner
+{
+Scale 5
+Alpha .75
+States
+	{
+	Spawn:
+		TNT1 A 0
+		PIGY A 1 A_Fadeout
+		TNT1 A 0 A_SetScale(scaleX-.75)
+        Loop
+	}
+}
+
+Actor PorkGrowSpawner : PorkShrinkSpawner
+{
+States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_PlaySound("Polymorphist/Abilities/Unpolymorph")
+		TNT1 AAAAA 1 A_SpawnItemEx("PorkGrowFX")
+        Stop
+	}
+}
+
+Actor PorkGrowFX : PorkShrinkSpawner
+{
+Alpha .75
+States
+	{
+	Spawn:
+		TNT1 A 0
+		PIGY A 1 A_Fadeout
+		TNT1 A 0 A_SetScale(scaleX+.5)
+        Loop
+	}
+}
+//Chicken FX====================================================================
+Actor ChickenShrinkSpawner : PorkShrinkSpawner
+{
+States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 AAAAA 1 A_SpawnItemEx("ChickenShrinkFX")
+        Stop
+	}
+}
+
+Actor ChickenShrinkFX : PorkShrinkSpawner
+{
+Scale 5
+Alpha .6
+States
+	{
+	Spawn:
+		TNT1 A 0
+		CHKN A 1 A_Fadeout
+		TNT1 A 0 A_SetScale(scaleX-.5)
+        Loop
+	}
+}
+
+Actor ChickenGrowSpawner : PorkShrinkSpawner
+{
+States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_PlaySound("Polymorphist/Abilities/Unpolymorph")
+		TNT1 AAAAA 1 A_SpawnItemEx("ChickenGrowFX")
+        Stop
+	}
+}
+
+Actor ChickenGrowFX : PorkShrinkSpawner
+{
+Alpha .6
+States
+	{
+	Spawn:
+		TNT1 A 0
+		CHKN A 1 A_Fadeout
+		TNT1 A 0 A_SetScale(scaleX+.75)
+        Loop
+	}
+}

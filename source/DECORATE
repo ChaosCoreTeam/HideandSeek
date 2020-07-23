@@ -1,0 +1,43 @@
+#include "Classes/FunStuff.TXT"
+#include "Classes/Banshee/Banshee.TXT"
+#include "Classes/Banshee/Weapons.TXT"
+#include "Classes/Banshee/Abilities.TXT"
+#include "Classes/Blazer/Blazer.TXT"
+#include "Classes/Blazer/Abilities.TXT"
+#include "Classes/Guardian/Guardian.TXT"
+#include "Classes/Guardian/Shield.TXT"
+#include "Classes/Guardian/Abilities.TXT"
+#include "Classes/Illusionist/Illusionist.TXT"
+#include "Classes/Illusionist/Shrink.TXT"
+#include "Classes/Illusionist/Disguises.TXT"
+#include "Classes/Rocketeer/Rocketeer.TXT"
+#include "Classes/Rocketeer/Weapons.TXT"
+#include "Classes/Rocketeer/Abilities.TXT"
+#include "Classes/Polymorphist/Polymorphist.TXT"
+#include "Classes/Polymorphist/Weapons.TXT"
+#include "Classes/Polymorphist/Abilities.TXT"
+#include "Classes/Teleporter/Teleporter.TXT"
+#include "Classes/Teleporter/Weapons.TXT"
+#include "Classes/Teleporter/Abilities.TXT"
+#include "Classes/Hunter/Weapons.TXT"
+#include "Classes/Hunter/Abilities.TXT"
+#include "Classes/Hunter/Hunter.TXT"
+#include "Classes/Scouter/Scouter.TXT"
+#include "Classes/Scouter/Weapons.TXT"
+#include "Classes/Berserker/Berserker.TXT"
+#include "Classes/Berserker/ABILITIES.TXT"
+#include "Classes/Tactician/Tactician.TXT"
+#include "Classes/Tactician/Weapons.TXT"
+#include "Classes/Terminator/Terminator.TXT"
+#include "Classes/Vanishing.TXT"
+#include "Classes/AbilityItems.TXT"
+
+projectile Glass //Glass Shard
+{
+ SpawnNum 161
+ Sprite GLAS
+ Frames "ABCDE"
+ Radius 3
+ Height 6
+// DoomBounce
+}

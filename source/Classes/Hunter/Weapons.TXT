@@ -1,0 +1,81 @@
+ACTOR HunterShotgun : Weapon
+{
+  Game Doom
+  Weapon.SelectionOrder 700
+  Weapon.AmmoUse 1
+  Weapon.AmmoGive 8
+  Weapon.AmmoType "Shell"
+  Weapon.PreferredSkin "Shotgun Hunter"
+  Inventory.PickupMessage "Picked up a Hunter's Shotgun"
+  Obituary "%o was hunted down by %k's shotgun."
+  States
+  {
+  Ready:
+    SHTG A 1 A_WeaponReady
+    Loop
+  Deselect:
+    SHTG A 1 A_Lower
+    Loop
+  Select:
+    SHTG A 1 A_Raise
+    Loop
+  Fire:
+	SHTG A 2
+    SHTG A 0 A_FireBullets(8, 2, 10, 6, "BulletPuff")
+    SHTG A 0 A_PlaySoundEx("ShotgunFire", "Weapon")
+    SHTG A 5 A_GunFlash
+	SHTG BC 2
+	SHTG A 0 A_PlaySoundEx("ShotgunCock", "SoundSlot5")
+	SHTG DEFGFEDCB 2
+	SHTG A 2 A_ReFire
+	Goto Ready
+  Flash:
+    SHTF B 3 Bright A_Light1
+    SHTF A 2 Bright A_Light0
+    Goto LightDone
+  Spawn:
+    SHOT A -1
+    Stop
+  }
+}
+
+ACTOR HunterChaingun : Weapon
+{
+  obituary "%o was gunned down by %k's chaingun."
+  attacksound "ChaingunFire"
+  inventory.pickupmessage "You got the hunter's chaingun!"
+  weapon.selectionorder 1300
+  weapon.ammotype "Clip"
+  weapon.ammouse 1
+  weapon.ammogive 20
+  Weapon.PreferredSkin "Chaingun Hunter"
+  states
+  {
+  Ready:
+    CHGG A 1 A_WeaponReady
+    loop
+  Deselect: 
+    CHGG A 1 A_Lower
+    loop
+  Select:
+    CHGG A 1 A_Raise
+    loop
+  Fire:
+	CHGG A 0 A_FireBullets(1, 1, 1, 5, "BulletPuff")
+	CHGG A 1 A_GunFlash
+	CHGG BCD 1
+	CHGG A 1 A_Refire
+	CHGG B 2 A_Weaponready
+	CHGG C 3 A_Weaponready
+	CHGG D 3 A_Weaponready
+	Goto Ready
+  Flash:
+	CHGF A 2 Bright A_Light1
+	CHGF B 1 Bright A_Light1
+	TNT1 A 2 A_Light1
+	Goto LightDone
+  Spawn:
+    MGUN A -1
+    stop
+  }
+}

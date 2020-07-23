@@ -1,0 +1,71 @@
+ACTOR RocketeerClass : PlayerPawn
+{
+	Speed 1
+	Health 100
+	Radius 16
+	Height 56
+	Mass 100
+	PainChance 255
+	Player.ColorRange 112, 127
+	Player.DisplayName "Rocketeer"
+	Player.CrouchSprite "RKTC"
+	Player.SoundClass "Rocketeer"
+	player.startitem "NoDamageRocketLauncher", 1
+	player.startitem "NoDamageRocketAmmo", 25
+	player.startitem "Vanishing", 100
+	player.startitem "megasphere", 1
+	damagefactor "rocket", 0
+	Species "Hider"
+	limitedtoteam 0
+	+NOSKIN
+	States
+	{
+	Spawn:
+		RKTP A 0
+		RKTP A 35
+		RKTP A 0 A_JumpIf (health>=50, 2)
+		RKTP A 0 ACS_NamedExecute("regenHealth",0)
+		RKTP A 0 A_JumpIfInventory("NoDamageRocketAmmo", 0, "Spawn")
+		RKTP A 0 ACS_NamedExecute("rechargeWeapon",0,4)
+	Loop
+	See:
+		RKTP ABCD 6 
+	Goto Spawn
+	Missile:
+		RKTP E 12 
+	Goto Spawn
+	Melee:
+		RKTP F 6 BRIGHT
+	Goto Missile
+	Pain:
+		RKTP G 4 
+		RKTP G 4 A_Pain
+	Goto Spawn
+	Death:
+		RKTP H 10
+		RKTP I 10 A_PlayerScream
+		RKTP J 10 A_NoBlocking
+		RKTP KLM 10
+		RKTP N -1
+	Stop
+	XDeath:
+		PLAY O 0 A_Stop
+		RKTP O 5 A_SpawnItemEx ("HumanGibs",0,0,0,0,0,0,0,128)
+		BRSP O 0 A_SkullPop("BlueHeadGib")
+		RKTP P 5 A_XScream
+		RKTP Q 5 A_NoBlocking
+		RKTP RSTUV 5
+		RKTP W -1
+    Stop
+	FadeIn:
+		PLAY O 0 A_SetTranslucent(0.25, 1)
+	Goto Spawn
+	FadeOut:
+		PLAY O 0 A_SetTranslucent(0.15, 1)
+	Goto Spawn
+	Visible:
+		PLAY O 0 A_SetTranslucent(1, 0)
+	Goto Spawn
+	}
+}
+

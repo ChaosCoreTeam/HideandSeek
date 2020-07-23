@@ -1,0 +1,38 @@
+[IntroStrings]
+"Good luck!"
+"Let's see if you can keep up!"
+
+[RareRoamingStrings]
+"Beam me up, Scotty."
+"You know, when you teleport, it gets really cold for a split second."
+"Terminator scares me shitless. Something about robots, man..."
+
+[FragStrings]
+"Wow."
+
+[KilledStrings]
+"I wish this gun didn't have a delay."
+"Fuck 3 shots...I need more."
+"Now why didn't that teleport charge deploy?"
+
+[RoamingStrings]
+"I see you."
+"I wonder if I can make it to the top of those cliffs..."
+"Rocketeer has it easy, you know."
+
+[EnragedStrings]
+"Oof! Leave me alone!"
+
+[DemoralizedStrings]
+"Aww. Come on."
+
+[WinStrings]
+"Try to anticipate where I'm going to teleport next."
+"I'm the best."
+"Woo!"
+":)"
+
+[LoseStrings]
+"Oh, that wasn't good."
+"Jesus, guys. You suck."
+"I blame my team."

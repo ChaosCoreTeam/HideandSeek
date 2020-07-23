@@ -1,0 +1,45 @@
+[IntroStrings]
+"Let's go."
+"Time to hunt!"
+"Ready?"
+"Let's get 'em!"
+
+[RareRoamingStrings]
+"I really need to take a piss."
+"Damnit. I lost my medkit!"
+"Damn Terminator and his fancy grenades."
+
+[FragStrings]
+"Thought you could escape?"
+"Your time is over!"
+"Would have been more of a challenge if you had a weapon..."
+"Pathetic."
+
+[KilledStrings]
+"That was dumb of me."
+"I'm dead?!"
+"Hmph."
+
+[RoamingStrings]
+"Come out, come out, wherever you are."
+"Beware my guns, cretins."
+"I'll rip you to pieces when I find you, Vanisher."
+"They've got to be here somewhere."
+"Scouter, you got a fix?"
+
+[EnragedStrings]
+"#$*&(!#@&%^*$!&^#$^"
+
+[DemoralizedStrings]
+"Ugh."
+
+[WinStrings]
+"You can run, but you can't hide."
+"Try as you might, you'll never win."
+"I am undefeatable!"
+
+[LoseStrings]
+"Why is it we explode when we lose?"
+"Terminator doesn't explode when he loses..."
+"I got some blood on my guns! My own blood!!"
+"Oh, damn."

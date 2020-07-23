@@ -1,0 +1,177 @@
+#library "RADAR"
+#include "zcommon.acs"
+#define ALL_OF_IT 0x7FFFFFFF
+#define MAXPLAYERS 64 
+
+int radarteam[MAXPLAYERS];
+
+#define ASPECT_4_3 1.3
+#define ASPECT_5_4 1.25
+#define ASPECT_16_9 1.7
+#define ASPECT_16_10 1.6
+
+function int getaspectratio(void)
+{
+	int width = getcvar("vid_defwidth");
+	int height = getcvar("vid_defheight");
+	int nowidescreen = getcvar("vid_nowidescreen");
+	int tft = getcvar("vid_tft");
+	if(nowidescreen)
+	{
+		if(!tft)
+			return ASPECT_4_3;
+		if(fixedmul(height<<16, fixeddiv(5.0, 4.0)) == width<<16)
+			return ASPECT_5_4;
+		else
+			return ASPECT_4_3;
+	}
+	if(abs((abs(fixedmul(height<<16, fixeddiv(16.0, 9.0)))>>16) - width) < 10)
+	{
+		return ASPECT_16_9;
+	}
+	if(abs((abs(fixedmul(height<<16, fixeddiv(16.0, 10.0)))>>16) - width) < 60)
+	{
+		if((width == 320 && height == 200) || (width == 640 && height == 400))
+			return ASPECT_4_3;
+		return ASPECT_16_10;
+	}
+	if(fixedmul(height<<16, fixeddiv(5.0, 4.0))>>16 == width && tft)
+	{
+		return ASPECT_5_4;
+	}
+	return ASPECT_4_3;
+}
+
+Script "radarSetup" (void) clientside
+//Radar for Scouter. Detection radius range is 1024 units by default, fine tuned to 1/2: 512 units
+{
+	if(consoleplayernumber() != playernumber()) terminate;
+	radarteam[playernumber()]=playerteam();
+	delay(1);
+	if(PlayerClass(PlayerNumber())==5) //Alive Scouter
+	{
+		int P,PT,PN,PX,PY,PD,PA;
+		SetHudSize(640,480,1);
+		while (GetActorProperty(1000 + PlayerNumber(),APROP_Health) > 0 && GetCVar("hns_togglevanish")==1)
+		{
+			P=1000; PT=0; PN=PlayerNumber();
+			while (P<1000+MAXPLAYERS)
+			{
+				PD=(fixeddistance(0,P) >> 20);
+				if ((PD <= 64 * 1/2) && (GetActorProperty(P,APROP_Health) > 0))
+				{
+					PA=(((16384 + GetActorAngle(0) - ((114688 + 16384 + GetTargetAngle(0,P)) % 65536) + 65536) % 65536));
+					PX=((cos(PA) * PD) * 2/1 >> 16);
+					PY=((sin(PA) * PD) * 2/1 >> 16);
+					//Aspect Ratio Correction Block for 4:3
+					if(GetAspectRatio() == ASPECT_4_3 && GetCVar("hns_showradar")==1)
+					{
+						SetFont("HudRadar");
+						HudMessage(s:"A"; HUDMSG_FADEOUT, 3000, CR_UNTRANSLATED, 561.0, 79.0, 5.0, 1.0);
+						if(radarteam[PT]==1 && PN != PT)
+						{
+							SetFont("RADAB0");
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (569.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+						}else if(radarteam[PT]==0 && PN != PT){
+							if(GetActorVelX(P) != 0 || GetActorVelY(P) != 0 || PlayerClass(PT) == 1){
+								SetFont("RADAC0");
+								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (569.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+							}
+						}else if(radarteam[PT]!=0){
+							SetFont("RADBA0");
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (569.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+						}
+					}
+					//Aspect Ratio Correction Block for 5:4
+					if(GetAspectRatio() == ASPECT_5_4 && GetCVar("hns_showradar")==1)
+					{
+						SetFont("HudRadar");
+						HudMessage(s:"A"; HUDMSG_FADEOUT, 3000, CR_UNTRANSLATED, 562.0, 66.0, 5.0, 1.0);
+						if(radarteam[PT]==1 && PN != PT)
+						{
+							SetFont("RADAB0");
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (570.0 - (PX * 1.0)), (58.0 - (PY * 1.0)), 1.0, 1.0);
+						}else if(radarteam[PT]==0 && PN != PT){
+							if(GetActorVelX(P) != 0 || GetActorVelY(P) != 0 || PlayerClass(PT) == 1){
+								SetFont("RADAC0");
+								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (570.0 - (PX * 1.0)), (58.0 - (PY * 1.0)), 1.0, 1.0);
+							}
+						}else if(radarteam[PT]!=0){
+							SetFont("RADBA0");
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (570.0 - (PX * 1.0)), (58.0 - (PY * 1.0)), 1.0, 1.0);
+						}
+					}
+					//Aspect Ratio Correction Block for 16:9
+					if(GetAspectRatio() == ASPECT_16_9 && GetCVar("hns_showradar")==1)
+					{
+						SetFont("HudRadar");
+						HudMessage(s:"A"; HUDMSG_FADEOUT, 3000, CR_UNTRANSLATED, 668.0, 79.0, 5.0, 1.0);
+						if(radarteam[PT]==1 && PN != PT)
+						{
+							SetFont("RADAB0");
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (676.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+						}else if(radarteam[PT]==0 && PN != PT){
+							if(GetActorVelX(P) != 0 || GetActorVelY(P) != 0 || PlayerClass(PT) == 1){
+								SetFont("RADAC0");
+								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (676.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+							}
+						}else if(radarteam[PT]!=0){
+							SetFont("RADBA0");
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (676.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+						}
+					}
+					//Aspect Ratio Correction Block for 16:10
+					if(GetAspectRatio() == ASPECT_16_10 && GetCVar("hns_showradar")==1)
+					{
+						SetFont("HudRadar");
+						HudMessage(s:"A"; HUDMSG_FADEOUT, 3000, CR_UNTRANSLATED, 625.0, 79.0, 5.0, 1.0);
+						if(radarteam[PT]==1 && PN != PT)
+						{
+							SetFont("RADAB0");
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (633.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+						}else if(radarteam[PT]==0 && PN != PT){
+							if(GetActorVelX(P) != 0 || GetActorVelY(P) != 0 || PlayerClass(PT) == 1){
+								SetFont("RADAC0");
+								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (633.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+							}
+						}else if(radarteam[PT]!=0){
+							SetFont("RADBA0");
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (633.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+						}
+					}
+				}
+				P++;
+				PT++;
+			}
+			if(GetCVar("hns_showradar")==1)LocalAmbientSound("Radar",128);
+			delay(175);
+		}
+	}
+}
+
+function int FixedDistance (int tid1, int tid2)
+{
+	int len;
+	int y = getactory(tid1) - getactory(tid2);
+	int x = getactorx(tid1) - getactorx(tid2);
+	int ang = vectorangle(x,y);
+	if(((ang+0.125)%0.5) > 0.25) len = fixeddiv(y, sin(ang));
+	else len = fixeddiv(x, cos(ang));
+	return len;
+}
+
+function int GetTargetAngle (int tid1, int tid2)
+{
+    int x, y;
+    x = GetActorX(tid2) - GetActorX(tid1);
+    y = GetActorY(tid2) - GetActorY(tid1);
+    return VectorAngle(x, y);
+}
+
+function int abs (int x)
+{
+    if (x < 0)
+        return -x;
+
+    return x;
+}

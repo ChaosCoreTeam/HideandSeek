@@ -1,0 +1,15 @@
+//{
+//mapname = hns04
+//gamemode = teamlms
+//timelimit = 5.18
+//dmflags = 2643072
+//dmflags2 = 2097728
+//compatflags = 0
+//playerteam = "Seeking Team"
+//bot[0] = [HnS]Blazer
+//botteam[0] = "Hiding Team"
+//bot[1] = [HnS]Vanisher
+//botteam[1] = "Hiding Team"
+//bot[2] = [HnS]Berserker
+//botteam[2] = "Seeking Team"
+//}

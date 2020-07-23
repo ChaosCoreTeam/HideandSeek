@@ -1,0 +1,76 @@
+ACTOR BansheeClass : PlayerPawn
+{
+	Speed 1
+	Health 100
+	Radius 16
+	Height 56
+	Mass 100
+	PainChance 255
+	Player.ColorRange 112, 127
+	Player.DisplayName "Banshee"
+	Player.SoundClass "Banshee"
+	Player.CrouchSprite "RKTC"
+	player.startitem "Rejuvinator", 1
+	player.startitem "HealingEnergy", 600
+	player.startitem "Vanishing", 35
+	player.startitem "MedicArmor", 1
+	damagefactor "rocket", 0
+	damagefactor "healable", 0
+	Species "Banshee"
+	limitedtoteam 0
+	+NOSKIN
+	States
+	{
+	Spawn:
+		CRSH A 0
+		CRSH A 35
+		CRSH A 0 A_JumpIf (health>=50, 2)
+		CRSH A 0 ACS_NamedExecute("regenHealth", 0)
+		CRSH A 0 A_JumpIfInventory("HealingEnergy", 0, "Spawn")
+		CRSH A 0 ACS_NamedExecute("rechargeWeapon",0,0)
+	Loop
+	See:
+		CRSH ABCD 6 
+	Goto Spawn
+	Missile:
+		CRSH E 12 
+	Goto Spawn
+	Melee:
+		CRSH F 6 BRIGHT
+	Goto Missile
+	Pain:
+		CRSH G 4 
+		CRSH G 4 A_Pain
+	Goto Spawn
+	Death:
+		CRSH H 10
+		CRSH I 10 A_PlayerScream
+		CRSH J 10 A_NoBlocking
+		CRSH KLM 10
+		CRSH N -1
+	Stop
+	XDeath:
+		PLAY O 0 A_Stop
+		CRSH O 5 A_SpawnItemEx ("HumanGibs",0,0,0,0,0,0,0,128)
+		BRSP O 0 A_SkullPop("BlueHeadGib")
+		CRSH P 5 A_XScream
+		CRSH Q 5 A_NoBlocking
+		CRSH RSTUV 5
+		CRSH W -1
+    Stop
+	FadeIn:
+		PLAY O 0 A_SetTranslucent(0.25, 1)
+	Goto Spawn
+	FadeOut:
+		PLAY O 0 A_SetTranslucent(0.15, 1)
+	Goto Spawn
+	Visible:
+		PLAY O 0 A_SetTranslucent(1, 0)
+	Goto Spawn
+	}
+}
+
+ACTOR MedicArmor : GreenArmor
+{
+	Armor.SaveAmount 200
+}

@@ -1,0 +1,714 @@
+#library "ABILITIES"
+#include "zcommon.acs"
+#define ALL_OF_IT 0x7FFFFFFF
+#define GAMETICKS_PER_SEC 35
+
+#define CLASS_BANSHEE 0
+#define CLASS_BLAZER 1
+#define CLASS_GUARDIAN 2
+#define CLASS_ILLUSIONIST 3
+#define CLASS_ROCKETEER 4
+#define CLASS_TELEPORTER 5
+#define CLASS_HUNTER 6
+#define CLASS_SCOUTER 7
+#define CLASS_BERSERKER 8
+#define CLASS_TERMINATOR 9
+#define CLASS_POLYMORPHIST 10
+#define CLASS_TACTICIAN 11
+
+#define NUM_POWERUPS 24
+#define POWERUP_ITEM_NAME 0
+#define POWERUP_ENGLISH_NAME 1
+#define POWERUP_ACTIVE_NAME 1
+#define POWERUP_HUD_X_OFFSET 300.1
+#define POWERUP_HUD_Y_OFFSET 200.1
+#define POWERUP_HUD_TEXT_VISIBLE_SEC 0.1
+
+// We need a way to go from the 'item name' to a readable English name when we
+// show it in the player HUD. This will allow us to do that where we look up
+// by the first value (item name), and if the player has it then we will use
+// the second value (english name) when we print the message.
+
+str classNames[12] = 
+{
+	"Banshee", 
+	"Blazer", 
+	"Guardian", 
+	"Illusionist", 
+	"Rocketeer",
+	"Teleporter",
+	"Hunter",
+	"Scouter", 
+	"Berserker", 
+	"Terminator", 
+	"Polymorphist", 
+	"Tactician"
+};
+str abilityData[NUM_POWERUPS][2] = {
+    { "BansheeFirstCooldown", "Energy Field"},
+    { "BlazerFirstCooldown", "Dash"},
+    { "GuardianFirstCooldown", "Smoke bomb"},
+    { "IllusionistFirstCooldown", "Disguise" },
+    { "RocketeerFirstCooldown", "Barrage" },
+    { "TeleporterFirstCooldown", "Translocator" },
+    { "HunterFirstCooldown", "Dual Wield" },
+    { "ScouterFirstCooldown", "Hookshot" },
+    { "BerserkerFirstCooldown", "Bloodlust" },
+    { "TerminatorFirstCooldown", "Laser Shot" },
+    { "PolymorphistFirstCooldown", "Lostsoul" },
+    { "TacticianFirstCooldown", "Tripmines" },
+    { "BansheeSecondCooldown", "Life Support" },
+    { "BlazerSecondCooldown", "Recall" },
+    { "GuardianSecondCooldown", "Invulnerability" },
+    { "IllusionistSecondCooldown", "Shrink" },
+    { "RocketeerSecondCooldown", "Knockback" },
+    { "TeleporterSecondCooldown", "Overcharge" },
+    { "HunterSecondCooldown", "Freeze Gun" },
+    { "ScouterSecondCooldown", "Tracking Device" },
+    { "BerserkerSecondCooldown", "Charge" },
+    { "TerminatorSecondCooldown", "Hyperdrive" },
+    { "PolymorphistSecondCooldown", "Cybruiser Transformation" },
+    { "TacticianSecondCooldown", "Sentry" }
+};
+function bool onCoolDown(int abilityNum) {
+	return CheckInventory(StrParam(s:abilityData[PlayerClass(PlayerNumber())+abilityNum][POWERUP_ITEM_NAME])) > 0;
+}
+function str getItemName(int abilityNum)
+{
+	return StrParam(s:abilityData[abilityNum][POWERUP_ENGLISH_NAME]);
+}
+script "giveCooldownForSeconds"(int itemName, int seconds) {
+	//GiveInventory(itemName, 999);
+	
+	for (int x = 1; x <= seconds; x++)
+	{
+		Delay(35);
+		TakeInventory(itemName, 1);
+	}
+}
+
+script "cooldownActive" (void) ClientSide
+{
+	HudMessage(s:"Cooldown still active!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+	PlaySound (0, "CooldownActive", 3); 
+}
+function str morphName(void) 
+{
+	for (int x = 6; x <= 11; x++)
+	{
+		If (CheckInventory(StrParam(s:classNames[x], s:"Morph")))
+		{
+			str morphClass = StrParam(s:classNames[x], s:"Morph");
+		}
+	}
+	return morphClass;
+}
+
+script "hudDash"(void) clientside
+{
+	While(CheckInventory("BlazerFirstCooldown") > 0)
+	{
+		Delay(35);
+		ACS_NamedExecute("takeDash", 0, 0);
+	}
+	ACS_NamedExecute("takeDash", 0, 1);
+}
+
+script "takeDash" (int selector) NET
+{
+	if (selector == 1)
+	{
+		TakeInventory("Dashed", 1);
+		terminate;
+	}
+	
+	//GiveInventory("BlazerFirstCooldown", 1);
+}
+
+script "hudMorph" (int seekerClass) clientside
+{
+	HudMessage(s:"You have transformed into a ", s:seekerClass; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+	While (CheckInventory("Morphed"))
+	{
+		For (int x = 20; x > 0; x--)
+		{
+			If (!CheckInventory("Morphed"))
+			{
+				terminate;
+			}
+			HudMessage(s:"metamorphosis lasts for", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+			Delay(35);
+		}
+		ACS_NamedExecute("endMorph", 0);
+		terminate;
+	}
+}
+script "endMorph" (void) NET
+{
+	str morphClass = morphName();
+	TakeInventory("Morphed", 1);
+	TakeInventory(morphClass, 1);
+	PlaySound(0, "Illusionist/Abilities/Morph");
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "IllusionistFirstCooldown", 20);
+	terminate;
+}
+
+script "hudDual" (void) clientside
+{
+	For (int x = 10; x > 0; x--)
+	{
+		HudMessage(s:"Dual Weapons lasts for", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		Delay(35);
+	}
+	ACS_NamedExecute("endDual", 0);
+}
+
+script "endDual" (void) NET
+{
+	TakeInventory("DualHunter", 1);
+	PlaySound(0, "Hunter/Abilities/LoseDual");
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "HunterFirstCooldown", 30);
+	terminate;
+}
+
+script "hudBlood" (void) clientside
+{
+	For (int x = 5; x >= 0; x--)
+	{
+		HudMessage(s:"Bloodlust lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 0.5, 0.5);
+		Delay(35);
+	}
+	ACS_NamedExecute("endBlood", 0);
+}
+
+script "endBlood" (void) NET
+{
+	TakeInventory("Bloodlust", 1);
+	PlaySound(0, "Berseker/Abilities/LoseBlood");
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "BerserkerFirstCooldown", 60);
+	terminate;
+}
+
+script "hudTrip" (void) clientside
+{
+	HudMessage(s:"You can only have 5 trip mines at a time"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+}
+
+
+script "HNS_PrimaryAbility" (int hTaunt, int sTaunt) NET {
+	int classNum = PlayerClass(PlayerNumber());
+	str itemName = StrParam(s:abilityData[PlayerClass(PlayerNumber())][POWERUP_ITEM_NAME]);
+	if (onCoolDown(0))
+	{
+		ACS_NamedExecuteAlways("cooldownActive", 0);
+		terminate;
+	}
+    switch (classNum) {
+	//Banshee Dash Ability
+    case CLASS_BANSHEE:
+		Delay(35);
+		GiveInventory("EnergyField", 1);
+		PlaySound(0, "Banshee/Abilities/EnergyField", 6);
+		ACS_NamedExecute("giveActiveforSeconds", 0, 5);
+		Delay(35 * 5);
+		TakeInventory("EnergyField", 1);
+		TakeInventory("BansheeFirstActive", 1);
+		ACS_NamedExecute("giveCooldownForSeconds", 0, "BansheeFirstCooldown", 15);
+        break;
+	//Blazer Dash Ability
+    
+	case CLASS_BLAZER:
+		If (!CheckInventory("Dashes"))
+		{
+			PlaySound (0, "Blazer/Abilities/Dashfail", 5);
+			terminate;
+		}
+		
+		
+		ThrustThing(GetActorAngle(0) >> 8, 50, 1, 0);
+		PlaySound (0, "Blazer/Abilities/Dash", 5);
+		TakeInventory("Dashes", 1);
+		If (!CheckInventory("Dashed"))
+		{
+			GiveInventory("Dashed", 1);
+			ACS_NamedExecute("hudDash", 0);
+		}
+		//ACS_NamedExecute("giveCooldownForSeconds", 0, "BlazerFirstCooldown", 3);
+        break;
+	//Guardian smoke ability
+    case CLASS_GUARDIAN:
+		Spawn("SmokeCanister", GetActorX(0), GetActorY(0), GetActorZ(0));
+		break;
+	//Illusionist Disguise Ability
+    //nearly complete
+	case CLASS_ILLUSIONIST:
+		if (CheckInventory("Morphed"))
+		{
+			str morphClass = morphName();
+			TakeInventory("Morphed", 1);
+			TakeInventory(morphClass, 1);
+			PlaySound(0, "Illusionist/Abilities/Morph");
+			ACS_NamedExecute("removeCooldownForSeconds", 0, classNum);
+			terminate;
+		}
+		
+		int seekerClass = Random(6,11);
+		GiveInventory("Morphed", 1);
+		GiveInventory(StrParam(s:classNames[seekerClass], s:"Morph"), 1);
+		PlaySound(0, "Illusionist/Abilities/Morph");
+		ACS_NamedExecute("hudMorph", 0, StrParam(s:classNames[seekerClass], s:"Morph"));
+		ACS_NamedExecute("giveActiveforSeconds", 0, 3, classNum, "First");
+		ACS_NamedExecute("giveCooldownForSeconds", 0, "IllusionistFirstCooldown", 20);
+		break;
+    
+	//Rocketeer Rocket Barrage Ability
+    //logic done
+	case CLASS_ROCKETEER:
+		SpawnProjectile(0, "EscapeRocket", GetActorAngle(0) >> 8, 200, -10, 0, 0);
+		SpawnProjectile(0, "EscapeRocket", GetActorAngle(32) >> 8, 200, -10, 0, 0);
+		SpawnProjectile(0, "EscapeRocket", GetActorAngle(64) >> 8, 200, -10, 0, 0);
+		SpawnProjectile(0, "EscapeRocket", GetActorAngle(96) >> 8, 200, -10, 0, 0);
+		SpawnProjectile(0, "EscapeRocket", GetActorAngle(-32) >> 8, 200, -10, 0, 0);
+		SpawnProjectile(0, "EscapeRocket", GetActorAngle(-64) >> 8, 200, -10, 0, 0);
+		SpawnProjectile(0, "EscapeRocket", GetActorAngle(-96) >> 8, 200, -10, 0, 0);
+		ACS_NamedExecute("removeCooldownForSeconds", 0, classNum);
+        break;
+	
+	//unfinished
+	case CLASS_TELEPORTER:
+		SpawnProjectile(0, "TranslocatorModule", GetActorAngle(0) >> 8, 200, 0,0,PlayerNumber()+2100);
+		GiveInventory("TeleporterFirstCooldown", 30);
+		If (!CheckInventory("Translocator"))
+		{
+			GiveInventory("Translocator", 1);
+			GiveInventory("Camera", 1);
+		}
+        break;
+		
+	//logic done
+	case CLASS_HUNTER:
+		GiveInventory("DualHunter", 1);
+		
+		PlaySound(0, "Hunter/Abilities/DualWeapons");
+		ACS_NamedExecute("hudDual", 0);
+        break;
+	
+	//logic done
+	case CLASS_SCOUTER:
+		PlaySound (0, "Scouter/Abilities/Hookshot", 6);
+		SpawnProjectile(0, "HookShot", GetActorAngle(0) >> 8, 200, 0,0,0);
+		ACS_NamedExecute("giveCooldownForSeconds", 0, "ScouterFirstCooldown", 15);
+        break;
+	
+	//logic done
+	case CLASS_BERSERKER:
+		GiveInventory("BloodLust", 1);
+		PlaySound(0, "Berserker/Abilities/Bloodlust", 6);
+		ACS_NamedExecute("hudBlood", 0);
+        break;
+	
+	//logic done
+	case CLASS_TERMINATOR:
+		SpawnProjectile(0, "MaelStromBall", GetActorAngle(0) >> 8, 200, 0,0,0);
+		ACS_NamedExecute("giveCooldownForSeconds", 0, "TerminatorFirstCooldown", 10);
+        break;
+	
+	//logic done
+	case CLASS_POLYMORPHIST:
+        if (CheckInventory("PowerSoulMorph"))
+		{
+			TakeInventory("PowerSoulMorph", 1);
+			PlaySound(0, "Polymorphist/Abilities/Morph", 6);
+			ACS_NamedExecute("giveCooldownForSeconds", 0, "PolymorphistFirstCooldown", 25);
+			terminate;
+		}
+		
+		GiveInventory("PowerSoulMorph", 1);
+		PlaySound(0, "Polymorphist/Abilities/Morph", 6);
+		ACS_NamedExecute("giveCooldownForSeconds", 0, "PolymorphistFirstCooldown", 3);
+		break;
+	
+	//logic done
+	case CLASS_TACTICIAN:
+		if (ThingCount("Mine", PlayerNumber()+20) > 5)
+		{
+			PlaySound(0, "Tactician/Abilities/Minefail", 6);
+			ACS_NamedExecute("hudTrip", 0);
+		}
+		SpawnProjectile(0, "Mine", GetActorAngle(0) >> 8, 200, 0,0, PlayerNumber()+20);
+		ACS_NamedExecute("giveCooldownForSeconds", 0, "TacticianFirstCooldown", 3);
+		break;
+		
+    default:
+        PrintBold(s: "Class not defined");
+        break;
+    }
+	GiveInventory(itemName, 999);
+	ACS_NamedExecuteAlways("giveCooldownForSeconds", 0, itemName, GetAmmoCapacity(itemName));
+} 
+script "HNS_SecondAbility" (int hTaunt, int sTaunt) NET {
+	int classNum = PlayerClass(PlayerNumber());
+	str itemName = StrParam(s:abilityData[PlayerClass(PlayerNumber())+12][POWERUP_ITEM_NAME]);
+	if (onCoolDown(12))
+	{
+		ACS_NamedExecuteAlways("cooldownActive", 0);
+		terminate;
+	}
+    switch (classNum) {
+    case CLASS_BANSHEE:
+		If (CheckInventory("HealingEnergy") < 50)
+		{
+			ACS_NamedExecute("hudLife", 0, 0);
+			terminate;
+		}
+		TakeInventory("HealingEnergy", 50);
+		GiveInventory("LifeSupport", 1);
+		PlaySound(0, "Banshee/Abilities/LifeSupport", 6);
+		ACS_NamedExecute("hudLife", 0, 1);
+		break;
+	//Blazer Recall ability
+	case CLASS_BLAZER:
+		int recallTid = PlayerNumber() + 500;
+		If (ThingCount(T_NONE, recallTid) == 0)
+		{
+			If (CheckInventory("Recall"))
+			{
+				HudMessage(s:"Have recall inventory but no placement"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+				Delay(70);
+				SpawnProjectile(0, "BlazerRecall", GetActorAngle(0) >> 8, 0, 0, 1, recallTid);
+				ACS_NamedExecute("hudRecall", 0, recallTid);
+				terminate;
+			}
+			GiveInventory("Recall", 1);
+			SpawnProjectile(0, "BlazerRecall", GetActorAngle(0) >> 8, 0, 0, 1, recallTid);
+			ACS_NamedExecute("hudRecall", 0, recallTid);
+			terminate;
+		}
+		TakeInventory("Recall", 1);
+		SetActorPosition(0, GetActorX(recallTid), GetActorY(recallTid), GetActorZ(recallTid), 0);
+		PlaySound(recallTid, "Blazer/Abilities/Recall", 6);
+		Thing_Remove(recallTid);
+		break;
+	case CLASS_GUARDIAN:
+		GiveInventory("GuardianSecondCooldown", 30);
+		ACS_NamedExecuteAlways("giveCooldownForSeconds", 0, "GuardianSecondCooldown", 30);
+		GiveInventory("GuardSphere", 1);
+		SetActorProperty(0, APROP_Invulnerable, 1);
+		Delay(140);
+		TakeInventory("PowerQuarterDamage", 1);
+		SetActorProperty(0, APROP_Invulnerable, 0);
+		break;
+	case CLASS_ILLUSIONIST:
+	if (CheckInventory("PowerShrink"))
+	{
+		HudMessage(s:"Took Shrink"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		TakeInventory("PowerShrink", 1);
+		PlaySound(0, "Illusionist/Abilities/UnShrink", 6);
+		ACS_NamedExecute("giveCooldownForSeconds", 0, "IllusionistSecondCooldown", 30);
+		terminate;
+	}
+		HudMessage(s:"Obtained Shrink"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		GiveInventory("PowerShrink", 1);
+		PlaySound(0, "Illusionist/Abilities/Shrink", 6);
+		ACS_NamedExecute("hudShrink", 0);
+		break;
+	case CLASS_ROCKETEER:
+		break;
+	case CLASS_TELEPORTER:
+		GiveInventory("Overcharge", 1);
+		PlaySound(0, "Teleporter/Abilities/Overcharge", 6);
+		ACS_NamedExecute("hudTele", 0);
+		break;
+	case CLASS_HUNTER:
+		GiveInventory("Freezegun", 1);
+		PlaySound(0, "Hunter/Abilities/Freezegun", 6);
+		ACS_NamedExecute("hudFreeze", 0);
+		break;
+	case CLASS_SCOUTER:
+		break;
+	case CLASS_BERSERKER:
+		Thing_Stop(0);
+		PlaySound(0, "Berserker/Leap", 6);
+		ThrustThing(GetActorAngle(0) >> 8, 35, 1, 0);
+		ThrustThingZ(0, 60, 0, 0);
+		Delay(35);
+		ACS_NamedExecute("HNS_Taunt", 0, 0, sTaunt);
+		Delay(35);
+		PlaySound(0, "Berserker/PunchBlast", 6);
+		SpawnProjectile(0, "MaelStromBall", GetActorAngle(0) >> 8, 200, 0,0,0);
+		ACS_NamedExecute("giveCooldownForSeconds", 0, "BerserkerFirstCooldown", 25);
+		break;
+	case CLASS_TERMINATOR:
+		break;
+	case CLASS_POLYMORPHIST:
+		break;
+	case CLASS_TACTICIAN:
+		break;
+		
+	default:
+        PrintBold(s: "Class not defined");
+        break;
+	}
+	if(PlayerClass(PlayerNumber()) != 2)
+	{
+		GiveInventory(itemName, 999);
+		ACS_NamedExecuteAlways("giveCooldownForSeconds", 0, itemName, GetAmmoCapacity(itemName));
+	}
+}
+
+script "hudLife" (int success) ClientSide
+{
+	if (success == 0)
+	{
+		HudMessage(s:"You need atleast half energy to activate this ability"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		PlaySound(0, "Banshee/Abilities/Fail", 6);
+	}
+	if (success == 1)
+	{
+		While (CheckInventory("LifeSupport"))
+		{
+			For (int x = 3; x > 0; x--)
+			{
+			HudMessage(s:"Life Support Systems last for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+			Delay(35);
+			}
+			ACS_NamedExecute("endLife", 0);
+			terminate;
+		}
+	}
+}
+
+script "endLife" (void) Net
+{
+	TakeInventory("LifeSupport", 1);
+	PlaySound(0, "Banshee/Abilities/LifeSupportOff", 6);
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "BansheeSecondCooldown", 45);
+}
+
+
+script "hudRecall" (int recallTid) Clientside
+{
+	HudMessage(s:"Recall Initiated"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+	While (ThingCount(T_NONE, recallTid) > 0)
+	{
+		For (int x = 3; x > 0; x--)
+		{
+			HudMessage(d:x, s:" seconds left to recall"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+			Delay(35);
+			If (!CheckInventory("Recall"))
+			{
+				HudMessage(s:"Recall successful"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+				terminate;
+			}
+		}
+		HudMessage(s:"Recall failure"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		ACS_NamedExecute("recallFail", 0, recallTid);
+		terminate;
+	}
+}
+
+script "recallFail" (int recallTid) NET
+{
+	TakeInventory("Recall", 1);
+	Thing_Remove(recallTid);
+	Delay(35);
+	
+	if (!ThingCount(T_NONE, recallTid) && !CheckInventory("Recall"))
+	{
+		HudMessage(s:"Recall process reset"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		terminate;
+	}
+		HudMessage(s:"wtf recall"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+}
+
+
+script "hudShrink" (void) Clientside
+{
+	While (CheckInventory("PowerShrink"))
+	{
+		For (int x = 15; x > 0; x--)
+		{
+			HudMessage(s:"shrunken state lasts for", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+			Delay(35);
+			If (!CheckInventory("PowerShrink"))
+			{
+				HudMessage(s:"back to normal"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+				terminate;
+			}
+		}
+		ACS_NamedExecute("endShrink", 0);
+		terminate;
+	}
+}
+
+script "endShrink" (void) Net
+{
+	TakeInventory("PowerShrink", 1);
+	PlaySound(0, "Illusionist/Abilities/Unshrink", 6);
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "IllusionistSecondCooldown", 45);
+}
+
+script "hudArmor" (int success) Clientside
+{
+	if (success == 0)
+	{
+		HudMessage(s:"You need armor for this ability"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		terminate;
+	}
+	While (CheckInventory("ArmorShield"))
+	{
+		For (int x = 5; x > 0; x--)
+		{
+			HudMessage(s:"Armor takes full damage for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+			Delay(35);
+		}
+		ACS_NamedExecute("endArmor", 0);
+		terminate;
+	}
+}
+
+script "endArmor" (void) Net
+{
+	TakeInventory("ArmorShield", 1);
+	PlaySound(0, "Guardian/Abilities/LoseArmor", 6);
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "GuardianSecondCooldown", 45);
+}
+
+script "hudOverCharge" (int success) Clientside
+{
+	While (CheckInventory("OverCharge"))
+	{
+		For (int x = 10; x > 0; x--)
+		{
+			HudMessage(s:"Overcharge lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+			Delay(35);
+		}
+		ACS_NamedExecute("endOverCharge", 0);
+		terminate;
+	}
+}
+
+script "endOverCharge" (void) Net
+{
+	TakeInventory("OverCharge", 1);
+	PlaySound(0, "Guardian/Abilities/LoseCharge", 6);
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "TeleporterSecondCooldown", 45);
+}
+
+script "hudFreeze" (void) Clientside
+{
+	While (CheckInventory("FreezeGun"))
+	{
+		For (int x = 5; x > 0; x--)
+		{
+			HudMessage(s:"Freezegun lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+			Delay(35);
+		}
+		ACS_NamedExecute("endOverCharge", 0);
+		terminate;
+	}
+}
+
+script "endFreeze" (void) Net
+{
+	TakeInventory("FreezeGun", 1);
+	PlaySound(0, "Hunter/Abilities/LoseFreeze", 6);
+	ACS_NamedExecute("removeCooldownForSeconds", 0, 15);
+}
+
+
+script "Client_Powerup_HudMessage" ENTER CLIENTSIDE {
+    while (true) {
+        // Inside the loop because it's possible while this script sleeps for
+        // another script to change the hud dimensions. We want a clean slate
+        // every single iteration.
+        SetHudSize(640, 480, false);
+        int offsetY = POWERUP_HUD_Y_OFFSET;
+        int powerupCountFound = 0;
+        
+        for (int powerupIndex = 0; powerupIndex < NUM_POWERUPS; powerupIndex++) {
+            int secondsLeft = CheckInventory(abilityData[powerupIndex][POWERUP_ITEM_NAME]);
+            
+            if (secondsLeft > 0) {
+                HudMessage(s: "Cooldown for ", 
+                           s: abilityData[powerupIndex][POWERUP_ENGLISH_NAME], 
+                           s: " lasts ", 
+                           d: secondsLeft, 
+                           s: " more seconds";
+                           HUDMSG_PLAIN, 123456 + powerupIndex, CR_YELLOW,
+                           POWERUP_HUD_X_OFFSET, offsetY, 
+                           POWERUP_HUD_TEXT_VISIBLE_SEC);            
+                           
+                offsetY -= 20.0;
+                powerupCountFound++;
+			{
+				
+			}
+            }
+        }
+		
+		/*int blazerCool = CheckInventory("BlazerFirstCooldown");
+		For (int totalAmount = 10 ; totalAmount > 0; totalAmount--)
+			{
+				if (blazerCool > 0)
+				{
+				
+				HudMessage(s: "Next Dash comes in ", 
+                           d:totalAmount, 
+                           s: " more seconds";
+                           HUDMSG_PLAIN, 12348, CR_YELLOW,
+                           POWERUP_HUD_X_OFFSET,  0.65, 
+                           POWERUP_HUD_TEXT_VISIBLE_SEC);     
+						   
+				HudMessage(s:"total time at ", 
+                           d:blazerCool, 
+                           s: " more seconds";
+                           HUDMSG_PLAIN, 12349, CR_YELLOW,
+                           POWERUP_HUD_X_OFFSET, 3.5, 
+                           POWERUP_HUD_TEXT_VISIBLE_SEC);     
+						   
+						   //HudMessage(s:"Bloodlust lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 0.5, 0.5);
+						   
+					//HudMessage(s:"Next Dash comes in ", d:totalAmount, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+					//HudMessage(s:"total time at ", d:blazerCool, s:" more seconds"; HUDMSG_FADEOUT, 8, 5, 1.5, 3, 3.5, 3.0);
+				}
+				//int totalCount = CheckInventory("BlazerFirstCooldown");
+				//if (x != totalCount)
+				//{
+				//	x = totalCount;
+				//}
+				
+				//if (x == totalCount - 10)
+				//{
+					//x = totalCount;
+					//ACS_NamedExecute("invDash", 0, 0);
+					//ACS_NamedExecute("updateDashHud", 0, newTotal);
+				//}
+				//Delay(35);
+			}*/
+        delay(1);
+    }
+}
+script "BlazerDashGiver" ENTER
+{
+	if(PlayerClass(PlayerNumber()) != 1)
+		terminate;
+	while(CheckInventory("Dashes") == 3)
+		Delay(1);		
+	Delay(350);
+	GiveInventory("Dashes", 1);
+	restart;
+}
+script "GuardianStunner" (void)
+{
+	if(PlayerClass(PlayerNumber()) >= 6)
+	{
+		SetFont("BIGFONT");
+		SetPlayerProperty(0, 1, PROP_TOTALLYFROZEN);
+		HudMessage(s:"STUNNED"; HUDMSG_PLAIN, 0, CR_RED, 0.5, 0.5, 3.0, 1.0);
+		FadeTo(255, 255, 255, 0.33, 0);
+		FadeTo(255, 255, 255, 0.0, 3.0);
+		Delay(105);
+		SetPlayerProperty(0, 0, PROP_TOTALLYFROZEN);
+	}
+}

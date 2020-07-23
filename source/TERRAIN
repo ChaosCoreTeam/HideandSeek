@@ -1,0 +1,837 @@
+//Liquid Splash Definitions:
+splash Nukage
+{
+	smallclass 		sludgesplash
+	smallclip		6
+	smallsound		splash/slimesmall
+
+	baseclass		sludgesplash
+	chunkclass		sludgechunk
+	chunkxvelshift	8
+	chunkyvelshift	8
+	chunkzvelshift	6
+	chunkbasezvel	2
+	sound			splash/slime
+	NoAlert
+}
+
+splash Slime
+{
+	smallclass		SlimeSplash
+	smallclip		6
+	smallsound		splash/slimesmall
+
+	baseclass		SlimeSplash
+	chunkclass		SlimeChunk
+	chunkxvelshift	8
+	chunkyvelshift	8
+	chunkzvelshift	8
+	chunkbasezvel	2
+	sound			splash/slime
+	NoAlert
+}
+
+splash Water
+{
+	smallclass 		watersplashbasesmall
+	smallclip		3
+	smallsound		splash/watersmall
+
+	baseclass		watersplashbase
+	chunkclass		watersplash
+	chunkxvelshift	8
+	chunkyvelshift	8
+	chunkzvelshift	8
+	chunkbasezvel	2
+	sound			splash/water
+	NoAlert
+}
+
+splash GrayWater
+{
+	smallclass 		GrayWaterSplashBaseSmall
+	smallclip		3
+	smallsound		splash/watersmall
+
+ 	baseclass		GrayWaterSplashBase
+ 	chunkclass		GrayWaterSplash
+ 	chunkxvelshift	8
+ 	chunkyvelshift	8
+ 	chunkzvelshift	8
+ 	chunkbasezvel	2
+ 	sound			splash/water
+ 	NoAlert
+}
+
+splash Blood
+{
+	smallclass 		bloodsplashbasesmall
+	smallclip		4
+	smallsound		splash/bloodsmall
+
+	baseclass		bloodsplashbase
+	chunkclass		bloodsplash
+	chunkxvelshift	8
+	chunkyvelshift	8
+	chunkzvelshift	8
+	chunkbasezvel	2
+	sound			splash/blood
+	NoAlert
+}
+
+splash BlueBlood
+{
+	smallclass 		watersplashbasesmall
+	smallclip		4
+	smallsound		splash/bloodsmall
+
+	baseclass		watersplashbase
+	chunkclass		watersplash
+	chunkxvelshift	8
+	chunkyvelshift	8
+	chunkzvelshift	8
+	chunkbasezvel	2
+	sound			splash/blood
+	NoAlert
+}
+
+splash Lava
+{
+	smallclass 		lavasplash
+	smallclip		5
+	smallsound		splash/lavasmall
+
+	baseclass		lavasplash
+	chunkclass		lavasmoke
+	chunkxvelshift	-1
+	chunkyvelshift	-1
+	chunkzvelshift	2
+	chunkbasezvel	1
+	sound			splash/lava
+	NoAlert
+}
+
+splash Hot
+{
+	smallclass		LavaSmoke
+	smallclip		12
+	smallsound		splash/hot
+
+	baseclass		SlimeChunk
+	chunkclass		LavaSmoke
+	chunkxvelshift	-1
+	chunkyvelshift	-1
+	chunkzvelshift	7
+	chunkbasezvel	1
+	sound			splash/hot
+	NoAlert
+}
+
+//Liquid Terrain Definitions:
+terrain Water_t
+{
+	splash			Water
+	footclip		10
+	liquid
+}
+
+terrain GrayWater_t
+{
+	splash			GrayWater
+	footclip		10
+	liquid
+}
+
+terrain Lava_t
+{
+	splash			Lava
+	footclip		10
+	liquid
+}
+
+terrain Blood_t
+{
+	splash			Blood
+	footclip		10
+	liquid
+}
+
+terrain BlueBlood_t
+{
+	splash			BlueBlood
+	footclip		10
+	liquid
+}
+
+terrain Nukage_t
+{
+	splash			Nukage
+	footclip		10
+	liquid
+}
+
+terrain Slime_t
+{
+	splash			Slime
+	footclip		10
+	liquid
+}
+
+terrain Hot_t
+{
+	splash			Hot
+	footclip		0
+	liquid
+}
+
+//Hard Floor Splash Definitions:
+splash Carpet
+{
+	smallclass		None
+	smallclip		0
+	smallsound		njmt
+
+	baseclass		None
+	chunkclass		None
+	chunkxvelshift	0
+	chunkyvelshift	0
+	chunkzvelshift	0
+	chunkbasezvel	0
+	sound			floor/carpet
+	NoAlert
+}
+
+splash Dirt
+{
+	smallclass		None
+	smallclip		0
+	smallsound		njmt
+
+	baseclass		None
+	chunkclass		None
+	chunkxvelshift	0
+	chunkyvelshift	0
+	chunkzvelshift	0
+	chunkbasezvel	0
+	sound			floor/dirt
+	NoAlert
+}
+
+splash Electric
+{
+	smallclass		None
+	smallclip		0
+	smallsound		njmt
+
+	baseclass		None
+	chunkclass		None
+	chunkxvelshift	0
+	chunkyvelshift	0
+	chunkzvelshift	0
+	chunkbasezvel	0
+	sound			floor/elec
+	NoAlert
+}
+
+splash Gravel
+{
+	smallclass		None
+	smallclip		0
+	smallsound		njmt
+
+	baseclass		None
+	chunkclass		None
+	chunkxvelshift	0
+	chunkyvelshift	0
+	chunkzvelshift	0
+	chunkbasezvel	0
+	sound			floor/gravel
+	NoAlert
+}
+
+splash Hard
+{
+	smallclass		None
+	smallclip		0
+	smallsound		njmt
+
+	baseclass		None
+	chunkclass		None
+	chunkxvelshift	0
+	chunkyvelshift	0
+	chunkzvelshift	0
+	chunkbasezvel	0
+	sound			floor/hard
+	NoAlert
+}
+
+splash Metal
+{
+	smallclass		None
+	smallclip		0
+	smallsound		njmt
+
+	baseclass		None
+	chunkclass		None
+	chunkxvelshift	0
+	chunkyvelshift	0
+	chunkzvelshift	0
+	chunkbasezvel	0
+	sound			floor/metal
+	NoAlert
+}
+
+splash Metal2
+{
+	smallclass		None
+	smallclip		0
+	smallsound		njmt
+
+	baseclass		None
+	chunkclass		None
+	chunkxvelshift	0
+	chunkyvelshift	0
+	chunkzvelshift	0
+	chunkbasezvel	0
+	sound			floor/metal2
+	NoAlert
+}
+
+splash Rock
+{
+	smallclass		None
+	smallclip		0
+	smallsound		njmt
+
+	baseclass		None
+	chunkclass		None
+	chunkxvelshift	0
+	chunkyvelshift	0
+	chunkzvelshift	0
+	chunkbasezvel	0
+	sound			floor/rock
+	NoAlert
+}
+
+
+splash Slimy
+{
+	smallclass		None
+	smallclip		0
+	smallsound		njmt
+
+	baseclass		None
+	chunkclass		None
+	chunkxvelshift	0
+	chunkyvelshift	0
+	chunkzvelshift	0
+	chunkbasezvel	0
+	sound			floor/slimy
+	NoAlert
+}
+
+
+splash Snow
+{
+	smallclass		None
+	smallclip		0
+	smallsound		njmt
+
+	baseclass		None
+	chunkclass		None
+	chunkxvelshift	0
+	chunkyvelshift	0
+	chunkzvelshift	0
+	chunkbasezvel	0
+	sound			floor/snow
+	NoAlert
+}
+
+splash Tile
+{
+	smallclass		None
+	smallclip		0
+	smallsound		njmt
+
+	baseclass		None
+	chunkclass		None
+	chunkxvelshift	0
+	chunkyvelshift	0
+	chunkzvelshift	0
+	chunkbasezvel	0
+	sound			floor/tile
+	NoAlert
+}
+
+splash Tile2
+{
+	smallclass		None
+	smallclip		0
+	smallsound		njmt
+
+	baseclass		None
+	chunkclass		None
+	chunkxvelshift	0
+	chunkyvelshift	0
+	chunkzvelshift	0
+	chunkbasezvel	0
+	sound			floor/tile2
+	NoAlert
+}
+
+splash Wood
+{
+	smallclass		None
+	smallclip		0
+	smallsound		njmt
+
+	baseclass		None
+	chunkclass		None
+	chunkxvelshift	0
+	chunkyvelshift	0
+	chunkzvelshift	0
+	chunkbasezvel	0
+	sound			floor/wood
+	NoAlert
+}
+
+//Hard Floor Terrain Definitions:
+terrain Carpet_t
+{
+	splash			Carpet
+	footclip		0
+}
+
+terrain Dirt_t
+{
+	splash			Dirt
+	footclip		0
+}
+
+terrain Electric_t
+{
+	splash			Electric
+	footclip		0
+}
+
+terrain Gravel_t
+{
+	splash			Gravel
+	footclip		0
+}
+
+terrain Hard_t
+{
+	splash			Hard
+	footclip		0
+}
+
+terrain Metal_t
+{
+	splash			Metal
+	footclip		0
+}
+
+terrain Metal2_t
+{
+	splash			Metal2
+	footclip		0
+}
+
+terrain Rock_t
+{
+	splash			Rock
+	footclip		0
+}
+
+terrain Slimy_t
+{
+	splash			Slimy
+	footclip		0
+}
+
+terrain Snow_t
+{
+	splash			Snow
+	footclip		0
+}
+
+terrain Tile_t
+{
+	splash			Tile
+	footclip		0
+}
+
+terrain Tile2_t
+{
+	splash			Tile2
+	footclip		0
+}
+
+terrain Wood_t
+{
+	splash			Wood
+	footclip		0
+}
+
+//Doom 2 Liquid Pointers:
+floor BLOOD1 Blood_t
+floor BLOOD2 Blood_t
+floor BLOOD3 Blood_t
+floor FWATER1 Water_t
+floor FWATER2 Water_t
+floor FWATER3 Water_t
+floor FWATER4 Water_t
+floor LAVA1 Lava_t
+floor LAVA2 Lava_t
+floor LAVA3 Lava_t
+floor LAVA4 Lava_t
+floor NUKAGE1 Nukage_t
+floor NUKAGE2 Nukage_t
+floor NUKAGE3 Nukage_t
+floor RROCK05 Hot_t
+floor RROCK06 Hot_t
+floor RROCK07 Hot_t
+floor RROCK08 Hot_t
+floor SLIME01 Slime_t
+floor SLIME02 Slime_t
+floor SLIME03 Slime_t
+floor SLIME04 Slime_t
+floor SLIME05 Slime_t
+floor SLIME06 Slime_t
+floor SLIME07 Slime_t
+floor SLIME08 Slime_t
+floor SLIME09 Hot_t
+floor SLIME10 Hot_t
+floor SLIME11 Hot_t
+floor SLIME12 Hot_t
+//Skulltag Liquid Pointers:
+floor BLBLOOD1 BlueBlood_t
+floor BLBLOOD2 BlueBlood_t
+floor BLBLOOD3 BlueBlood_t
+floor BWATER1 Water_t
+floor BWATER2 Water_t
+floor BWATER3 Water_t
+floor BWATER4 Water_t
+floor FLAVA1 Hot_t
+floor FLAVA2 Hot_t
+floor GRANUKE1 GrayWater_t
+floor GRANUKE2 GrayWater_t
+floor GRANUKE3 GrayWater_t
+floor WBLOOD1 Blood_t
+floor WFWATER1 Water_t
+floor WQLAVA Lava_t
+floor WSLIME01 Slime_t
+
+//Doom 2 Hard Floor Pointers:
+floor CEIL1_1 Wood_t
+floor CEIL1_2 Metal_t
+floor CEIL1_3 Wood_t
+floor CEIL3_1 Hard_t
+floor CEIL3_2 Hard_t
+floor CEIL3_3 Tile_t
+floor CEIL3_4 Tile_t
+floor CEIL3_5 Hard_t
+floor CEIL3_6 Hard_t
+floor CEIL4_1 Carpet_t
+floor CEIL4_2 Carpet_t
+floor CEIL4_3 Carpet_t
+floor CEIL5_1 Hard_t
+floor CEIL5_2 Hard_t
+floor COMP01 Tile_t
+floor CONS1_1 Tile_t
+floor CONS1_5 Tile_t
+floor CONS1_7 Tile_t
+floor CRATOP1 Wood_t
+floor CRATOP2 Wood_t
+floor DEM1_1 Tile2_t
+floor DEM1_2 Tile2_t
+floor DEM1_3 Tile2_t
+floor DEM1_4 Tile2_t
+floor DEM1_5 Tile2_t
+floor DEM1_6 Tile2_t
+floor FLAT1 Carpet_t
+floor FLAT1_1 Rock_t
+floor FLAT1_2 Rock_t
+floor FLAT1_3 Metal_t
+floor FLAT2 Tile_t
+floor FLAT3 Tile_t
+floor FLAT4 Metal_t
+floor FLAT5 Hard_t
+floor FLAT5_1 Wood_t
+floor FLAT5_2 Wood_t
+floor FLAT5_3 Hard_t
+floor FLAT5_4 Hard_t
+floor FLAT5_5 Hard_t
+floor FLAT5_6 Rock_t
+floor FLAT5_7 Rock_t
+floor FLAT5_8 Rock_t
+floor FLAT8 Tile_t
+floor FLAT9 Carpet_t
+floor FLAT10 Dirt_t
+floor FLAT14 Carpet_t
+floor FLAT17 Tile_t
+floor FLAT18 Carpet_t
+floor FLAT19 Carpet_t
+floor FLAT20 Metal_t
+floor FLAT22 Metal_t
+floor FLAT23 Metal_t
+floor FLOOR0_1 Hard_t
+floor FLOOR0_2 Hard_t
+floor FLOOR0_3 Hard_t
+floor FLOOR0_5 Tile_t
+floor FLOOR0_6 Tile_t
+floor FLOOR0_7 Tile_t
+floor FLOOR1_1 Carpet_t
+floor FLOOR1_6 Hard_t
+floor FLOOR1_7 Hard_t
+floor FLOOR3_3 Tile_t
+floor FLOOR4_1 Tile_t
+floor FLOOR4_5 Tile_t
+floor FLOOR4_6 Tile2_t
+floor FLOOR4_8 Tile2_t
+floor FLOOR5_1 Tile2_t
+floor FLOOR5_2 Tile2_t
+floor FLOOR5_3 Tile2_t
+floor FLOOR5_4 Rock_t
+floor FLOOR6_1 Gravel_t
+floor FLOOR6_2 Gravel_t
+floor FLOOR7_1 Hard_t
+floor FLOOR7_2 Tile2_t
+floor GATE1 Metal2_t
+floor GATE2 Metal2_t
+floor GATE3 Metal2_t
+floor GATE4 Metal2_t
+floor GRASS1 Dirt_t
+floor GRASS2 Dirt_t
+floor GRNLITE1 Hard_t
+floor GRNROCK Rock_t
+floor MFLR8_1 Hard_t
+floor MFLR8_2 Dirt_t
+floor MFLR8_3 Gravel_t
+floor MFLR8_4 Dirt_t
+floor RROCK03 Rock_t
+floor RROCK04 Rock_t
+floor RROCK09 Rock_t
+floor RROCK10 Rock_t
+floor RROCK11 Rock_t
+floor RROCK12 Rock_t
+floor RROCK13 Rock_t
+floor RROCK14 Rock_t
+floor RROCK15 Rock_t
+floor RROCK16 Dirt_t
+floor RROCK17 Dirt_t
+floor RROCK18 Dirt_t
+floor RROCK19 Dirt_t
+floor RROCK20 Dirt_t
+floor SFLR6_1 Slimy_t
+floor SFLR6_4 Slimy_t
+floor SFLR7_1 Slimy_t
+floor SFLR7_4 Slimy_t
+floor SLIME13 Rock_t
+floor SLIME14 Metal2_t
+floor SLIME15 Metal2_t
+floor SLIME16 Metal2_t
+floor STEP1 Metal_t
+floor STEP2 Metal_t
+floor TLITE6_1 Tile_t
+floor TLITE6_4 Tile_t
+floor TLITE6_5 Tile_t
+floor TLITE6_6 Tile_t
+//Skulltag Hard Floor Pointers:
+floor BLUEFLOR Hard_t
+floor BOX1F Tile_t
+floor BOX2F Tile_t
+floor CAUTION1 Metal2_t
+floor CAUTION2 Metal2_t
+floor CRATOP10 Wood_t
+floor CRATOP11 Wood_t
+floor CRATOP12 Wood_t
+floor CRATOP13 Wood_t
+floor CRATOP15 Wood_t
+floor CRATOP4 Wood_t
+floor CRATOP8 Wood_t
+floor CRATOP9 Wood_t
+floor DEM2_1 Tile2_t
+floor DEM2_2 Tile2_t
+floor DEM2_3 Tile2_t
+floor DEM2_4 Tile2_t
+floor DEM2_5 Tile2_t
+floor DEM2_6 Tile2_t
+floor DEM3_1 Tile2_t
+floor DEM3_2 Tile2_t
+floor DEM3_3 Tile2_t
+floor DEM3_4 Tile2_t
+floor DEM3_5 Tile2_t
+floor DEM3_6 Tile2_t
+floor DEM4_1 Tile2_t
+floor DEM4_2 Tile2_t
+floor DEM4_3 Tile2_t
+floor DEM4_4 Tile2_t
+floor DEM4_5 Tile2_t
+floor DEM4_6 Tile2_t
+floor DMDCTF01 Tile_t
+floor DMDCTF02 Tile_t
+floor DMDCTF03 Tile_t
+floor DMDCTF04 Tile_t
+floor DMDCTF05 Tile_t
+floor DMDCTF06 Tile_t
+floor DMDFECK Tile_t
+floor DMDMFLAT Metal_t
+floor FAN1 Metal_t
+floor FAN2 Metal_t
+floor FAN3 Metal_t
+floor FAN4 Metal_t
+floor FLAT14-B Carpet_t
+floor FLAT14-G Carpet_t
+floor FLAT14-M Carpet_t
+floor FLAT14-Y Carpet_t
+floor FLAT15 Carpet_t
+floor FLAT21 Metal_t
+floor FLAT24 Metal_t
+floor FLAT25 Metal_t
+floor FLAT26 Metal_t
+floor FLAT27 Metal_t
+floor FLAT28 Metal_t
+floor FLAT29 Metal_t
+floor FLAT30 Metal_t
+floor FLAT31 Metal_t
+floor FLAT32 Metal_t
+floor FLAT33 Metal_t
+floor FLATNEW1 Metal2_t
+floor FLATNEW2 Dirt_t
+floor FLATNEW3 Metal2_t
+floor FLATNEW4 Metal2_t
+floor FLATNEW5 Metal2_t
+floor FLATNEW6 Rock_t
+floor FLITES1 Metal_t
+floor FLOOR1_5 Tile_t
+floor FLOOR1_8 Carpet_t
+floor FLOOR1_9 Tile_t
+floor FLOOR1B1 Carpet_t
+floor FLOOR1G1 Carpet_t
+floor FLOOR1M1 Carpet_t
+floor FLOOR1R1 Carpet_t
+floor FLOOR1Y1 Carpet_t
+floor FLOOR7_3 Tile2_t
+floor FLR1_3_ Metal2_t
+floor GATEB1 Metal2_t
+floor GATEB2 Metal2_t
+floor GATEB3 Metal2_t
+floor GATEBL1 Metal2_t
+floor GATEBL2 Metal2_t
+floor GATEBL3 Metal2_t
+floor GATEBLB2 Metal2_t
+floor GATEGR1 Metal2_t
+floor GATEGR2 Metal2_t
+floor GATEGR3 Metal2_t
+floor GATEGRB2 Metal2_t
+floor GATEOR1 Metal2_t
+floor GATEOR2 Metal2_t
+floor GATEOR3 Metal2_t
+floor GATEORB2 Metal2_t
+floor GRASS1_2 Dirt_t
+floor GRASS1_3 Dirt_t
+floor ICEF1 Snow_t
+floor J-FLAT1 Metal_t
+floor J-FLAT2 Metal_t
+floor N5FL14RD Hard_t
+floor NFBRIK37 Rock_t
+floor NFBRKA01 Rock_t
+floor NFBRKA02 Rock_t
+floor NFBRKA03 Rock_t
+floor NFBRWN01 Hard_t
+floor NFBRWN02 Hard_t
+floor NFMBGY01 Tile2_t
+floor NFMETA03 Metal_t
+floor NFMETA04 Metal_t
+floor NFMETA05 Metal_t
+floor NFMETA06 Metal_t
+floor NFMETA45 Hard_t
+floor NFMTRC14 Metal2_t
+floor NFMTRC15 Metal2_t
+floor NFMTSP3C Metal_t
+floor NFMTSP3D Metal_t
+floor NFMTSQ01 Hard_t
+floor NFMTSQ02 Hard_t
+floor NFMTSQ03 Hard_t
+floor NFMTSQ04 Hard_t
+floor NFMTSQ05 Hard_t
+floor NFROCK01 Rock_t
+floor NFSTBN12 Hard_t
+floor NFSTGN12 Hard_t
+floor NFSTGY12 Hard_t
+floor NFSTSK03 Hard_t
+floor NFSTSK04 Hard_t
+floor NFSTTN12 Hard_t
+floor NFTECH02 Tile_t
+floor NFTECH03 Tile_t
+floor NFTLTE01 Tile_t
+floor NFTLTE02 Tile_t
+floor PANEL1 Metal2_t
+floor PANEL2 Metal2_t
+floor PANEL3 Metal2_t
+floor PANEL4 Metal2_t
+floor PANEL5 Metal2_t
+floor PANEL6 Metal2_t
+floor PANEL7 Metal2_t
+floor PIPE1 Carpet_t
+floor PWFLAT1 Metal2_t
+floor PWFLAT10 Wood_t
+floor PWFLAT11 Tile_t
+floor PWFLAT12 Tile_t
+floor PWFLAT13 Tile_t
+floor PWFLAT14 Hard_t
+floor PWFLAT15 Hard_t
+floor PWFLAT16 Hard_t
+floor PWFLAT17 Metal_t
+floor PWFLAT18 Metal_t
+floor PWFLAT19 Hard_t
+floor PWFLAT2 Metal2_t
+floor PWFLAT22 Tile_t
+floor PWFLAT23 Tile_t
+floor PWFLAT24 Metal_t
+floor PWFLAT25 Metal_t
+floor PWFLAT3 Wood_t
+floor PWFLAT4 Wood_t
+floor PWFLAT5 Wood_t
+floor PWFLAT6 Wood_t
+floor PWFLAT7 Wood_t
+floor PWFLAT8 Wood_t
+floor PWFLAT9 Wood_t
+floor Q2GRATE1 Metal2_t
+floor Q2LITE1G Metal2_t
+floor Q2LITE1H Metal2_t
+floor Q2LITE1I Metal2_t
+floor TLITE6_7 Tile_t
+floor WSFLR6_4 Slime_t
+floor YEL_1 Metal2_t
+floor ROCK19_1 Dirt_t
+floor OLA_W7_1 Rock_t
+floor N_WOOD07 Wood_t
+floor N_BRIK07 Rock_t
+floor N_BRIK08 Rock_t
+floor N_BRIK09 Rock_t
+floor N_ROCK13 Rock_t
+floor ADEL_J11 Hard_t
+floor ADEL_F71 Wood_t
+floor BRICK1 Wood_t
+floor BRICK8 Wood_t
+floor ADEL_B22 Dirt_t
+floor FLAT26 Metal_t
+floor FNEW4 Dirt_t
+floor ZIMMER4 Dirt_t
+floor ADEL_F48 Hard_t
+floor BSTONE1 Rock_t
+floor ROCKRED1 Rock_t
+floor WOODVERT Wood_t
+floor N_MTSP3N Metal_t
+floor NMARBLE1 Tile2_t
+floor N_GRAY57 Hard_t
+floor N_GRAY60 Hard_t
+floor METTILE3 Tile_t
+floor FGRASS2 Dirt_t
+floor FGRASS1 Dirt_t
+floor PMOSSROC Dirt_t
+floor AQUAFLAT Tile2_t
+floor METTILE2 Metal_t

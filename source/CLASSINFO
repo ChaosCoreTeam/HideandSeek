@@ -1,0 +1,109 @@
+#library "CLASSES"
+#include "zcommon.acs"
+#define ALL_OF_IT 0x7FFFFFFF
+#define GAMETICKS_PER_SEC 35
+
+#define CLASS_BANSHEE 0
+#define CLASS_BLAZER 1
+#define CLASS_GUARDIAN 2
+#define CLASS_ILLUSIONIST 3
+#define CLASS_ROCKETEER 4
+#define CLASS_TELEPORTER 5
+#define CLASS_HUNTER 6
+#define CLASS_SCOUTER 7
+#define CLASS_BERSERKER 8
+#define CLASS_TERMINATOR 9
+#define CLASS_POLYMORPHIST 10
+#define CLASS_TACTICIAN 11
+
+str classDetails[12][5] = {
+    { "Banshee", "Rejuvinator", "Energy Shield", "Life Support", "Passive"},
+    { "Blazer", "Mirror Images", "Dash", "Recall", "Passive"},
+    { "GuardianFirstCooldown", "Shield", "Protection", "Smokescreen", "Passive"},
+    { "IllusionistFirstCooldown", "Holograms", "Disguise", "Shrink", "Passive" },
+    { "RocketeerFirstCooldown", "Rocket Launcher", "Barrage", "Concussive Blast", "Passive"},
+    { "TeleporterFirstCooldown", "Teleportation Device and Translocator", "Translocation Module", "Device Burst", "Passive" },
+    { "HunterFirstCooldown", "Shotgun and Chaingun", "Dual Wield", "Freezegun", "Passive" },
+    { "ScouterFirstCooldown", "Pistol and Knife", "Tracking Device", "Chain Hook", "Jetpack & Radar"},
+    { "BerserkerFirstCooldown", "Fists", "Bloodlust", "Charge", "Passive"},
+    { "TerminatorFirstCooldown", "Plasma Gun and Grenades", "Laser Shot", "Devestator", "Passive"},
+    { "PolymorphistFirstCooldown", "Shotgun", "Lost Soul Morph", "Minotaur Morph", "Passive" },
+    { "TacticianFirstCooldown", "Light Machine Gun and Pipebombs", "Tripmines", "Sentry", "Passive" },
+};
+
+str classImages[12][5] = {
+    { "CRSHA1", "Rejuvinator", "Energy Shield", "Life Support", "Passive"},
+    { "BRSPA1", "Mirror Images", "Dash", "Recall", "Passive"},
+    { "AGRDA1", "Shield", "Protection", "Smokescreen", "Passive"},
+    { "VSHPA1", "Holograms", "Disguise", "Shrink", "Passive" },
+    { "RKTPA1", "Rocket Launcher", "Barrage", "Concussive Blast", "Passive"},
+    { "TELPA1", "Teleportation Device and Translocator", "Translocation Module", "Device Burst", "Passive" },
+    { "HNP1A1", "Shotgun and Chaingun", "Dual Wield", "Freezegun", "Passive" },
+    { "SCP1A1", "Pistol and Knife", "Tracking Device", "Chain Hook", "Jetpack & Radar"},
+    { "BSKRA1", "Fists", "Bloodlust", "Charge", "Passive"},
+    { "TMP1A1", "Plasma Gun and Grenades", "Laser Shot", "Devestator", "Passive"},
+    { "PLA2A1", "Shotgun", "Lost Soul Morph", "Minotaur Morph", "Passive" },
+    { "SILEA1", "Light Machine Gun and Pipebombs", "Tripmines", "Sentry", "Passive"},
+};
+
+Script "respawnDescription" respawn CLIENTSIDE
+{
+	if (GetCVar("cl_descriptionspawn") == 1)
+	{
+		ACS_NamedExecute("HNS_ClassDescription", 0);
+	}
+}
+
+Script "HNS_ClassDescription" (void)
+{
+	if(consoleplayernumber() != playernumber()) terminate;
+	{
+		if (GetCVar("cl_description" == 1))
+		{
+			ACS_NamedExecute("classDescriptionImage", 0);
+			terminate;
+		}
+		else // ACS description
+		{
+			Switch(PlayerClass(PlayerNumber()))
+			{
+				case CLASS_BANSHEE:
+					HudMessage(s:"\ccCLASS : \cuBanshee\n\n\ccWEAPONS : \crRejuvinator\n\ccABILITY : \ciEnergy Shield \cc( \cdDepletes the rejuinators energy when taking damage \cc\n\ABILITY : \ci Life Support \cc( \cdAbsorb all incoming damage for the next 3 seconds \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+					break;
+				case CLASS_BLAZER:
+					HudMessage(s:"\ccCLASS : \cuBlazer\n\n\ccWEAPONS : \crNone\n\ccABILITY : \ciExtreme Speed \cc( \cdRun Around! \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+					break;
+				case CLASS_GUARDIAN:
+					HudMessage(s:"\ccCLASS : \cuGuardian\n\n\ccWEAPONS : \crNone\n\ccABILITY : \ciInvisibility \cc( \cdJust Hide and Don't Move, OK? \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+					break;
+				case CLASS_ILLUSIONIST:
+					HudMessage(s:"\ccCLASS : \cuVanisher\n\n\ccWEAPONS : \crNone\n\ccABILITY : \ciInvisibility \cc( \cdJust Hide and Don't Move, OK? \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+					break;
+				case CLASS_ROCKETEER:
+					HudMessage(s:"\ccCLASS : \cuRocketeer\n\n\ccWEAPONS : \crNo-Damage Rocket Launcher\n\ccABILITY : \ciRocket Jumping \cc( \cdJump + Fire At Ground \cc)\n\ccABILITY : \ciAmmo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+					break;
+				case CLASS_TELEPORTER:
+					HudMessage(s:"\ccCLASS : \cuTeleporter\n\n\ccWEAPONS : \crAutomatic-Relocation Transmission Rifle\n\ccABILITY : \ciRadiation Shield \cc( \cdNo melty-melty! \cc)\n\ccABILITY : \ciAmmo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+					break;
+				case CLASS_HUNTER:
+					HudMessage(s:"\ccCLASS : \ckHunter\n\n\ccWEAPONS : \crCombat Shotgun \cc, \crRapid-Fire Chaingun\n\ccABILITY : \ciAmmo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+					break;
+				case CLASS_SCOUTER:
+					HudMessage(s:"\ccCLASS : \ckScouter\n\n\ccWEAPONS : \crRail Pistol \cc, \crCombat Knife\n\ccABILITY : \ciRadar \cc( \cdLocate Hiders within a short radius \cc)\n\ccABILITY : \ciJetpack \cc( \cdDouble-Jump to enable \cc)\n\ccABILITY : \ciAmmo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+					break;
+				case CLASS_BERSERKER:
+					HudMessage(s:"\ccCLASS : \ckBerserker\n\n\ccWEAPONS : \crMighty Fists\n\ccABILITY : \ciDrug-Induced Insane Speed \cc( \cdRun Around! \cc)\n\ccABILITY : \ciScream Loudly \cc( \cdAAAAAAAHHHHHHHHH \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+					break;
+				case CLASS_TERMINATOR:
+					HudMessage(s:"\ccCLASS : \ckTerminator\n\n\ccWEAPONS : \crPlasma Rifle \cc, \crFragmentation Grenades\n\ccABILITY : \ciGrenade Throw Strength \cc( \cdHold Down Fire Button To Charge \cc)\n\ccABILITY : \ciPlasma Rifle Ammo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+					break;
+				case CLASS_POLYMORPHIST:
+					HudMessage(s:"\ccCLASS : \ckTerminator\n\n\ccWEAPONS : \crPlasma Rifle \cc, \crFragmentation Grenades\n\ccABILITY : \ciGrenade Throw Strength \cc( \cdHold Down Fire Button To Charge \cc)\n\ccABILITY : \ciPlasma Rifle Ammo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+					break;
+				case CLASS_TACTICIAN:
+					HudMessage(s:"\ccCLASS : \ckTerminator\n\n\ccWEAPONS : \crPlasma Rifle \cc, \crFragmentation Grenades\n\ccABILITY : \ciGrenade Throw Strength \cc( \cdHold Down Fire Button To Charge \cc)\n\ccABILITY : \ciPlasma Rifle Ammo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+					break;
+			}
+		}
+	}
+}

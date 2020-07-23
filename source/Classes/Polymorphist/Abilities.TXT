@@ -1,0 +1,102 @@
+Actor PowerSoulMorph : PowerMorph
+{
+  PowerMorph.PlayerClass "PolySoul"
+  PowerMorph.MorphStyle ( MRF_FULLHEALTH | MRF_ADDSTAMINA | MRF_WHENINVULNERABLE | MRF_LOSEACTUALWEAPON | MRF_NEWTIDBEHAVIOUR | MRF_UNDOBYDEATH | MRF_UNDOBYDEATHSAVES )
+}
+
+
+Actor PowerSoulFlight : PowerFlight
+{
+  Inventory.Icon "TNT1A0"
+}
+
+Actor SoulFlyer : PowerupGiver
+{
+  Inventory.PickupSound ""
+  Inventory.PickupMessage ""
+  Inventory.MaxAmount 0
+  Inventory.Icon "TNT1A0"
+  Powerup.Type SoulFlight
+  Powerup.Duration 8
+  +Inventory.AutoActivate
+  States
+  {
+  Spawn:
+    TNT1 A 1
+    Fail
+  }
+}
+
+Actor SoulPowerups : CustomInventory
+{
+  Inventory.MaxAmount 0
+  +Inventory.AutoActivate
+  States
+  {
+  Use:
+    TNT1 A 0 A_GiveInventory("SoulFlyer", 1)
+    Stop
+  }
+}
+
+Actor PolySoul : PolymorphistClass
+{
+  Health 30
+  ReactionTime 0
+  PainChance 255
+  Radius 16
+  Height 56
+  Speed 1
+  +NoSkin
+  -PickUp
+  +NoTarget
+  Player.Viewheight 32
+  Player.DisplayName "LostSoul"
+  Player.MorphWeapon "NoWeapon"
+  States
+  {
+  Spawn:
+    TERR A 0
+    TERR AB 5  A_GiveInventory("SoulPowerups", 1)
+    Loop
+  See:
+    TERR AB 5 A_GiveInventory("SoulPowerups", 1)
+    Loop
+  Pain:
+    TERR E 3 A_Pain
+    Goto Spawn
+  Death:
+	  TERR F 0 A_Die
+      TERR F 0 A_Explode
+      TERR F 6 A_NoGravity
+      TERR G 6 A_Scream
+      TERR H 6 
+      TERR I 6 A_Fall
+      TERR J 6
+      TERR K 6   
+      Stop
+  }
+}
+
+Actor NoWeapon : Beak
+{
+  Weapon.SelectionOrder 10000
+  +Weapon.DontBob
+  +Weapon.MeleeWeapon
+  +Weapon.NoAlert
+  States
+  {
+  Ready:
+    TNT1 A 1 A_WeaponReady
+    Loop
+  Deselect:
+    TNT1 A 1 A_Lower
+    Loop
+  Select:
+    TNT1 A 1 A_BeakRaise
+    Loop
+  Fire:
+    TNT1 A 18 A_Punch
+    Goto Ready
+  }
+}

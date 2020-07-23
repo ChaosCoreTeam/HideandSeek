@@ -1,0 +1,160 @@
+ACTOR TeleporterGun : Weapon
+{
+   Weapon.SelectionOrder 350
+   Inventory.PickupSound "misc/w_pkup"
+   Inventory.PickupMessage "You got the Teleporter!"
+   Weapon.AmmoType "TeleporterAmmo"
+   Weapon.AmmoGive 7
+   Weapon.AmmoUse 1
+   Weapon.AmmoUse2 1
+   Weapon.AmmoType2 "Vanishing"
+   Weapon.Kickback 0
+   Weapon.YAdjust 0
+   +WEAPON.NOAUTOAIM
+   +WEAPON.AMMO_OPTIONAL
+   States
+   {
+   Spawn:
+      TLPP A -1
+      Loop
+   Ready:
+      TLPG A 1 A_WeaponReady
+      Loop
+   Deselect:
+      TLPG A 1 A_Lower
+      Loop
+   Select:
+      TLPG A 1 A_Raise
+      Goto Select
+   Fire:
+	  TLPG A 0 A_JumpIfNoAmmo("NoAmmo")
+	  TLPG A 0 bright A_PlaySound("Teleporter/Weapons/TeleporterFire")
+	  TLPG A 0 A_GunFlash
+	  TLPG AABBC 3 bright
+      TLPG A 0 A_PlayWeaponSound("Teleporter/Weapons/TeleporterShot")
+	  TLPG A 0 bright ACS_NamedExecuteAlways("identifyPlayer",0)
+	  TLPG C 3 bright A_FireCustomMissile("TeleporterProjectile",0,0,0,0,0)
+      TLPG CCBB 7 bright
+	  TLPG A 0 A_Refire
+      goto Ready
+   AltFire:
+	  TLPG A 0 A_JumpIfNoAmmo("NoAmmo")
+	  TLPG A 0 bright A_PlaySound("Teleporter/Weapons/TeleporterFire")
+	  TLPG A 0 A_GunFlash
+	  TLPG AABBC 3 bright
+      TLPG A 0 A_PlayWeaponSound("Teleporter/Weapons/TeleporterShot")
+	  TLPG A 0 bright ACS_NamedExecuteAlways("identifyPlayer",0)
+	  TLPG C 3 bright A_FireCustomMissile("TeleporterDecoyProjectile",0,0,0,0,0)
+      TLPG CCBB 7 bright
+	  TLPG A 0 A_Refire
+      goto Ready
+   Flash:
+	  TLPF AA 3 bright A_Light1
+	  TLPF BBCC 3 bright A_Light2
+	  TNT1 A 0 A_Light0 
+	  Stop
+   NoAmmo:
+      TLPG A 30 A_PlayWeaponSound("Teleporter/Weapons/TeleporterNo")
+      goto Ready
+   }
+}
+
+ACTOR TeleporterAmmo : Ammo
+{
+	Inventory.PickupMessage "Teleporter Ammo!"
+	Inventory.Amount 1
+	Inventory.MaxAmount 5
+	Ammo.BackpackAmount 1
+	Ammo.BackpackMaxAmount 5
+	Inventory.Icon "CELLA0"
+	States
+	{
+	Spawn:
+		CELL A -1
+		stop
+	}
+}
+
+ACTOR TeleporterProjectile
+{
+	Speed 200
+	Radius 16
+	Height 2
+	Damage 0
+	PROJECTILE
+	+RIPPER
+	+PAINLESS
+	+NOBLOCKMAP
+	+SKYEXPLODE
+	+EXPLODEONWATER
+	+INVISIBLE
+	Translation "80:127=192:207", "224:231=192:199", "160:167=192:199"
+	States
+	{
+	Spawn:
+		APLS A 0
+		APLS A 0 Thing_ChangeTID(0, 1999)
+		APLS A 0 ACS_NamedExecuteAlways("changeProjId", 0)
+		APLS AB 1 bright
+		goto spawn+3
+	Death:
+		APBX A 2 A_Recoil(10)
+		APBX A 0 A_Stop
+		APBX A 0 A_PlaySound("Teleporter/Weapons/TeleporterHit")
+		APBX A 0 ACS_NamedExecuteAlways("spawnDestination", 0)
+		APBX ABCDE 5 bright
+		stop
+	}
+}
+
+ACTOR TeleporterDecoyProjectile
+{
+	Speed 200
+	Radius 16
+	Height 2
+	Damage 0
+	PROJECTILE
+	+RIPPER
+	+PAINLESS
+	+NOBLOCKMAP
+	+SKYEXPLODE
+	+EXPLODEONWATER
+	+INVISIBLE
+	Translation "80:127=192:207", "224:231=192:199", "160:167=192:199"
+	States
+	{
+	Spawn:
+		APLS A 0
+		APLS A 0 
+		APLS A 0
+		APLS AB 1 bright
+		goto spawn+3
+	Death:
+		APBX A 2 A_Recoil(10)
+		APBX A 0 A_Stop
+		APBX A 0 A_PlaySound("Teleporter/Weapons/TeleporterHit")
+		APBX A 0
+		APBX ABCDE 5 bright
+		stop
+	}
+}
+
+ACTOR TeleporterDestination
+{
+	Radius 16
+	Height 56
+	Speed 0
+	+SOLID
+	+NOBLOCKMAP
+	+NOLIFTDROP
+	+NOGRAVITY
+	+TELESTOMP
+	Translation "80:127=192:207", "224:231=192:199", "160:167=192:199"
+	States
+	{
+	Spawn:
+		TFOG A 0 ACS_NamedExecuteAlways("teleportPlayer", 0)
+		TFOG ABCDCB 3 bright
+	Loop
+	}
+}

@@ -1,0 +1,49 @@
+#library "TAUNT"
+
+#include "zcommon.acs"
+
+#define ALL_OF_IT 0x7FFFFFFF
+#define PLAYER_BASE_TID 1000
+#define HIDER_IDENTIFIER 6
+
+script "HNS_Taunt" (int hTaunt, int sTaunt) net
+{
+    if(PlayerClass(PlayerNumber()) < HIDER_IDENTIFIER) 
+    {
+        PlaySound(PlayerNumber(), hiderStringToTaunt(hTaunt), 6);
+        GiveInventory("Vanishing",5);
+		Delay(100);
+    }
+    else
+    {
+        PlaySound(PlayerNumber(), seekerStringToTaunt(sTaunt), 6);
+		Delay(50);
+    }
+}
+
+function int hiderStringToTaunt(int taunt) {
+    switch (taunt) {
+    case 1:
+        return "NyxTaunt";
+    default:
+        break;
+    }
+    return "UNKNOWN";
+}
+
+function int seekerStringToTaunt(int taunt) {
+    switch (taunt) {
+    case 1:
+        return "CalebTaunt";
+    case 2:
+        return "DukeTaunt";
+	case 3:
+        return "ZedekTaunt";
+	case 3:
+        return "VisorTaunt";
+		
+    default:
+        break;
+    }
+    return "UNKNOWN";
+}

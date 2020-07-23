@@ -1,0 +1,217 @@
+ACTOR LMG : Chaingun
+{
+   Weapon.AmmoUse 1
+   Weapon.AmmoGive 20
+   Weapon.AmmoType "Clip"
+   Inventory.PickupMessage "You picked up the LMG."
+   Obituary "%o was mowed down by %k's LMG"
+   AttackSound "weapons/lmgfire"
+   Tag "Light Machine Gun"
+   States
+   {
+   Ready:
+     LMGG A 1 A_WeaponReady
+     Loop
+   Deselect:
+     LMGG A 1 A_Lower
+     Loop
+   Select:
+     LMGG A 1 A_Raise
+     Loop
+   Fire:
+     LMGF A 3 A_FireBullets(5.6, 0, 1, 7, "BulletPuff", FBF_NORANDOM)
+	 LMGF B 1
+	 LMGF C 3 A_FireBullets(5.6, 0, 1, 7, "BulletPuff", FBF_NORANDOM)
+	 LMGF D 1 A_ReFire
+     Goto Ready
+   Spawn:
+     LMGL A -1
+     Stop
+   }
+}
+Actor LandMineLayer : Weapon
+{
+	Weapon.AmmoType "MineAmmo"
+	Inventory.PickUpSound "misc/i_pkup"
+	Weapon.AmmoGive 1
+	Weapon.AmmoUse 1
+	+WEAPON.NOALERT
+	+WEAPON.NOAUTOAIM
+	Inventory.PickupMessage "Picked up a land mine."
+	States
+	{
+	Remove:
+		TNT1 A 0 A_TakeInventory("LandMineLayer", 1)
+		Stop
+	Ready:
+		MINE A 1 A_WeaponReady
+		Loop
+	Select:
+		MINE A 1 A_Raise
+		Loop
+	Deselect:
+		MINE A 1 A_Lower
+		Loop
+	Fire:
+		MIN2 A 5
+		MIN2 ABCDEFGH 1
+		NULL A 7 A_FireCustomMissile("Mine",0,1,0,0)
+		MINE BCDEFG 1
+		TNT1 A 0 A_JumpIfNoAmmo("Remove")
+		MINE A 3 A_ReFire
+		Goto Ready
+	AltFire:
+		MIN2 A 5
+		MIN2 ABCDEFGH 1
+		NULL A 5
+		MIN3 ABCDE 1
+		NULL A 0 A_PlayWeaponSound("MINE002")
+		MIN3 FG 1
+		MIN3 H 2 A_FireCustomMissile("Mine2",0,1,0,8)
+		MIN3 IJKL 1
+		NULL A 4
+		MINE BCDEFG 1
+		MINE A 0 A_JumpIfNoAmmo("Remove")
+		MINE A 3 A_ReFire
+		Goto Ready
+	Spawn:
+		LMIN A -1
+		Stop
+	}
+}
+
+Actor Mine
+{
+Radius 32
+Height 5
+Mass 1000000
+Health 20
+Damage 0
+SeeSound "MINE001"
+DONTHURTSHOOTER
+Speed 2
++NOBLOOD
+-SHOOTABLE
++MISSILE
++DOOMBOUNCE
++THRUGHOST
+States
+{
+Spawn:
+	LMIN A 0 A_Gravity
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	Goto Death
+Death:
+	LMIN A 0 A_SpawnItem("MineBase")
+	Stop
+}
+}
+Actor MineBase
+{
+Radius 32
+Height 5
+Mass 1000000
+Health 20
+Damage 1
+SeeSound "MINE001"
+DONTHURTSHOOTER
+Speed 0
++NOBLOOD
+-SHOOTABLE
++MISSILE
++THRUGHOST
++DEHEXPLOSION
++FORCERADIUSDMG
+States
+{
+Spawn:
+	LMIN A 0 A_Gravity
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	LMIN AAABBB 4
+	Goto Death
+Death:
+	TNT1 A 0 A_AlertMonsters
+	TNT1 A 0 A_PlaySound("weapons/rocklx")
+	MISL B 8 A_Explode
+	MISL C 6
+	MISL D 4
+	Stop
+}
+}
+Actor Mine2 : Mine
+{
+Speed 15
+}
+Actor MineAmmo : Ammo
+{
+Radius 10
+Inventory.Amount 1
+Inventory.MaxAmount 5
+Ammo.BackpackAmount 1
+Ammo.BackpackMaxAmount 5
+Inventory.PickupMessage "Picked up a land mine."
+Inventory.Icon "LMINA0"
+States
+{
+Spawn:
+	LMIN A -1
+	Loop
+}
+}

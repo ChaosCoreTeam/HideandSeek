@@ -1,0 +1,52 @@
+LISTMENU "MainMenu"
+{
+	StaticPatch 94, 2, "M_DOOM"
+	Position 97, 72	//already positioned for "read this" being always there
+	PatchItem "M_NGAME", "n", "PlayerclassMenu"
+	PatchItem "H_CONFIG", "c", "HNSOptions"
+	PatchItem "M_OPTION","o", "OptionsMenu"
+	PatchItem "M_QUITG", "q", "QuitMenu"
+}
+
+OptionMenu "HNSOptions"
+{
+	Title 			"HNS Config"
+	StaticText 	""
+	StaticText 	"Controls",1
+	StaticText 	""
+	Control "Taunt",								"HNS_Taunts"
+	Control "Use Ability",							"HNS_PrimaryAbility"
+	Control "Use Second Ability",					"HNS_SecondAbility"
+	Control "Class Description",					"HNS_ClassDescription"
+	StaticText 	""
+	StaticText 	"Hider Controls",1
+	StaticText 	""
+	Control "Vanish Toggle",						"+HNS_Vanish"
+	Option "Hider Taunt",				"cl_hidertaunt", 		"HiderTaunt"
+	StaticText 	""
+	StaticText 	"Seeker Controls",1
+	StaticText 	""
+	Control "Scouter Radar Toggle",					"ToggleRadarHNSOff"
+	Option "Seeker Taunt",				"cl_seekertaunt", 		"SeekerTaunt"
+	StaticText 	""
+	StaticText 	"Options",1
+	StaticText 	""
+	Option "Class Description Image or ACS",			"cl_description",			"ClassDescMethod"
+	Option "Class Description shows on Spawn",			"cl_descriptionspawn",		"ClassDescSpawn"
+}
+
+OptionValue "HiderTaunt"
+{
+	1, "Nyx"
+	2, "Spongebob"
+	3, "Patrick"
+	4, "Sonic"
+	5, "Shadow"	
+}
+
+OptionValue "SeekerTaunt"
+{
+	1, "Caleb"
+	2, "Duke"
+	3, "Zedek"
+}

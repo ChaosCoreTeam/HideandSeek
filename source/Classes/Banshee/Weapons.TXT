@@ -1,0 +1,123 @@
+ACTOR Rejuvinator : Weapon
+{
+   Inventory.PickupSound "misc/w_pkup"
+   Inventory.PickupMessage "You got the Rejuvinator"
+   Weapon.AmmoType "HealingEnergy"
+   Weapon.AmmoGive 600
+   Weapon.AmmoUse 1
+   Obituary "%o somehow defied logic." 
+   Weapon.Kickback 10000000
+   AttackSound "Banshee/Weapons/HealingWave"
+   States
+   {
+   Spawn:
+      STPO A -1
+      Loop
+   Ready:
+      STPO A 2 A_WeaponReady
+	  STPO B 2 A_WeaponReady
+	  STPO C 2 A_WeaponReady
+      Loop
+   Deselect:
+      STPO A 1 A_Lower
+      Loop
+   Select:
+      STPO A 1 A_Raise
+      Loop
+   Fire:
+	  STPO A 0 A_JumpIfInventory("revCharged",1,3) 
+	  STPO D 3
+	  STPO A 0 A_GiveInventory("revCharged",1)
+	  STPO EFGH 1 A_FireCustomMissile("HealingWave", 0, 1, 0, 0)
+	  STPO EFGH 1 A_FireCustomMissile("HealingWave", 0, 1, 0, 0)
+	  STPO EFGH 1 A_ReFire
+	  STPO A 0 A_TakeInventory("revCharged",1)
+      Goto Ready   
+   Flash:
+      PDBF A 0
+      Stop
+   }
+}
+
+ACTOR HealingEnergy : Ammo
+{
+	Inventory.PickupMessage "Healing Energy!"
+	Inventory.Amount 600
+	Inventory.MaxAmount 600
+	Ammo.BackpackAmount 600
+	Ammo.BackpackMaxAmount 600
+	Inventory.Icon "CELLA0"
+	States
+	{
+	Spawn:
+		CELL A -1
+		stop
+	}
+}
+
+
+ACTOR revCharged : Ammo
+{
+Inventory.Amount 0
+Inventory.MaxAmount 1
+States
+{
+Spawn:
+TNT1 A -1
+Loop
+}
+}
+
+ACTOR HealingWave
+{ 
+   Radius 96
+   Height 5 
+   Damage 0
+   Speed 10
+   Scale 0.6
+   SeeSound "Banshee/Weapons/HealingWave" 
+   PROJECTILE
+   RENDERSTYLE ADD
+   ALPHA 0.67
+   DamageType healable
+   States 
+   {
+   Spawn:
+	  STPR A 0 A_JumpIfInTargetInventory("isSeeker", 1, "Death")
+      STPR A 5
+	  STPR A 0 ACS_NamedExecute("GiveHealth", 0)
+	  STPR A 0 A_SpawnItemEx("HealingWaveFX1", 1, 0, 0, 0, 0, 0, 0, SXF_TRANSFERTRANSLATION)
+   Death:
+      STPR A 0
+      Stop 
+   } 
+}
+
+ACTOR HealingWaveFX1 : HealingWave 
+{ 
+   Scale 0.4
+   Speed 11
+   States 
+   {
+   Spawn:
+      STPR A 3
+	  STPR A 0 A_SpawnItemEx("HealingWaveFX2", 1, 0, 0, 0, 0, 0, 0, SXF_TRANSFERTRANSLATION)
+	Death:
+      STPR A 0 
+      Stop 
+   } 
+}
+
+ACTOR HealingWaveFX2 : HealingWave 
+{ 
+   Scale 0.2 
+   Speed 12
+   States 
+   {
+   Spawn:
+      STPR A 2
+	Death:
+      STPR A 0
+      Stop 
+   } 
+}

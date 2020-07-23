@@ -1,0 +1,223 @@
+//main hud gfx
+graphic hudleft, 158, 66 { XScale 2.0 YScale 2.0 Patch hudleft, 0, 0 }
+graphic hudritbb, 158, 66 { XScale 2.0 YScale 2.0 Patch hudritbb, 0, 0 }
+graphic hudritgb, 158, 66 { XScale 2.0 YScale 2.0 Patch hudritgb, 0, 0 }
+graphic hudritgg, 158, 66 { XScale 2.0 YScale 2.0 Patch hudritgg, 0, 0 }
+graphic hudbar01, 100, 24 { XScale 2.0 YScale 2.0 Patch hudbar01, 0, 0 }
+graphic hudbar11, 100, 24 { XScale 2.0 YScale 2.0 Patch hudbar11, 0, 0 }
+graphic hudbar02, 100, 24 { XScale 2.0 YScale 2.0 Patch hudbar02, 0, 0 }
+graphic hudbar12, 100, 24 { XScale 2.0 YScale 2.0 Patch hudbar12, 0, 0 }
+graphic hudbar03, 77, 24 { XScale 2.0 YScale 2.0 Patch hudbar03, 0, 0 }
+graphic hudbar13, 77, 24 { XScale 2.0 YScale 2.0 Patch hudbar13, 0, 0 }
+graphic hudbar04, 77, 24 { XScale 2.0 YScale 2.0 Patch hudbar04, 0, 0 }
+graphic hudbar14, 77, 24 { XScale 2.0 YScale 2.0 Patch hudbar14, 0, 0 }
+graphic hudabil, 123, 37 { XScale 2.0 YScale 2.0 Patch hudabil, 0, 0 }
+//graphic hudradar, 158, 158 { XScale 2.0 YScale 2.0 Patch hudradar, 0, 0 }
+graphic hudnone, 48, 28 { XScale 2.0 YScale 2.0 Patch hudnone, 0, 0 }
+graphic hudammo, 48, 28 { XScale 2.0 YScale 2.0 Patch hudammo, 0, 0 }
+graphic hudblue, 48, 28 { XScale 2.0 YScale 2.0 Patch hudblue, 0, 0 }
+graphic hudbserk, 48, 28 { XScale 2.0 YScale 2.0 Patch hudbserk, 0, 0 }
+graphic hudcell, 48, 28 { XScale 2.0 YScale 2.0 Patch hudcell, 0, 0 }
+graphic hudcellp, 48, 28 { XScale 2.0 YScale 2.0 Patch hudcellp, 0, 0 }
+graphic hudclip, 48, 28 { XScale 2.0 YScale 2.0 Patch hudclip, 0, 0 }
+graphic hudgreen, 48, 28 { XScale 2.0 YScale 2.0 Patch hudgreen, 0, 0 }
+graphic hudgren, 48, 28 { XScale 2.0 YScale 2.0 Patch hudgren, 0, 0 }
+graphic hudknife, 48, 28 { XScale 2.0 YScale 2.0 Patch hudknife, 0, 0 }
+graphic hudmdkit, 48, 28 { XScale 2.0 YScale 2.0 Patch hudmdkit, 0, 0 }
+graphic hudrockt, 48, 28 { XScale 2.0 YScale 2.0 Patch hudrockt, 0, 0 }
+graphic hudshbox, 48, 28 { XScale 2.0 YScale 2.0 Patch hudshbox, 0, 0 }
+graphic hudshell, 48, 28 { XScale 2.0 YScale 2.0 Patch hudshell, 0, 0 }
+graphic hudthrow, 48, 28 { XScale 2.0 YScale 2.0 Patch hudthrow, 0, 0 }
+graphic hudjetpk, 48, 28 { XScale 2.0 YScale 2.0 Patch hudjetpk, 0, 0 }
+graphic hudchick, 48, 28 { XScale 2.0 YScale 2.0 Patch hudchick, 0, 0 }
+graphic hudmin, 80, 80 { XScale 3.0 YScale 3.0 Patch hudmin, 0, 0 }
+graphic hudserp, 80, 80 { XScale 3.0 YScale 3.0 Patch hudserp, 0, 0 }
+graphic hudafrit, 80, 80 { XScale 3.0 YScale 3.0 Patch hudafrit, 0, 0 }
+graphic hudsmoke, 25, 31 { XScale 3.0 YScale 3.0 Patch hudsmoke, 0, 0 }
+//font hud gfx
+graphic hnsfont0, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont0, 0, 0 }
+graphic hnsfont1, 7, 12 { XScale 2.0 YScale 2.0 Patch hnsfont1, 0, 0 }
+graphic hnsfont2, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont2, 0, 0 }
+graphic hnsfont3, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont3, 0, 0 }
+graphic hnsfont4, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont4, 0, 0 }
+graphic hnsfont5, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont5, 0, 0 }
+graphic hnsfont6, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont6, 0, 0 }
+graphic hnsfont7, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont7, 0, 0 }
+graphic hnsfont8, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont8, 0, 0 }
+graphic hnsfont9, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont9, 0, 0 }
+graphic hnsfonta, 15, 12 { XScale 2.0 YScale 2.0 Patch hnsfonta, 0, 0 }
+graphic hnsfontb, 15, 12 { XScale 2.0 YScale 2.0 Patch hnsfontb, 0, 0 }
+graphic hnsfontc, 14, 12 { XScale 2.0 YScale 2.0 Patch hnsfontc, 0, 0 }
+graphic hnsfontd, 15, 12 { XScale 2.0 YScale 2.0 Patch hnsfontd, 0, 0 }
+graphic hnsfonte, 14, 12 { XScale 2.0 YScale 2.0 Patch hnsfonte, 0, 0 }
+graphic hnsfontf, 12, 12 { XScale 2.0 YScale 2.0 Patch hnsfontf, 0, 0 }
+graphic hnsfontg, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfontg, 0, 0 }
+graphic hnsfonth, 15, 12 { XScale 2.0 YScale 2.0 Patch hnsfonth, 0, 0 }
+graphic hnsfonti, 6, 12 { XScale 2.0 YScale 2.0 Patch hnsfonti, 0, 0 }
+graphic hnsfontj, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfontj, 0, 0 }
+graphic hnsfontk, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfontk, 0, 0 }
+graphic hnsfontl, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfontl, 0, 0 }
+graphic hnsfontm, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfontm, 0, 0 }
+graphic hnsfontn, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfontn, 0, 0 }
+graphic hnsfonto, 17, 12 { XScale 2.0 YScale 2.0 Patch hnsfonto, 0, 0 }
+graphic hnsfontp, 14, 12 { XScale 2.0 YScale 2.0 Patch hnsfontp, 0, 0 }
+graphic hnsfontq, 17, 12 { XScale 2.0 YScale 2.0 Patch hnsfontq, 0, 0 }
+graphic hnsfontr, 15, 12 { XScale 2.0 YScale 2.0 Patch hnsfontr, 0, 0 }
+graphic hnsfonts, 15, 12 { XScale 2.0 YScale 2.0 Patch hnsfonts, 0, 0 }
+graphic hnsfontt, 12, 12 { XScale 2.0 YScale 2.0 Patch hnsfontt, 0, 0 }
+graphic hnsfontu, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfontu, 0, 0 }
+graphic hnsfontv, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfontv, 0, 0 }
+graphic hnsfontw, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfontw, 0, 0 }
+graphic hnsfontx, 14, 12 { XScale 2.0 YScale 2.0 Patch hnsfontx, 0, 0 }
+graphic hnsfonty, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfonty, 0, 0 }
+graphic hnsfontz, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfontz, 0, 0 }
+graphic hnsslash, 13, 12 { XScale 2.0 YScale 2.0 Patch hnsslash, 0, 0 }
+graphic hnscolon, 5, 12 { XScale 2.0 YScale 2.0 Patch hnscolon, 0, 0 }
+graphic hnsdash, 6, 12 { XScale 2.0 YScale 2.0 Patch hnsdash, 0, 0 }
+//Kuchi's Sky Texture
+texture tntsky, 512, 128 { Patch DOWNITE, 0, 0 Patch DOSNITE, 256, 0 }
+
+//Berserker
+Sprite "BSKRE2E8", 66, 73
+{
+	Offset 33, 69
+	Patch "BSKRA2A8", 0, 0
+}
+
+Sprite "BSKRE3E7", 73, 73
+{
+	Offset 36, 69
+	Patch "BSKRA3A7", 0, 0
+}
+
+Sprite "BSKRE4E6", 70, 74
+{
+	Offset 35, 70
+	Patch "BSKRA4A6", 0, 0
+}
+
+Sprite "BSKRE5", 62, 76
+{
+	Offset 31, 72
+	Patch "BSKRA5", 0, 0
+}
+
+Sprite "BSKRF2F8", 54, 73
+{
+	Offset 27, 69
+	Patch "BSKRB2B8", 0, 0
+}
+
+Sprite "BSKRF3F7", 47, 73
+{
+	Offset 23, 69
+	Patch "BSKRB3B7", 0, 0
+}
+
+Sprite "BSKRF4F6", 57, 72
+{
+	Offset 28, 68
+	Patch "BSKRB4B6", 0, 0
+}
+
+Sprite "BSKRF5", 66, 73
+{
+	Offset 33, 69
+	Patch "BSKRB5", 0, 0
+}
+
+Sprite "BSKRG2G8", 72, 76
+{
+	Offset 36, 72
+	Patch "BSKRC2C8", 0, 0
+}
+
+Sprite "BSKRG3G7", 76, 77
+{
+	Offset 38, 73
+	Patch "BSKRC3C7", 0, 0
+}
+
+Sprite "BSKRG4G6", 67, 75
+{
+	Offset 33, 71
+	Patch "BSKRC4C6", 0, 0
+}
+
+Sprite "BSKRG5", 62, 76
+{
+	Offset 31, 72
+	Patch "BSKRC5", 0, 0
+}
+
+Sprite "BSKRH2H8", 54, 72
+{
+	Offset 27, 68
+	Patch "BSKRD2D8", 0, 0
+}
+
+Sprite "BSKRH3H7", 45, 73
+{
+	Offset 22, 69
+	Patch "BSKRD3D7", 0, 0
+}
+
+Sprite "BSKRH4H6", 57, 74
+{
+	Offset 28, 70
+	Patch "BSKRD4D6", 0, 0
+}
+
+Sprite "BSKRH5", 66, 73
+{
+	Offset 33, 69
+	Patch "BSKRD5", 0, 0
+}
+
+Sprite "BSKRI2I8", 66, 73
+{
+	Offset 33, 69
+	Patch "BSKRA2A8", 0, 0
+}
+
+Sprite "BSKRI3I7", 73, 73
+{
+	Offset 36, 69
+	Patch "BSKRA3A7", 0, 0
+}
+
+Sprite "BSKRI4I6", 70, 74
+{
+	Offset 35, 70
+	Patch "BSKRA4A6", 0, 0
+}
+
+Sprite "BSKRI5", 62, 76
+{
+	Offset 31, 72
+	Patch "BSKRA5", 0, 0
+}
+
+Sprite "BSKRJ2J8", 54, 73
+{
+	Offset 27, 69
+	Patch "BSKRB2B8", 0, 0
+}
+
+Sprite "BSKRJ3J7", 47, 73
+{
+	Offset 23, 69
+	Patch "BSKRB3B7", 0, 0
+}
+
+Sprite "BSKRJ4J6", 57, 72
+{
+	Offset 28, 68
+	Patch "BSKRB4B6", 0, 0
+}
+
+Sprite "BSKRJ5", 66, 73
+{
+	Offset 33, 69
+	Patch "BSKRB5", 0, 0
+}

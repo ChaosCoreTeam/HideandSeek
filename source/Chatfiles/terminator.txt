@@ -1,0 +1,48 @@
+[IntroStrings]
+"Loading processes..."
+"Initiating FindAndKill.exe..."
+"Your hiding is futile."
+"Come quietly and you will not be harmed."
+"Beginning mission."
+
+[RareRoamingStrings]
+"ERROR: Hiders not found..."
+"Analyzing Internal Hard Drive Disk."
+"Where is John Connor?"
+"Berserker Unit, you will alert Hiders of your presence. Cease Screaming."
+
+[FragStrings]
+"Chances of your survival were calculated to be 0.013 percent."
+"Target eliminated."
+"Terminated."
+"Initiating search protocols for remaining Hiders."
+
+[KilledStrings]
+"Invalid."
+"Error in pathing made. Adjusting systems."
+"Organic components terminated. Analyzing data..."
+"Returning to base for repairs."
+
+[RoamingStrings]
+"Come with me if you want to live."
+"Resistance will be met with high-velocity plasma."
+"My systems indicate that you cannot fight. Give up."
+
+[EnragedStrings]
+"Unknown Emotion: RAGE...Attempting to terminate..."
+
+[DemoralizedStrings]
+"This is unforeseen."
+"I require recharging."
+
+[WinStrings]
+"Hiding team eradicated."
+"Victory achieved."
+"Mission completed."
+"You must upgrade your systems to survive."
+
+[LoseStrings]
+"Impossible."
+"Error."
+"My calculations were imperfect. Unacceptable."
+"I am sorry. I will not let you win again."
