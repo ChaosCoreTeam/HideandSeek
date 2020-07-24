@@ -11,7 +11,27 @@ script "HNS_Taunt" (int hTaunt, int sTaunt) net
     if(PlayerClass(PlayerNumber()) < HIDER_IDENTIFIER) 
     {
         PlaySound(PlayerNumber(), hiderStringToTaunt(hTaunt), 6);
-        GiveInventory("Vanishing",5);
+		
+		switch(PlayerClass(PlayerNumber())){
+			case 1:
+				ACS_NamedExecute("returnVanishing", 0, 0, 0, 0);
+			break;
+			case 2:
+				ACS_NamedExecute("returnLowVanishing", 0, 0, 0, 0);
+			break;
+			case 3:
+				ACS_NamedExecute("returnMedVanishing", 0, 0, 0, 0);
+			break;
+			case 4:
+				ACS_NamedExecute("returnLowVanishing", 0, 0, 0, 0);
+			break;
+			case 5:
+				ACS_NamedExecute("returnMedVanishing", 0, 0, 0, 0);
+			break;
+			case 6:
+				ACS_NamedExecute("returnLowVanishing", 0, 0, 0, 0);
+			break;
+		}
 		Delay(100);
     }
     else
@@ -46,4 +66,19 @@ function int seekerStringToTaunt(int taunt) {
         break;
     }
     return "UNKNOWN";
+}
+
+Script "returnLowVanishing" (void)
+{
+	GiveInventory("lowVanishingPool", 15);
+}
+
+Script "returnMedVanishing" (void)
+{
+	GiveInventory("medVanishingPool", 15);
+}
+
+Script "returnVanishing" (void)
+{
+	GiveInventory("Vanishing", 15);
 }

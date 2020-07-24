@@ -16,7 +16,7 @@ ACTOR GuardianClass : PlayerPawn
 	Player.SoundClass "Guardian"
 	Player.CrouchSprite "RKTC"
 	player.startitem "Shield", 1
-	player.startitem "lowVanishingPool", 35
+	player.startitem "medVanishingPool", 50
 	player.startitem "GuardianArmor", 1
 	player.startitem "GuardianPower", 500
 	player.startitem "Vanishing", 125

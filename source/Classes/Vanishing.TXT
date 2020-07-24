@@ -21,7 +21,7 @@ ACTOR medVanishingPool : Ammo
   Game Doom
   Inventory.PickupMessage "Vanishing"
   Inventory.Amount 1
-  Inventory.MaxAmount 90
+  Inventory.MaxAmount 65
   Ammo.BackpackAmount 1
   Ammo.BackpackMaxAmount 65
   Inventory.Icon "JETPA0"

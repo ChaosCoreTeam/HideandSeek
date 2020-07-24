@@ -496,7 +496,28 @@ Script 118 (void) clientside
 		{
 			while (isVanished(1000 + PlayerNumber()) == true)
 			{
-				TakeActorInventory(PlayerNumber() + 1000, "Vanishing", 1);
+				switch(PlayerClass(1000 + PlayerNumber()))
+				{
+					case 1:
+					TakeActorInventory(PlayerNumber() + 1000, "Vanishing", 1);
+					break;
+					case 2:
+					TakeActorInventory(PlayerNumber() + 1000, "lowVanishingPool", 1);
+					break;
+					case 3:
+					TakeActorInventory(PlayerNumber() + 1000, "medVanishingPool", 1);
+					break;
+					case 4:
+					TakeActorInventory(PlayerNumber() + 1000, "lowVanishingPool", 1);
+					break;
+					case 5:
+					TakeActorInventory(PlayerNumber() + 1000, "medVanishingPool", 1);
+					break;
+					case 6:
+					TakeActorInventory(PlayerNumber() + 1000, "lowVanishingPool", 1);
+					break;
+				}
+				
 				if (CheckActorInventory(1000 + PlayerNumber(), "Vanishing") == 0)
 				{
 					ACS_NamedExecuteAlways("HNS_NoVanish", 0);

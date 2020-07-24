@@ -154,11 +154,31 @@ StatusBar FullScreen, FullScreenOffsets, ForceScaled
 		DrawBar "hudbar13", "hudbar03", GuardianFirstCooldown, Horizontal, 116, -12;
 		DrawBar "hudbar14", "hudbar04", GuardianSecondCooldown, Horizontal, 196, -12;
 	    DrawBar "hudbar11", "hudbar01", GuardianPower, Horizontal, -73, -12;
-		DrawBar "hudbar12", "hudbar02", Vanishing, Horizontal, -73, -27;
+		DrawBar "hudbar12", "hudbar02", medVanishingPool, Horizontal, -73, -27;
 		//
 		DrawImage "hudsmoke", -377, -12;
 	}
-	PlayerClass Teleporter, Rocketeer
+		PlayerClass Illusionist
+	{
+		//Health+Armor Icons
+		DrawImage "hudmdkit", 0, -14;
+		DrawImage "hudblue", 0, -28;
+		//Bottom Right - Ammo
+		DrawImage "hudritgg", -79, -33;
+		//Health+Armor Display Readouts
+		DrawNumber 3, HNS_HUD_FONT, Black, Health, DrawShadow, 42, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Health, WhenNotZero, 42, -10, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -10; DrawNumber 3, HNS_HUD_FONT, Green, 200, DrawShadow, 68, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Black, Armor, DrawShadow, 42, -24, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Armor, WhenNotZero, 42, -24, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -24; DrawNumber 3, HNS_HUD_FONT, Green, 200, DrawShadow, 68, -24, 0;
+		//Ammo
+		DrawBar "hudbar13", "hudbar03", GuardianFirstCooldown, Horizontal, 116, -12;
+		DrawBar "hudbar14", "hudbar04", GuardianSecondCooldown, Horizontal, 196, -12;
+	    DrawBar "hudbar11", "hudbar01", GuardianPower, Horizontal, -73, -12;
+		DrawBar "hudbar12", "hudbar02", lowVanishingPool, Horizontal, -73, -27;
+		//
+		DrawImage "hudsmoke", -377, -12;
+	}
+	PlayerClass Teleporter 
 	{
 		//Health+Armor Icons
 		DrawImage "hudmdkit", 0, -14;
@@ -170,7 +190,23 @@ StatusBar FullScreen, FullScreenOffsets, ForceScaled
 		DrawNumber 3, HNS_HUD_FONT, Gold, Health, WhenNotZero, 42, -10, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -10; DrawNumber 3, HNS_HUD_FONT, Green, 200, DrawShadow, 68, -10, 0;
 		DrawNumber 3, HNS_HUD_FONT, Black, Armor, DrawShadow, 42, -24, 0;
 		DrawNumber 3, HNS_HUD_FONT, Gold, Armor, WhenNotZero, 42, -24, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -24; DrawNumber 3, HNS_HUD_FONT, Green, 200, DrawShadow, 68, -24, 0;
+		DrawBar "hudbar12", "hudbar02", lowVanishingPool, Horizontal, -73, -27;
 	}
+		PlayerClass Rocketeer
+	{
+		//Health+Armor Icons
+		DrawImage "hudmdkit", 0, -14;
+		DrawImage "hudblue", 0, -28;
+		//Bottom Right - Ammo
+		DrawImage "hudritgb", -79, -33;
+		//Health+Armor Display Readouts
+		DrawNumber 3, HNS_HUD_FONT, Black, Health, DrawShadow, 42, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Health, WhenNotZero, 42, -10, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -10; DrawNumber 3, HNS_HUD_FONT, Green, 200, DrawShadow, 68, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Black, Armor, DrawShadow, 42, -24, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Armor, WhenNotZero, 42, -24, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -24; DrawNumber 3, HNS_HUD_FONT, Green, 200, DrawShadow, 68, -24, 0;
+		DrawBar "hudbar12", "hudbar02", lowVanishingPool, Horizontal, -73, -27;
+	}
+	
 	PlayerClass Berserker, Hunter, Terminator
 	{
 		//Health+Armor Icons

@@ -12,7 +12,7 @@ ACTOR IllusionistClass : PlayerPawn
 	Player.SoundClass "Illusionist"
 	player.startitem "megasphere", 1
 	player.startitem "vanisherfist", 1
-	player.startitem "Vanishing", 100
+	player.startitem "lowVanishingPool", 35
   	Player.ForwardMove 0.25, 1.00
   	Player.SideMove 0.25, 1.00
 	Player.JumpZ 12
