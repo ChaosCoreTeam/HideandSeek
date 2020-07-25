@@ -490,37 +490,65 @@ Script 118 (void) clientside
 		delay(1);
 		}
 	}
-	if(PlayerClass(PlayerNumber()) < 6) //Hider check
+	if(PlayerClass(PlayerNumber()) < 7) //Hider check
 	{
 		while (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0)
 		{
 			while (isVanished(1000 + PlayerNumber()) == true)
 			{
-				switch(PlayerClass(1000 + PlayerNumber()))
+				if (CheckActorInventory(1000 + PlayerNumber(), "Vanishing") > 0)
 				{
-					case 1:
-					TakeActorInventory(PlayerNumber() + 1000, "Vanishing", 1);
-					break;
-					case 2:
-					TakeActorInventory(PlayerNumber() + 1000, "lowVanishingPool", 1);
-					break;
-					case 3:
-					TakeActorInventory(PlayerNumber() + 1000, "medVanishingPool", 1);
-					break;
-					case 4:
-					TakeActorInventory(PlayerNumber() + 1000, "lowVanishingPool", 1);
-					break;
-					case 5:
-					TakeActorInventory(PlayerNumber() + 1000, "medVanishingPool", 1);
-					break;
-					case 6:
-					TakeActorInventory(PlayerNumber() + 1000, "lowVanishingPool", 1);
-					break;
+					TakeActorInventory(1000 + PlayerNumber(), "Vanishing", 1);
 				}
 				
-				if (CheckActorInventory(1000 + PlayerNumber(), "Vanishing") == 0)
+				if (CheckActorInventory(1000 + PlayerNumber(), "lowVanishingPool") > 0)
 				{
-					ACS_NamedExecuteAlways("HNS_NoVanish", 0);
+					TakeActorInventory(1000 +  PlayerNumber(), "lowVanishingPool", 1);
+				}
+				
+				if (CheckActorInventory(1000 + PlayerNumber(), "medVanishingPool") > 0)
+				{
+					TakeActorInventory(PlayerNumber() + 1000, "medVanishingPool", 1);
+				}
+				
+				switch (PlayerClass(PlayerNumber() + 1000))
+				{
+					case 1:
+						if (CheckActorInventory(1000 + PlayerNumber(), "Vanishing") == 0)
+						{
+							ACS_NamedExecuteAlways("HNS_NoVanish", 0);
+						}
+					break;
+					case 2:
+						if (CheckActorInventory(1000 + PlayerNumber(), "lowVanishingPool") == 0)
+						{
+							ACS_NamedExecuteAlways("HNS_NoVanish", 0);
+						}
+					break;
+					case 3:
+						if (CheckActorInventory(1000 + PlayerNumber(), "medVanishingPool") == 0)
+						{
+							ACS_NamedExecuteAlways("HNS_NoVanish", 0);
+						}
+					break;
+					case 4:
+						if (CheckActorInventory(1000 + PlayerNumber(), "lowVanishingPool") == 0)
+						{
+							ACS_NamedExecuteAlways("HNS_NoVanish", 0);
+						}
+					break;
+					case 5:
+						if (CheckActorInventory(1000 + PlayerNumber(), "medVanishingPool") == 0)
+						{
+							ACS_NamedExecuteAlways("HNS_NoVanish", 0);
+						}
+					break;
+					case 6:
+						if (CheckActorInventory(1000 + PlayerNumber(), "lowVanishingPool") == 0)
+						{
+							ACS_NamedExecuteAlways("HNS_NoVanish", 0);
+						}
+					break;
 				}
 				delay(15);
 			}

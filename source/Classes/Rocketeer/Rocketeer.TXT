@@ -12,7 +12,7 @@ ACTOR RocketeerClass : PlayerPawn
 	Player.SoundClass "Rocketeer"
 	player.startitem "NoDamageRocketLauncher", 1
 	player.startitem "NoDamageRocketAmmo", 25
-	player.startitem "medVanishingPool", 50
+	player.startitem "medVanishingPool", 85
 	player.startitem "megasphere", 1
 	damagefactor "rocket", 0
 	Species "Hider"
