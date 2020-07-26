@@ -12,7 +12,7 @@ ACTOR BansheeClass : PlayerPawn
 	Player.CrouchSprite "RKTC"
 	player.startitem "Rejuvinator", 1
 	player.startitem "HealingEnergy", 600
-	player.startitem "Vanishing", 100
+	player.startitem "Vanishing", 125
 	player.startitem "MedicArmor", 1
 	damagefactor "rocket", 0
 	damagefactor "healable", 0

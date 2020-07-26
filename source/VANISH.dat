@@ -52,10 +52,42 @@ function int isVanished(int pNumber)
 }
 
 function int hasVanish(int pNumber)
-{	
-	if (CheckActorInventory(pNumber + 1000, "Vanishing") == 0)
+{
+	If (PlayerClass(PlayerNumber()) < 7)
 	{
-		return 0;
+		switch (PlayerClass(PlayerNumber() + 1000))
+		{
+			case 1:
+				if (CheckActorInventory(pNumber + 1000, "Vanishing") == 0)
+				{
+					return 0;
+				}
+			case 2:
+				if (CheckActorInventory(pNumber + 1000, "lowVanishingPool") == 0)
+				{
+					return 0;
+				}
+			case 3:
+				if (CheckActorInventory(pNumber + 1000, "medVanishingPool") == 0)
+				{
+					return 0;
+				}
+			case 4:
+				if (CheckActorInventory(pNumber + 1000, "lowVanishingPool") == 0)
+				{
+					return 0;
+				}
+			case 5:
+				if (CheckActorInventory(pNumber + 1000, "medVanishingPool") == 0)
+				{
+					return 0;
+				}
+			case 6:
+				if (CheckActorInventory(pNumber + 1000, "lowVanishingPool") == 0)
+				{
+					return 0;
+				}
+		}
 	}
-		return 1;
+	return 1;
 }

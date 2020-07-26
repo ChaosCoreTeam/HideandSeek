@@ -5,7 +5,7 @@ ACTOR Vanishing : Ammo
   Inventory.Amount 1
   Inventory.MaxAmount 125
   Ammo.BackpackAmount 1
-  Ammo.BackpackMaxAmount 100
+  Ammo.BackpackMaxAmount 125
   Inventory.Icon "JETPA0"
   States
   {
@@ -21,9 +21,9 @@ ACTOR medVanishingPool : Ammo
   Game Doom
   Inventory.PickupMessage "Vanishing"
   Inventory.Amount 1
-  Inventory.MaxAmount 65
+  Inventory.MaxAmount 85
   Ammo.BackpackAmount 1
-  Ammo.BackpackMaxAmount 65
+  Ammo.BackpackMaxAmount 85
   Inventory.Icon "JETPA0"
   States
   {
@@ -38,9 +38,9 @@ ACTOR lowVanishingPool : Ammo
   Game Doom
   Inventory.PickupMessage "Vanishing"
   Inventory.Amount 1
-  Inventory.MaxAmount 75
+  Inventory.MaxAmount 45
   Ammo.BackpackAmount 1
-  Ammo.BackpackMaxAmount 35
+  Ammo.BackpackMaxAmount 45
   Inventory.Icon "JETPA0"
   States
   {
