@@ -1,10 +1,6 @@
 #library "TAUNT"
-
 #include "zcommon.acs"
-
-#define ALL_OF_IT 0x7FFFFFFF
-#define PLAYER_BASE_TID 1000
-#define HIDER_IDENTIFIER 6
+#include "DEFINITIONS.acs"
 
 script "HNS_Taunt" (int hTaunt, int sTaunt) net
 {

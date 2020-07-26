@@ -1,0 +1,293 @@
+ACTOR BlazerClass : PlayerPawn
+{
+	Speed 1
+	Health 100
+	Radius 16
+	Height 56
+	Mass 200
+	PainChance 255
+	Player.ColorRange 112, 127
+	Player.DisplayName "Blazer"
+	Player.SoundClass "Blazer"
+	player.startitem "MegaSphere", 1
+	player.startitem "BlazeSphere", 1
+	player.startitem "blazerfist", 1
+	player.startitem "blazerenergy", 5
+	player.startitem "Dashes", 3
+	player.startitem "lowVanishingPool", 45
+	Player.CrouchSprite "BSRC"
+	Player.ForwardMove 1.00, 1.00
+	Player.SideMove 0.90, 0.90
+	Player.JumpZ 12
+	Species "Hider"
+	limitedtoteam 0
+	damagefactor "rocket", 0
+	+NOSKIN
+	States
+	{
+	Spawn:
+		BRSP A 0
+		BRSP A 35
+		BRSP A 0 A_JumpIf (health>=50, 2)
+		BRSP A 0 ACS_NamedExecute("regenHealth",0)
+		BRSP A 0 A_JumpIfInventory("BlazerEnergy", 5, "Spawn")
+		BRSP A 35
+		BRSP A 0 ACS_NamedExecute("rechargeWeapon",0,1)
+    Loop
+	See:
+		BRSP ABCD 6
+	Loop
+	Missile:
+		BRSP E 12 
+	Goto Spawn
+	Melee:
+		BRSP F 6 BRIGHT
+	Goto Missile
+	Pain:
+		BRSP G 4 
+		BRSP G 4 A_Pain
+	Goto Spawn
+	Death:
+		BRSP H 10
+		BRSP I 10 A_PlayerScream
+		BRSP J 10 A_NoBlocking
+		BRSP KLM 10
+		BRSP N -1
+    Stop
+	XDeath:
+		PLAY O 0 A_Stop
+		BRSP O 5 A_SpawnItemEx ("HumanGibs",0,0,0,0,0,0,0,128)
+		BRSP O 0 A_SkullPop("HeadGib") 
+		BRSP P 5 A_XScream
+		BRSP Q 5 A_NoBlocking
+		BRSP RSTUV 5
+		BRSP W -1
+    Stop
+	FadeIn:
+		PLAY O 0 A_SetTranslucent(0.25, 1)
+	Goto Spawn
+	FadeOut:
+		PLAY O 0 A_SetTranslucent(0.15, 1)
+	Goto Spawn
+	Visible:
+		PLAY O 0 A_SetTranslucent(1, 0)
+	Goto Spawn
+	}
+}
+
+Actor BlazerFist : Weapon
+{
+	  Weapon.AmmoUse1 0
+	  Weapon.AmmoGive1 0
+	  Weapon.AmmoType1 "Vanishing"
+	+WEAPON.NOALERT
+	States
+	{
+	Ready:
+		FIST A 1 A_WeaponReady
+	Loop
+	Deselect:
+		FIST A 1 A_Lower
+	Loop
+	Select:
+		FIST A 1 A_Raise
+	Loop
+	Fire:
+	  FIST A 0 A_JumpIfInventory("BlazerEnergy", 1, 1)
+	  Goto Ready
+	  FIST A 0 A_TakeInventory("BlazerEnergy", 1)
+	  FIST A 5 A_SpawnItemEx("BlazerClone", 0, 0, 0, 24, 0, 0, 0, SXF_TRANSFERTRANSLATION)
+	  Goto Ready
+	}
+}
+ACTOR BlazerClone
+{
+  Radius 16
+  Height 56
+  ProjectilePassHeight 24
+  BounceFactor 0x7fffffff
+  -NOGRAVITY
+  +BOUNCEONFLOORS
+  +MISSILE
+  +STEPMISSILE
+  
+  var int user_angle;
+  States
+  {
+  Spawn:
+    TNT1 AA 0 A_SetUserVar("user_angle", angle)
+  Spawn2:
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP A 1 A_SpawnItemEx("BlazerCloneA", -24, 0, 0, 0, 0, 0, 0, SXF_TRANSFERTRANSLATION)
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP A 1
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP A 1 A_SpawnItemEx("BlazerCloneA", -24, 0, 0, 0, 0, 0, 0, SXF_TRANSFERTRANSLATION)
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP A 1
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP A 1 A_SpawnItemEx("BlazerCloneA", -24, 0, 0, 0, 0, 0, 0, SXF_TRANSFERTRANSLATION)
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP A 1
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP B 1 A_SpawnItemEx("BlazerCloneB", -24, 0, 0, 0, 0, 0, 0, SXF_TRANSFERTRANSLATION)
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP B 1
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP B 1 A_SpawnItemEx("BlazerCloneB", -24, 0, 0, 0, 0, 0, 0, SXF_TRANSFERTRANSLATION)
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP B 1
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP B 1 A_SpawnItemEx("BlazerCloneB", -24, 0, 0, 0, 0, 0, 0, SXF_TRANSFERTRANSLATION)
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP B 1
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP C 1 A_SpawnItemEx("BlazerCloneC", -24, 0, 0, 0, 0, 0, 0, SXF_TRANSFERTRANSLATION)
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP C 1
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP C 1 A_SpawnItemEx("BlazerCloneC", -24, 0, 0, 0, 0, 0, 0, SXF_TRANSFERTRANSLATION)
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP C 1
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP C 1 A_SpawnItemEx("BlazerCloneC", -24, 0, 0, 0, 0, 0, 0, SXF_TRANSFERTRANSLATION)
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP C 1
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP D 1 A_SpawnItemEx("BlazerCloneD", -24, 0, 0, 0, 0, 0, 0, SXF_TRANSFERTRANSLATION)
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP D 1
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP D 1 A_SpawnItemEx("BlazerCloneD", -24, 0, 0, 0, 0, 0, 0, SXF_TRANSFERTRANSLATION)
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP D 1
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP D 1 A_SpawnItemEx("BlazerCloneD", -24, 0, 0, 0, 0, 0, 0, SXF_TRANSFERTRANSLATION)
+    TNT1 A 0 A_SetAngle(user_angle)
+    TNT1 A 0 A_ChangeVelocity(24, 0, velz, CVF_RELATIVE | CVF_REPLACE)
+    BRSP D 1
+    loop
+  Death:
+    BRSP A 0
+    Stop
+  }
+}
+ACTOR BlazerCloneA
+{
+  -SOLID
+  -SHOOTABLE
+  +NOGRAVITY
+  Radius 16
+  Height 56
+  States
+  {
+  Spawn:
+    BRSP A 2 A_SetTranslucent(0.6)
+    BRSP A 2 A_SetTranslucent(0.5)
+	BRSP A 2 A_SetTranslucent(0.4)
+	BRSP A 2 A_SetTranslucent(0.3)
+	BRSP A 2 A_SetTranslucent(0.2)
+	BRSP A 2 A_SetTranslucent(0.1)
+    Stop
+  Death:
+    BRSP A 0
+    Stop
+  }
+}
+ACTOR BlazerCloneB : BlazerCloneA
+{
+  States
+  {
+  Spawn:
+	BRSP B 2 A_SetTranslucent(0.6)
+    BRSP B 2 A_SetTranslucent(0.5)
+	BRSP B 2 A_SetTranslucent(0.4)
+	BRSP B 2 A_SetTranslucent(0.3)
+	BRSP B 2 A_SetTranslucent(0.2)
+	BRSP B 2 A_SetTranslucent(0.1)
+    Stop
+  }
+}
+ACTOR BlazerCloneC : BlazerCloneA
+{
+  States
+  {
+  Spawn:
+	BRSP C 2 A_SetTranslucent(0.6)
+    BRSP C 2 A_SetTranslucent(0.5)
+	BRSP C 2 A_SetTranslucent(0.4)
+	BRSP C 2 A_SetTranslucent(0.3)
+	BRSP C 2 A_SetTranslucent(0.2)
+	BRSP C 2 A_SetTranslucent(0.1)
+    Stop
+  }
+}
+ACTOR BlazerCloneD : BlazerCloneA
+{
+  States
+  {
+  Spawn:
+	BRSP D 2 A_SetTranslucent(0.6)
+    BRSP D 2 A_SetTranslucent(0.5)
+	BRSP D 2 A_SetTranslucent(0.4)
+	BRSP D 2 A_SetTranslucent(0.3)
+	BRSP D 2 A_SetTranslucent(0.2)
+	BRSP D 2 A_SetTranslucent(0.1)
+    Stop
+  }
+}
+ACTOR BlazeSphere : PowerupGiver
+{
+  +INVENTORY.AUTOACTIVATE
+  +INVENTORY.ALWAYSPICKUP
+  Inventory.MaxAmount 0
+  Powerup.Type "Speed"
+  Speed 1.0
+  Powerup.Duration 99999999999999999999
+  Inventory.PickupMessage "EatShitAndDie"
+  States
+  {
+    Spawn:
+    TURB A 6 Bright
+    TURB B 6
+    Loop
+  }
+}
+ACTOR BlazerEnergy : Ammo
+{
+	Inventory.PickupMessage "Blazer Energy!"
+	Inventory.Amount 5
+	Inventory.MaxAmount 5
+	Ammo.BackpackAmount 5
+	Ammo.BackpackMaxAmount 5
+	Inventory.Icon "CELLA0"
+	States
+	{
+	Spawn:
+		CELL A -1
+		stop
+	}
+}

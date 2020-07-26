@@ -1,28 +1,6 @@
 #library "ABILITIES"
 #include "zcommon.acs"
-#define ALL_OF_IT 0x7FFFFFFF
-#define GAMETICKS_PER_SEC 35
-
-#define CLASS_BANSHEE 0
-#define CLASS_BLAZER 1
-#define CLASS_GUARDIAN 2
-#define CLASS_ILLUSIONIST 3
-#define CLASS_ROCKETEER 4
-#define CLASS_TELEPORTER 5
-#define CLASS_HUNTER 6
-#define CLASS_SCOUTER 7
-#define CLASS_BERSERKER 8
-#define CLASS_TERMINATOR 9
-#define CLASS_POLYMORPHIST 10
-#define CLASS_TACTICIAN 11
-
-#define NUM_POWERUPS 24
-#define POWERUP_ITEM_NAME 0
-#define POWERUP_ENGLISH_NAME 1
-#define POWERUP_ACTIVE_NAME 1
-#define POWERUP_HUD_X_OFFSET 300.1
-#define POWERUP_HUD_Y_OFFSET 200.1
-#define POWERUP_HUD_TEXT_VISIBLE_SEC 0.1
+#include "DEFINITIONS.acs"
 
 // We need a way to go from the 'item name' to a readable English name when we
 // show it in the player HUD. This will allow us to do that where we look up
@@ -77,9 +55,8 @@ function str getItemName(int abilityNum)
 {
 	return StrParam(s:abilityData[abilityNum][POWERUP_ENGLISH_NAME]);
 }
-script "giveCooldownForSeconds"(int itemName, int seconds) {
-	//GiveInventory(itemName, 999);
-	
+script "giveCooldownForSeconds"(int itemName, int seconds)
+{
 	for (int x = 1; x <= seconds; x++)
 	{
 		Delay(35);
@@ -121,8 +98,6 @@ script "takeDash" (int selector) NET
 		TakeInventory("Dashed", 1);
 		terminate;
 	}
-	
-	//GiveInventory("BlazerFirstCooldown", 1);
 }
 
 script "hudMorph" (int seekerClass) clientside
@@ -233,7 +208,6 @@ script "HNS_PrimaryAbility" (int hTaunt, int sTaunt) NET {
 			GiveInventory("Dashed", 1);
 			ACS_NamedExecute("hudDash", 0);
 		}
-		//ACS_NamedExecute("giveCooldownForSeconds", 0, "BlazerFirstCooldown", 3);
         break;
 	//Guardian smoke ability
     case CLASS_GUARDIAN:
@@ -343,8 +317,12 @@ script "HNS_PrimaryAbility" (int hTaunt, int sTaunt) NET {
         PrintBold(s: "Class not defined");
         break;
     }
-	GiveInventory(itemName, 999);
-	ACS_NamedExecuteAlways("giveCooldownForSeconds", 0, itemName, GetAmmoCapacity(itemName));
+	//Excluding the blazer because it has it's own cooldown system
+	if (PlayerClass(PlayerNumber()) != 1)
+	{
+		GiveInventory(itemName, 999);
+		ACS_NamedExecuteAlways("giveCooldownForSeconds", 0, itemName, GetAmmoCapacity(itemName));
+	}
 } 
 script "HNS_SecondAbility" (int hTaunt, int sTaunt) NET {
 	int classNum = PlayerClass(PlayerNumber());
@@ -390,8 +368,8 @@ script "HNS_SecondAbility" (int hTaunt, int sTaunt) NET {
 		Thing_Remove(recallTid);
 		break;
 	case CLASS_GUARDIAN:
-		GiveInventory("GuardianSecondCooldown", 30);
-		ACS_NamedExecuteAlways("giveCooldownForSeconds", 0, "GuardianSecondCooldown", 30);
+		GiveInventory("GuardianSecondCooldown", GetAmmoCapacity("GuardianSecondCooldown"));
+		ACS_NamedExecuteAlways("giveCooldownForSeconds", 0, "GuardianSecondCooldown", GetAmmoCapacity("GuardianSecondCooldown"));
 		GiveInventory("GuardSphere", 1);
 		SetActorProperty(0, APROP_Invulnerable, 1);
 		Delay(140);
@@ -449,8 +427,9 @@ script "HNS_SecondAbility" (int hTaunt, int sTaunt) NET {
         PrintBold(s: "Class not defined");
         break;
 	}
+	//Excluding the guardian because it has it's own cooldown system
 	if(PlayerClass(PlayerNumber()) != 2)
-	{
+    {
 		GiveInventory(itemName, 999);
 		ACS_NamedExecuteAlways("giveCooldownForSeconds", 0, itemName, GetAmmoCapacity(itemName));
 	}
@@ -646,46 +625,6 @@ script "Client_Powerup_HudMessage" ENTER CLIENTSIDE {
 			}
             }
         }
-		
-		/*int blazerCool = CheckInventory("BlazerFirstCooldown");
-		For (int totalAmount = 10 ; totalAmount > 0; totalAmount--)
-			{
-				if (blazerCool > 0)
-				{
-				
-				HudMessage(s: "Next Dash comes in ", 
-                           d:totalAmount, 
-                           s: " more seconds";
-                           HUDMSG_PLAIN, 12348, CR_YELLOW,
-                           POWERUP_HUD_X_OFFSET,  0.65, 
-                           POWERUP_HUD_TEXT_VISIBLE_SEC);     
-						   
-				HudMessage(s:"total time at ", 
-                           d:blazerCool, 
-                           s: " more seconds";
-                           HUDMSG_PLAIN, 12349, CR_YELLOW,
-                           POWERUP_HUD_X_OFFSET, 3.5, 
-                           POWERUP_HUD_TEXT_VISIBLE_SEC);     
-						   
-						   //HudMessage(s:"Bloodlust lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 0.5, 0.5);
-						   
-					//HudMessage(s:"Next Dash comes in ", d:totalAmount, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-					//HudMessage(s:"total time at ", d:blazerCool, s:" more seconds"; HUDMSG_FADEOUT, 8, 5, 1.5, 3, 3.5, 3.0);
-				}
-				//int totalCount = CheckInventory("BlazerFirstCooldown");
-				//if (x != totalCount)
-				//{
-				//	x = totalCount;
-				//}
-				
-				//if (x == totalCount - 10)
-				//{
-					//x = totalCount;
-					//ACS_NamedExecute("invDash", 0, 0);
-					//ACS_NamedExecute("updateDashHud", 0, newTotal);
-				//}
-				//Delay(35);
-			}*/
         delay(1);
     }
 }
@@ -694,14 +633,29 @@ script "BlazerDashGiver" ENTER
 	if(PlayerClass(PlayerNumber()) != 1)
 		terminate;
 	while(CheckInventory("Dashes") == 3)
-		Delay(1);		
-	Delay(350);
+		Delay(1);	
+	for(int i = 10; i >= 1; i--)
+	{
+		HudMessage(s: "Next Dash comes in ", 
+                           d:i, 
+                           s: " more seconds";
+                           HUDMSG_PLAIN, 12348, CR_YELLOW,
+                           POWERUP_HUD_X_OFFSET,  0.65, 
+                           POWERUP_HUD_TEXT_VISIBLE_SEC);
+	    HudMessage(s: "Total time at ", 
+                           d:i+(2-CheckInventory("Dashes"))*10, 
+                           s: " more seconds";
+                           HUDMSG_PLAIN, 12349, CR_YELLOW,
+                           POWERUP_HUD_X_OFFSET,  0.7, 
+                           POWERUP_HUD_TEXT_VISIBLE_SEC);
+		Delay(35);
+	}
 	GiveInventory("Dashes", 1);
 	restart;
 }
 script "GuardianStunner" (void)
 {
-	if(PlayerClass(PlayerNumber()) >= 6)
+	if(PlayerClass(PlayerNumber()) >= HIDER_IDENTIFIER)
 	{
 		SetFont("BIGFONT");
 		SetPlayerProperty(0, 1, PROP_TOTALLYFROZEN);

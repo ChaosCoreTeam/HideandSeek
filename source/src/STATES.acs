@@ -1,20 +1,6 @@
 #library "STATES"
 #include "zcommon.acs"
-#define ALL_OF_IT 0x7FFFFFFF
-#define GAMETICKS_PER_SEC 35
-
-#define CLASS_BANSHEE 0
-#define CLASS_BLAZER 1
-#define CLASS_GUARDIAN 2
-#define CLASS_ILLUSIONIST 3
-#define CLASS_ROCKETEER 4
-#define CLASS_TELEPORTER 5
-#define CLASS_HUNTER 6
-#define CLASS_SCOUTER 7
-#define CLASS_BERSERKER 8
-#define CLASS_TERMINATOR 9
-#define CLASS_POLYMORPHIST 10
-#define CLASS_TACTICIAN 11
+#include "DEFINITIONS.acs"
 
 int buttons;
 int nobuttons;
@@ -44,10 +30,10 @@ Script "rechargeWeapon" (int classNum) //recharging state
 			GiveInventory("HealingEnergy", 30);
 		break;
 		case CLASS_BLAZER:
-			GiveInventory("BlazerEnergy", 15);
+			GiveInventory("BlazerEnergy", 1);
 		break;
 		case CLASS_GUARDIAN:
-			GiveInventory("GuardianEnergy", 15);
+			GiveInventory("GuardianPower", 15);
 		break;
 		case CLASS_ILLUSIONIST:
 			GiveInventory("IllusionistEnergy", 15);

@@ -34,6 +34,7 @@ graphic hudmin, 80, 80 { XScale 3.0 YScale 3.0 Patch hudmin, 0, 0 }
 graphic hudserp, 80, 80 { XScale 3.0 YScale 3.0 Patch hudserp, 0, 0 }
 graphic hudafrit, 80, 80 { XScale 3.0 YScale 3.0 Patch hudafrit, 0, 0 }
 graphic hudsmoke, 25, 31 { XScale 3.0 YScale 3.0 Patch hudsmoke, 0, 0 }
+graphic huddash, 83, 64 { XScale 6.0 YScale 6.0 Patch huddash, 0, 0 }
 //font hud gfx
 graphic hnsfont0, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont0, 0, 0 }
 graphic hnsfont1, 7, 12 { XScale 2.0 YScale 2.0 Patch hnsfont1, 0, 0 }

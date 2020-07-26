@@ -1,6 +1,6 @@
 #library "VANISH"
 #include "zcommon.acs"
-#define ALL_OF_IT 0x7FFFFFFF
+#include "DEFINITIONS.acs"
 
 script "HNS_Vanish" (void) net
 {

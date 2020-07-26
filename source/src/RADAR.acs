@@ -1,14 +1,9 @@
 #library "RADAR"
 #include "zcommon.acs"
-#define ALL_OF_IT 0x7FFFFFFF
-#define MAXPLAYERS 64 
+#include "DEFINITIONS.acs"
 
 int radarteam[MAXPLAYERS];
 
-#define ASPECT_4_3 1.3
-#define ASPECT_5_4 1.25
-#define ASPECT_16_9 1.7
-#define ASPECT_16_10 1.6
 
 function int getaspectratio(void)
 {

@@ -1,8 +1,6 @@
 #library "Global"
 #include "zcommon.acs"
-
-// [Cata] Definitions.
-#define MAXPLAYERS 64 // If Zandro supports more than 64 players, change this. Nothing else needs to be done.
+#include "DEFINITIONS.acs"
 
 int pteam[MAXPLAYERS];
 int radarteam[MAXPLAYERS];

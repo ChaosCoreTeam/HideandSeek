@@ -1,24 +1,6 @@
 #library "WEAPONS"
 #include "zcommon.acs"
-#define ALL_OF_IT 0x7FFFFFFF
-#define GAMETICKS_PER_SEC 35
-
-#define CLASS_BANSHEE 0
-#define CLASS_BLAZER 1
-#define CLASS_GUARDIAN 2
-#define CLASS_ILLUSIONIST 3
-#define CLASS_ROCKETEER 4
-#define CLASS_TELEPORTER 5
-#define CLASS_HUNTER 6
-#define CLASS_SCOUTER 7
-#define CLASS_BERSERKER 8
-#define CLASS_TERMINATOR 9
-#define CLASS_POLYMORPHIST 10
-#define CLASS_TACTICIAN 11
-
-#define teamPlayer_id 0
-#define teamPlayer_distance 1
-#define MAXPLAYERS 64
+#include "DEFINITIONS.acs"
 
 int pteam[MAXPLAYERS];
 int healIden[MAXPLAYERS][2];

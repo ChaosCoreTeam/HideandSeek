@@ -9,8 +9,8 @@ Actor BansheeSecondActive : Inventory { }
 Actor BlazerFirstCooldown : Ammo { Inventory.Amount 3 Inventory.MaxAmount 3 }
 Actor BlazerSecondCooldown : Ammo { Inventory.Amount 20 Inventory.MaxAmount 20 }
 
-Actor GuardianFirstCooldown : Ammo { Inventory.Amount 34 Inventory.MaxAmount 34 }
-Actor GuardianSecondCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
+Actor GuardianFirstCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
+Actor GuardianSecondCooldown : Ammo { Inventory.Amount 34 Inventory.MaxAmount 34 }
 Actor GuardianFirstActive : Inventory { }
 Actor GuardianSecondActive : Inventory { }
 

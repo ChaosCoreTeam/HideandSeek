@@ -136,6 +136,7 @@ StatusBar FullScreen, FullScreenOffsets, ForceScaled
 		DrawNumber 1, HNS_HUD_FONT, Green, 3, DrawShadow, -32, -24, 0;
 		DrawNumber 1, HNS_HUD_FONT, Gold, Dashes, WhenNotZero, -59, -24, 0, Red, 1, Green, 3;
 	    DrawBar "hudbar11", "hudbar01", BlazerEnergy, Horizontal, -73, -12;
+		DrawImage "huddash", -379, -11;
 		//-60 -321
 	}
 	PlayerClass Guardian
