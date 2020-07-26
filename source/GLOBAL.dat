@@ -214,7 +214,11 @@ Script 109 respawn CLIENTSIDE
 {
 	if(consoleplayernumber() != playernumber()) terminate;
 	
-	if(PlayerClass(PlayerNumber())==2) //Blazer
+	if(PlayerClass(PlayerNumber())==1) //Banshee
+    {
+        HudMessage(s:"\ccCLASS : \cuBanshee\n\n\ccWEAPONS : \crRejuvinator"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+    }
+    if(PlayerClass(PlayerNumber())==2) //Blazer
 	{
 		HudMessage(s:"\ccCLASS : \cuBlazer\n\n\ccWEAPONS : \crNone\n\ccABILITY : \ciExtreme Speed \cc( \cdRun Around! \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
 	}
