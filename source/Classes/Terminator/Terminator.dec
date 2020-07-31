@@ -11,7 +11,10 @@ ACTOR TerminatorClass : PlayerPawn
   Player.CrouchSprite "PLYC"
   Player.SoundClass "Terminator"
   player.startitem "TerminatorPlasmaRifle", 1
+  player.startitem "TerminatorDevastators", 1
   player.startitem "TerminatorGrenade", 1
+  player.startitem "Devastators", 1
+  player.startitem "MiniRockets", 50
   player.startitem "HandGrenadeAmmo", 30
   player.startitem "Cell", 300
   player.startitem "greenarmor", 1
@@ -110,6 +113,84 @@ ACTOR TerminatorPlasmaRifle : Weapon
     PLAS A -1
     Stop
   }
+}
+
+
+ACTOR TerminatorDevastators : Weapon
+{
+   Inventory.PickupSound "misc/w_pkup"
+   Inventory.PickupMessage "You got the Devastator Weapon!"
+   Weapon.AmmoType "MiniRockets"
+   Weapon.AmmoGive 50
+   Weapon.AmmoUse 1
+   States
+   {
+   Spawn:
+      DVST A -1
+      Loop
+   Ready:
+      DEVG A 1 A_WeaponReady
+      Loop
+   Deselect:
+      DEVG A 1 A_Lower
+	  NULL AA 0 A_LOWER
+      Loop
+   Select:
+      DEVG A 1 A_Raise
+	  NULL AA 0 A_RAISE
+      Loop
+   Fire:
+   NULL A 0 A_JumpIfInventory("Devcheck",1,"fire2")
+      DEVG B 0 A_Light2
+      DEVG B 0 A_PlayWeaponSound("weapons/devshot")
+	  DEVG AAAA 0 A_FireCustomMissile("DevastatorShot",random(2,-2),0,5,5)
+      DEVG C 1 A_FireCustomMissile("DevastatorShot",random(2,-2),1,5,6)
+      DEVG C 0 A_Light2
+	  DEVG EGHI 1 A_Light0 
+	  NULL A 0 A_GiveInventory("Devcheck",1)
+      DEVG A 1 
+      Goto Ready
+	  Fire2:
+      DEVG B 0 A_Light2
+      DEVG B 0 A_PlayWeaponSound("weapons/devshot")
+	  DEVG AAAA 0 A_FireCustomMissile("DevastatorShot",random(2,-2),0,-5,5)
+      DEVG J 1 A_FireCustomMissile("DevastatorShot",random(2,-2),1,-5,6)
+      DEVG C 0 A_Light2
+	  DEVG LNPQR 1 A_Light0 
+      DEVG A 1 
+	  NULL A 0 A_TakeInventory("Devcheck",1)
+      Goto Ready
+   }
+}
+
+ACTOR DevastatorGenerator : CustomInventory
+{ 
+	+FLOORCLIP
+   +AUTOACTIVATE
+   Scale 0.5
+   Inventory.MaxAmount 2 
+   Inventory.PickupSound "misc/w_pkup" 
+   Inventory.PickupMessage "You got a Devastator" 
+   States 
+   { 
+   Spawn: 
+      DVGG A -1 
+      LOOP 
+   Pickup: 
+      TNT1 A 0 A_JumpIfInventory("DoubleDevastator", 1, 8) 
+      TNT1 A 0 A_JumpIfInventory("Devastator", 1, 4) 
+      TNT1 A 0 A_JumpIfInventory("DevastatorGenerator", 2, 6) 
+      TNT1 A 0 A_GiveInventory("Devastator", 1) 
+      TNT1 A 0 A_SelectWeapon("Devastator") 
+      Stop 
+      TNT1 A 0 A_TakeInventory("Devastator", 1) 
+      TNT1 A 0 A_GiveInventory("DoubleDevastator", 1) 
+      TNT1 A 0 A_SelectWeapon("DoubleDevastator") 
+      Stop 
+      TNT1 A 0 A_TakeInventory("DevastatorGenerator", 1) 
+      TNT1 A 0 A_GiveInventory("miniRockets", 12) 
+      Stop 
+   } 
 }
 
 actor TerminatorPlasmaBall
@@ -288,6 +369,86 @@ ACTOR TerminatorGrenade : Weapon
    
    }
 }
+
+
+
+ACTOR Devcheck : Ammo
+{
+   Inventory.MaxAmount 1
+}
+ACTOR MiniRockets : Ammo 25048
+{
+   Inventory.Amount 6
+   Inventory.MaxAmount 100
+   Ammo.BackpackAmount 6
+   Ammo.BackpackMaxAmount 200
+   Inventory.PickupMessage "Picked up some mini rockets."
+   Inventory.Icon MNRAA0
+   States
+   {
+   Spawn:
+      MNRA A -1
+      Loop
+   }
+}
+
+ACTOR DevastatorShot
+{
+   Radius 4
+   Height 4
+   Speed 18
+   Scale 0.1
+   Damage 12
+   PROJECTILE
+   ExplosionDamage 20
+   ExplosionRadius 48
+   SeeSound "weapons/devlnch"
+   DeathSound "weapons/devexpl"
+   States
+   {
+   Spawn:
+      MNSS A 1 Bright A_SpawnItem("DevRockTrail")
+      Loop
+   Death:
+      GRNE A 3 Bright A_Explode
+      GRNE BCDEFGHIJKLMN 3 Bright
+      Stop
+   }
+}
+
+ACTOR MiniRocketBox : MiniRockets 25049
+{
+   +ALWAYSPICKUP
+   Inventory.Amount 30
+   Inventory.PickupMessage "Picked up a box of mini rockets."
+   States
+   {
+   Spawn:
+      MNRB A -1
+      Loop
+   }
+}
+
+
+actor DevRockTrail
+{
+	Radius 1
+	Height 1
+	Speed 0
+	Damage 0
+	Scale 0.06
+	RenderStyle Add
+	Alpha 0.5
+	+NOGRAVITY
+	States
+	{
+	Spawn:
+		PDBA VWXYZ 1 A_FadeOut(0.1)
+		wait
+	}
+}
+
+
 
 ACTOR HandGrenadeAmmo : Ammo
 {
