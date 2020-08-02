@@ -10,7 +10,12 @@ ACTOR TacticianClass : PlayerPawn
   Player.DisplayName "Tactician"
   Player.SoundClass "Tactician"
   Player.CrouchSprite "PLYC"
-  player.startitem "LMG", 1
+  player.startitem "Tactician_Machinegun", 1
+  player.startitem "Tactician_Pipebomb", 1
+  player.startitem "Tactician_Detonator", 1
+  player.startitem "D2C_PipebombAmmo", 15
+  player.startitem "greenarmor", 1
+  player.startitem "clip", 200
   player.startitem "isSeeker", 1
   Player.JumpZ 10
   damagefactor "rocket", 0

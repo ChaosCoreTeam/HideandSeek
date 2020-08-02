@@ -53,6 +53,15 @@ StatusBar Normal
 	{
 		DrawNumber 3, HUDFONT_DOOM, Gold, Ammo1, WhenNotZero, 44, 171, 0, Red, 6, Green, 13;
 	}
+	IsSelected Tactician_Pipebomb
+	{
+		DrawNumber 3, HUDFONT_DOOM, Gold, Ammo1, WhenNotZero, 44, 171, 0, Red, 6, Green, 13;
+	}
+	
+	IsSelected Tactician_Machinegun
+	{
+		DrawNumber 3, HUDFONT_DOOM, Gold, Ammo1, WhenNotZero, 44, 171, 0, Red, 6, Green, 13;
+	}
 
 	//Weapons
 	drawnumber 3, INDEXFON, gold, ammo Clip, 288, 173;
@@ -208,7 +217,7 @@ StatusBar FullScreen, FullScreenOffsets, ForceScaled
 		DrawBar "hudbar12", "hudbar02", lowVanishingPool, Horizontal, -73, -27;
 	}
 	
-	PlayerClass Berserker, Hunter, Terminator
+	PlayerClass Berserker, Hunter, Terminator, Tactician
 	{
 		//Health+Armor Icons
 		DrawImage "hudmdkit", 0, -14;
@@ -389,4 +398,35 @@ StatusBar FullScreen, FullScreenOffsets, ForceScaled
 		//Grenade Throw Strength
 		DrawBar "hudbar11", "hudbar01", Ammo2, Horizontal, 247, -27;
 	}
+	IsSelected Tactician_Machinegun
+	{
+		//Ammo or Weapon Icon
+		DrawImage "hudclip", -24, -14;
+		//Ammo Display Readout
+		DrawNumber 3, HNS_HUD_FONT, Black, Ammo1, DrawShadow, 267, -10, 0;
+		DrawImage "hnsslash", 269, -10;
+		DrawNumber 3, HNS_HUD_FONT, Green, 200, DrawShadow, 293, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Ammo1, WhenNotZero, 267, -10, 0, Red, 75, Green, 151;
+		//Alt Ammo Display Readout
+		DrawString HNS_HUD_FONT, Black, "N", 263, -24, 0; DrawImage "hnsslash", 269, -24; DrawString HNS_HUD_FONT, Black, "A", 288, -24, 0;
+	}
+	IsSelected Tactician_Pipebomb
+	{
+		//Ammo or Weapon Icon
+		DrawImage "hudrockt", -24, -14;
+		DrawImage "hudthrow", -24, -28;
+		//Ammo Display Readout
+		DrawNumber 2, HNS_HUD_FONT, Black, Ammo1, DrawShadow, 264, -10, 0;
+		DrawImage "hnsslash", 269, -10;
+		DrawNumber 2, HNS_HUD_FONT, Green, 15, DrawShadow, 291, -10, 0;
+		DrawNumber 2, HNS_HUD_FONT, Gold, Ammo1, WhenNotZero, 264, -10, 0, Red, 4, Green, 8;
+		//Pipebomb Throw Strength
+		DrawBar "hudbar11", "hudbar01", Ammo2, Horizontal, 247, -27;
+	}
+	IsSelected Tactician_Detonator
+	{
+		DrawString HNS_HUD_FONT, Red, "DETONATE", 305, -10, 0;
+		DrawString HNS_HUD_FONT, Black, "N", 263, -24, 0; DrawImage "hnsslash", 269, -24; DrawString HNS_HUD_FONT, Black, "A", 288, -24, 0;
+	}
 }
+
