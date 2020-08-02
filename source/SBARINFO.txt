@@ -302,7 +302,7 @@ StatusBar FullScreen, FullScreenOffsets, ForceScaled
 	IsSelected ScoutPistol
 	{
 		//Ammo or Weapon Icon
-		DrawImage "hudclip", -24, -14;
+		DrawImage "hudcell", -24, -14;
 		DrawImage "hudjetpk", -24, -28;
 		//Ammo Display Readout
 		DrawNumber 2, HNS_HUD_FONT, Black, Ammo1, DrawShadow, 264, -10, 0;
