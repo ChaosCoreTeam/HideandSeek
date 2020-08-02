@@ -1,0 +1,31 @@
+Actor PlasmaPistol : Weapon
+{
+  Weapon.SlotNumber 2
+  Weapon.AmmoUse 1
+  Weapon.AmmoGive 10
+  Weapon.AmmoType "Cell"
+  Inventory.PickupMessage "You got a Plasma Pistol!"
+  obituary "%o was melted by %k's Plasma Pistol"
+  states
+  {
+  Spawn:
+    PLSP A -1
+    loop
+  Ready:
+    PLPI A 1 A_WeaponReady
+    loop
+  Deselect:
+    PLPI A 1 A_Lower
+    loop
+  Select:
+    PLPI A 1 A_Raise
+    loop
+  Fire:
+    PLPI A 0
+    PLPI B 3
+    PLPI C 3 A_FireCustomMissile("PlasmaBall")
+    PLPI A 8
+    BLAG B 0 A_ReFire
+    goto Ready
+  }
+}

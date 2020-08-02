@@ -16,6 +16,7 @@ ACTOR RailClip : Ammo
 }
 
 
+
 actor ScoutPistol : Weapon
 {
   Weapon.SelectionOrder 500
@@ -30,33 +31,33 @@ actor ScoutPistol : Weapon
   States
   {
   Ready:
-    PISG A 1 A_WeaponReady
+    PLPI A 1 A_WeaponReady
     Loop
   Deselect:
-    PISG A 1 A_Lower
+    PLPI A 1 A_Lower    
     Loop
   Select:
-    PISG A 1 A_Raise
+    PLPI A 1 A_Raise
     Loop
   Fire:
-    PISG A 4
-	PISG B 0 A_PlayWeaponSound("PistolFire")
-	TNT1 A 0 A_GunFlash
-	PISG B 2 A_RailAttack (random(25,45), 0, 1, none, "ff ff a0", 2)
-    PISG CEDB 2
-	PISG A 20
-    PISG A 5 A_ReFire
+    PLPI A 0
+    PLPI B 3
+	PLPI A 0 A_GunFlash
+    PLPI C 3 A_RailAttack (random(25,45), 0, 1, none, "00 00 FF", 2)
+    PLPI A 8
+    BLAG B 0 A_ReFire
+	PLPI A 0
+	PLPI A 3
     Goto Ready
   Flash:
-    PISF A 3 Bright A_Light1
-    TNT1 A 2 Bright A_Light0
-	Stop
+  	PLPI A 1 Bright A_Light0
+    PLPI A 1 Bright A_Light2
+	Goto LightDone
   Spawn:
     PIST A -1
     Stop
   }
 }
-
 
 actor ScoutKnife : Weapon
 {
