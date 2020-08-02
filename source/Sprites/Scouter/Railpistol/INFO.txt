@@ -1,8 +1,0 @@
-Name: Plasma Pistol
-Class: 2
-Type: Projectile
-Palette: Custom
-Summon: PlasmaPistol
-Ammo Type: Cell
-Altfire: No
-Powered Mode: No
