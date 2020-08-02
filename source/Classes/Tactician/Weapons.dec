@@ -358,9 +358,9 @@ ACTOR PipebombExplosion
 ACTOR D2C_PipebombAmmo : Ammo
 {
    Inventory.Amount 1
-   Inventory.MaxAmount 25
+   Inventory.MaxAmount 15
    Ammo.BackpackAmount 1
-   Ammo.BackpackMaxAmount 40
+   Ammo.BackpackMaxAmount 15
    Inventory.Icon PIPBB0
    Inventory.PickupMessage ""
    States
