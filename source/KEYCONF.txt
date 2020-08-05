@@ -48,10 +48,10 @@ alias HNS_Taunts "pukename HNS_Taunt $cl_hidertaunt $cl_seekertaunt"
 defaultbind Y HNS_Taunts
 
 //Vanishing Toggle
-addmenukey "Toggle Vanishing" +HNS_Vanish
-alias +HNS_Vanish "pukename HNS_Vanish; rebind -HNS_Vanish"
-alias -HNS_Vanish "pukename HNS_Visible; rebind +HNS_Vanish"
-defaultbind V +HNS_Vanish
+addmenukey "Toggle Vanishing" HNS_VanishOn
+alias HNS_VanishOn "pukename HNS_Vanish; rebind HNS_VanishOff"
+alias HNS_VanishOff "pukename HNS_Visible; rebind HNS_VanishOn"
+defaultbind V HNS_VanishOn
 
 //Class Abilities
 addmenukey "Activate First Ability" HNS_PrimaryAbility

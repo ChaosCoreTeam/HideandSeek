@@ -4,7 +4,7 @@
 
 script "HNS_Vanish" (void) net
 {
-	if(PlayerClass(PlayerNumber()) > 5) terminate;
+	if(PlayerClass(PlayerNumber()) > 6) terminate;
 	
 	if(isVanished(PlayerNumber()) == 1)
 	{
@@ -24,7 +24,7 @@ script "HNS_Vanish" (void) net
 
 script "HNS_Visible" (void) CLIENTSIDE
 {
-	if(PlayerClass(PlayerNumber()) > 5) terminate;
+	if(PlayerClass(PlayerNumber()) > 6) terminate;
 	
 	if(isVanished(PlayerNumber()) == 0)
 	{
