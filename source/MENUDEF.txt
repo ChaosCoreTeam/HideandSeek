@@ -21,7 +21,7 @@ OptionMenu "HNSOptions"
 	StaticText 	""
 	StaticText 	"Hider Controls",1
 	StaticText 	""
-	Control "Vanish Toggle",						"+HNS_Vanish"
+	Control "Vanish Toggle",						"HNS_VanishOn"
 	Option "Hider Taunt",				"cl_hidertaunt", 		"HiderTaunt"
 	StaticText 	""
 	StaticText 	"Seeker Controls",1
