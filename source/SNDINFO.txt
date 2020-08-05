@@ -446,6 +446,18 @@ $playersound	Scouter male	*gasp		SCOUGASP
 // Tactician Class Sounds
 //=======================================================================
 
+//Tactician_Pipebombs
+weapons/pbbounce		dspipbnc
+weapons/pbthrow		        dspipthr
+weapons/pbarm		        dspiparm
+weapons/explode1	        dspipex1
+weapons/explode2	        dspipex2
+weapons/explode3	        dspipex3
+weapons/explode4	        dspipex4
+$random weapons/explode  { weapons/explode1 weapons/explode2 weapons/explode3 weapons/explode4 }
+
+//Tactician_Machinegun
+weapons/Machinegun	        DSMCGUNF
 
 //Mines
 MINE001		MINE001

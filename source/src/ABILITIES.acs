@@ -309,7 +309,7 @@ script "HNS_PrimaryAbility" (int hTaunt, int sTaunt) NET {
 			PlaySound(0, "Tactician/Abilities/Minefail", 6);
 			ACS_NamedExecute("hudTrip", 0);
 		}
-		SpawnProjectile(0, "Mine", GetActorAngle(0) >> 8, 200, 0,0, PlayerNumber()+20);
+		SpawnProjectile(0, "Mine", GetActorAngle(0) >> 8, 1, 0,0, PlayerNumber()+20);
 		ACS_NamedExecute("giveCooldownForSeconds", 0, "TacticianFirstCooldown", 3);
 		break;
 		
