@@ -10,7 +10,12 @@ ACTOR TacticianClass : PlayerPawn
   Player.DisplayName "Tactician"
   Player.SoundClass "Tactician"
   Player.CrouchSprite "PLYC"
-  player.startitem "LMG", 1
+  player.startitem "Tactician_Machinegun", 1
+  player.startitem "Tactician_Pipebomb", 1
+  player.startitem "Tactician_Detonator", 1
+  player.startitem "D2C_PipebombAmmo", 15
+  player.startitem "greenarmor", 1
+  player.startitem "clip", 200
   player.startitem "isSeeker", 1
   Player.JumpZ 10
   damagefactor "rocket", 0
@@ -19,23 +24,23 @@ ACTOR TacticianClass : PlayerPawn
   States
   {
   Spawn:
-	XXLF A 0
-	XXLF A 35
-	XXLF A 0 A_JumpIf (health>=50, 2)
-	XXLF A 0 ACS_NamedExecute("regenHealth", 0)
-	XXLF A 0 A_JumpIfInventory("Clip", 0, "Spawn")
-	XXLF A 0 ACS_Execute(112,0)
+  XXLF A 0
+  XXLF A 35
+  XXLF A 0 A_JumpIf (health>=50, 2)
+  XXLF A 0 ACS_NamedExecute("regenHealth", 0)
+  XXLF A 0 A_JumpIfInventory("Clip", 0, "Spawn")
+  XXLF A 0 ACS_Execute(112,0)
     Loop
   See:
-	TNT1 A 0
-	TNT1 A 0 A_JumpIfInventory("Step",1,4)
-	XXLF A 6 A_SpawnItemEx ("FootStep", 0, 0, 0, 0, 0, -1, 0,0, 0)
-	XXLF B 6
-	TNT1 A 0 A_GiveInventory("Step",1)
-	XXLF C 6 A_SpawnItemEx ("FootStep", 0, 0, 0, 0, 0, -1, 0,0, 0)
-	XXLF D 6
-	TNT1 A 0 A_TakeInventory("Step",1)
-	Goto Spawn
+  TNT1 A 0
+  TNT1 A 0 A_JumpIfInventory("Step",1,4)
+  XXLF A 6 A_SpawnItemEx ("FootStep", 0, 0, 0, 0, 0, -1, 0,0, 0)
+  XXLF B 6
+  TNT1 A 0 A_GiveInventory("Step",1)
+  XXLF C 6 A_SpawnItemEx ("FootStep", 0, 0, 0, 0, 0, -1, 0,0, 0)
+  XXLF D 6
+  TNT1 A 0 A_TakeInventory("Step",1)
+  Goto Spawn
   Missile:
     XXLF E 12 
     Goto Spawn
@@ -54,9 +59,9 @@ ACTOR TacticianClass : PlayerPawn
     XXLF N -1
     Stop
   XDeath:
-	PLAY O 0 A_Stop
+  PLAY O 0 A_Stop
     XXLF O 5 A_SpawnItemEx ("HumanGibs",0,0,0,0,0,0,0,128)
-	XXLF O 0 A_SkullPop("HeadGib")
+  XXLF O 0 A_SkullPop("HeadGib")
     XXLF P 5 A_XScream
     XXLF Q 5 A_NoBlocking
     XXLF RSTUV 5

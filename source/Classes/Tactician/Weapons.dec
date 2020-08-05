@@ -1,34 +1,4 @@
-ACTOR LMG : Chaingun
-{
-   Weapon.AmmoUse 1
-   Weapon.AmmoGive 20
-   Weapon.AmmoType "Clip"
-   Inventory.PickupMessage "You picked up the LMG."
-   Obituary "%o was mowed down by %k's LMG"
-   AttackSound "weapons/lmgfire"
-   Tag "Light Machine Gun"
-   States
-   {
-   Ready:
-     LMGG A 1 A_WeaponReady
-     Loop
-   Deselect:
-     LMGG A 1 A_Lower
-     Loop
-   Select:
-     LMGG A 1 A_Raise
-     Loop
-   Fire:
-     LMGF A 3 A_FireBullets(5.6, 0, 1, 7, "BulletPuff", FBF_NORANDOM)
-	 LMGF B 1
-	 LMGF C 3 A_FireBullets(5.6, 0, 1, 7, "BulletPuff", FBF_NORANDOM)
-	 LMGF D 1 A_ReFire
-     Goto Ready
-   Spawn:
-     LMGL A -1
-     Stop
-   }
-}
+
 Actor LandMineLayer : Weapon
 {
 	Weapon.AmmoType "MineAmmo"
@@ -82,6 +52,7 @@ Actor LandMineLayer : Weapon
 
 Actor Mine
 {
+PROJECTILE
 Radius 32
 Height 5
 Mass 1000000
@@ -89,12 +60,13 @@ Health 20
 Damage 0
 SeeSound "MINE001"
 DONTHURTSHOOTER
-Speed 2
+Speed 0
 +NOBLOOD
 -SHOOTABLE
-+MISSILE
 +DOOMBOUNCE
 +THRUGHOST
+-NOGRAVITY
++floorhugger
 States
 {
 Spawn:
@@ -130,8 +102,10 @@ Death:
 	Stop
 }
 }
+
 Actor MineBase
 {
+PROJECTILE
 Radius 32
 Height 5
 Mass 1000000
@@ -142,10 +116,11 @@ DONTHURTSHOOTER
 Speed 0
 +NOBLOOD
 -SHOOTABLE
-+MISSILE
 +THRUGHOST
 +DEHEXPLOSION
 +FORCERADIUSDMG
+-NOGRAVITY
++floorhugger
 States
 {
 Spawn:
@@ -194,11 +169,13 @@ Death:
 	MISL D 4
 	Stop
 }
+
 }
 Actor Mine2 : Mine
 {
 Speed 15
 }
+
 Actor MineAmmo : Ammo
 {
 Radius 10
@@ -215,3 +192,557 @@ Spawn:
 	Loop
 }
 }
+
+
+
+
+////////////////////// Pipebomb ////////////////////////////
+///////////////////////////////////////////////////////////
+ACTOR Tactician_Pipebomb : Weapon 25018
+{
+   Inventory.PickupSound "misc/w_pkup"
+   Inventory.PickupMessage "You got a pipebomb!"
+   Weapon.AmmoType "D2C_PipebombAmmo"
+   Weapon.AmmoGive 1
+   Weapon.AmmoUse 1
+   Weapon.Kickback 0
+   Weapon.AmmoType2 "pbThrowPower" 
+   Weapon.AmmoGive2 0 
+   Weapon.AmmoUse2 0 
+   AttackSound "weapons/pbarm"
+   Weapon.SelectionOrder 2600
+   Scale 0.1
+   + NOALERT
+   +WEAPON.NOAUTOAIM
+   States
+   {
+   Spawn:
+      PIPB D -1
+      Loop
+   Ready: 
+      PIPE A 1 A_WeaponReady
+      Loop
+   Deselect:
+	  PIPE A 0 A_Lower 
+      PIPE A 1 A_Lower 
+      Loop
+   Select:
+      PIPE A 0 A_TakeInventory("pbThrowPower",999) 
+	  PIPE A 0 A_Raise
+      PIPE A 1 A_Raise
+      Loop
+   Fire:
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",1,9)
+      PIPE BCD 2
+      PIPE E 2 A_PlaySound("weapons/grnpullpin")
+      PIPE FGHH 2
+      NULL A 2 A_GiveInventory("pbThrowPower",2)
+      NULL A 0 A_Refire
+      PIPE I 2 A_PlaySound("weapons/grntoss") 
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",30,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",29,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",28,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",27,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",26,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",25,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",24,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",23,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",22,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",21,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",20,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",19,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",18,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",17,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",16,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",15,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",14,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",13,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",12,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",11,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",10,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",9,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",8,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",7,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",6,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",5,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",4,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",3,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",2,30)
+      PIPE A 0 A_JumpIfInventory("pbThrowPower",1,30) 
+      
+      PIPE J 0 A_FireCustomMissile("Thrownpipe30",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe29",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe28",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe27",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe26",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe25",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe24",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe23",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe22",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe21",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe20",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe19",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe18",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe17",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe16",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe15",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe14",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe13",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe12",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe11",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe10",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe9",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe8",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe7",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe6",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe5",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe4",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe3",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe2",0,1,0,0)
+      Goto Fire +72
+      PIPE J 0 A_FireCustomMissile("Thrownpipe1",0,1,0,0)
+      Goto Fire +72  
+      
+	  PIPE Q 8 A_PlayWeaponSound("weapons/pbthrow")
+	  PIPE K 1 A_GiveInventory("Tactician_Detonator")
+      PIPE J 2
+      PIPE A 0 A_TakeInventory("pbThrowPower",999)
+	  PIPE P 0 A_SelectWeapon("Tactician_Detonator") //A_GiveInventory("D2C_Detonator")
+      NULL A 12 A_CheckReload
+      PIPE XWVUTS 1
+      
+      Goto Ready
+   
+   }
+}
+
+
+ACTOR Pipebomb
+{ 
+    Scale 0.1
+	radius 0.1
+    - NOGRAVITY
+    - ROCKETTRAIL
+    + DOOMBOUNCE
+    Damage 0
+    ExplosionDamage 255
+    ExplosionRadius 128
+    SeeSound "weapons/pbbounce"
+    DeathSound "weapons/pbbounce"
+    Renderstyle Normal
+    Alpha 255
+    States
+    {
+    Spawn:
+      PIPB A 1 Thing_ChangeTid(0,1999)
+      Loop
+    Death:
+      PIPB A 1
+      PIPB A 1 Thing_ChangeTid(0,1999)
+      PIPB A 1 
+      Goto Death+2
+    }
+}
+
+
+ACTOR pbThrowPower : Ammo
+{
+   Inventory.MaxAmount 30
+   Ammo.BackpackMaxAmount 30
+   Inventory.Icon THROW
+}
+
+ACTOR ThrownPipeB1
+{
+   PROJECTILE
+
+   speed 1
+   Scale 0.1
+   Radius 5
+   +Bounceonwalls
+   -NOGRAVITY
+   +DOOMBOUNCE
+   +CANBOUNCEWATER
+   BounceType Doom
+   wallBounceFactor 1.0
+   ExplosionDamage 255
+   ExplosionRadius 128
+   Damage 0
+   SeeSound "weapons/pbbounce"
+   DeathSound "weapons/pbbounce"
+   Obituary "%o was blown up by %k's Pipebomb."
+
+   Renderstyle Normal
+   Alpha 255
+   States
+   {
+   Spawn:
+      PIPB A 1 Thing_ChangeTid(0, 1999)
+      Loop
+   Death:
+      PIPB A 1
+	  PIPB A 1 Thing_ChangeTid(0,1999)
+      PIPB A 1 
+      Goto Death+2
+   }
+}
+
+
+ACTOR Thrownpipe2 : ThrownPipeB1
+{
+   Speed 2
+}
+
+ACTOR Thrownpipe3 : ThrownPipeB1
+{
+   Speed 3
+}
+
+ACTOR Thrownpipe4 : ThrownPipeB1
+{
+   Speed 4
+}
+
+ACTOR Thrownpipe5 : ThrownPipeB1
+{
+   Speed 5
+}
+
+ACTOR Thrownpipe6 : ThrownPipeB1
+{
+   Speed 6
+}
+
+ACTOR Thrownpipe7 : ThrownPipeB1
+{
+   Speed 7
+}
+
+ACTOR Thrownpipe8 : ThrownPipeB1
+{
+   Speed 8
+}
+
+ACTOR Thrownpipe9 : ThrownPipeB1
+{
+   Speed 9
+}
+
+ACTOR Thrownpipe10 : ThrownPipeB1
+{
+   Speed 10
+}
+
+ACTOR Thrownpipe11 : ThrownPipeB1
+{
+   Speed 11
+}
+
+ACTOR Thrownpipe12 : ThrownPipeB1
+{
+   Speed 12
+}
+
+ACTOR Thrownpipe13 : ThrownPipeB1
+{
+   Speed 13
+}
+
+ACTOR Thrownpipe14 : ThrownPipeB1
+{
+   Speed 14
+}
+
+ACTOR Thrownpipe15 : ThrownPipeB1
+{
+   Speed 15
+}
+
+ACTOR Thrownpipe16 : ThrownPipeB1
+{
+   Speed 16
+}
+
+ACTOR Thrownpipe17 : ThrownPipeB1
+{
+   Speed 17
+}
+
+ACTOR Thrownpipe18 : ThrownPipeB1
+{
+   Speed 18
+}
+
+ACTOR Thrownpipe19 : ThrownPipeB1
+{
+   Speed 19
+}
+
+ACTOR Thrownpipe20 : ThrownPipeB1
+{
+   Speed 20
+}
+
+ACTOR Thrownpipe21 : ThrownPipeB1
+{
+   Speed 21
+}
+
+ACTOR Thrownpipe22 : ThrownPipeB1
+{
+   Speed 22
+}
+
+ACTOR Thrownpipe23 : ThrownPipeB1
+{
+   Speed 23
+}
+
+ACTOR Thrownpipe24 : ThrownPipeB1
+{
+   Speed 24
+}
+
+ACTOR Thrownpipe25 : ThrownPipeB1
+{
+   Speed 25
+}
+
+ACTOR Thrownpipe26 : ThrownPipeB1
+{
+   Speed 26
+}
+
+ACTOR Thrownpipe27 : ThrownPipeB1
+{
+   Speed 27
+}
+
+ACTOR Thrownpipe28 : ThrownPipeB1
+{
+   Speed 28
+}
+
+ACTOR Thrownpipe29 : ThrownPipeB1
+{
+   Speed 29
+}
+
+ACTOR Thrownpipe30 : ThrownPipeB1
+{
+   Speed 30
+}
+
+
+ACTOR Tactician_Detonator : Weapon
+{
+   Weapon.SelectionOrder 1
+   Inventory.PickupSound "misc/w_pkup"
+   Inventory.PickupMessage "You should not see this message, loser!"
+   Weapon.AmmoType "D2C_PipebombAmmo"
+   Weapon.AmmoGive 0
+   Weapon.AmmoUse 0
+   Weapon.Kickback 1000
+   AttackSound "weapons/mauler1"
+   Scale 0.1
+
+   + NOALERT
+   States
+   {
+   Spawn:
+      PIPB A -1
+      Loop
+   Ready:
+      DETO A 1 A_WeaponReady
+      Loop
+   Deselect:
+      DETO A 1 A_Lower
+      Loop
+   Select:
+      DETO A 0 A_Raise
+      DETO A 1 A_Raise
+      Loop
+   Fire:
+      DETO B 2
+      DETO B 0 A_AlertMonsters
+      DETO B 0 Thing_Projectile(1999,201,0,0,0)
+      DETO B 0 A_PlayWeaponSound("weapons/pbarm")
+      DETO C 2 Thing_ReMove(1999)
+      DETO B 2
+      DETO A 8
+      //DETO DEFGHIJKLMNO 1
+      DETO A 8
+      DETO Z 0 A_SelectWeapon("Tactician_Pipebomb") //A_GiveInventory("D2C_Pipebomb")
+      DETO A 3 //A_TakeInventory("D2C_Detonator")
+      goto Deselect
+   }
+}
+
+
+ACTOR PipebombExplosion 
+{
+    SeeSound "weapons/explode"
+    SpawnID 201
+    Radius 8
+    Height 56
+    Speed 0
+    ExplosionDamage 255
+    ExplosionRadius 192
+    States
+    {
+    Spawn:
+        NKXP B 3 BRIGHT
+        NKXP C 3 BRIGHT
+        NKXP D 3 BRIGHT A_Explode
+        NKXP EFGHIJKLMNOPQRSTUV 3 BRIGHT
+        Stop
+    }
+}
+
+ACTOR D2C_PipebombAmmo : Ammo
+{
+   Inventory.Amount 1
+   Inventory.MaxAmount 15
+   Ammo.BackpackAmount 1
+   Ammo.BackpackMaxAmount 15
+   Inventory.Icon PIPBB0
+   Inventory.PickupMessage ""
+   States
+   {
+   Spawn:
+      PIPB C   -1     
+   }
+}
+
+
+
+ACTOR Pipebomb : Rocket
+{ 
+    Scale 0.1
+	radius 5
+    - NOGRAVITY
+    +Bounceonwalls
+    -NOGRAVITY
+    +DOOMBOUNCE
+    +CANBOUNCEWATER
+    - ROCKETTRAIL
+    Damage 0
+    ExplosionDamage 255
+    ExplosionRadius 128
+    SeeSound "weapons/pbbounce"
+    DeathSound "weapons/pbbounce"
+    Renderstyle Normal
+    Alpha 255
+    States
+    {
+    Spawn:
+      PIPB A 1 Thing_ChangeTid(0,1999)
+      Loop
+    Death:
+      PIPB A 1
+      PIPB A 1 Thing_ChangeTid(0,1999)
+      PIPB A 1 
+      Goto Death+2
+    }
+}
+
+
+ACTOR PipebombBox : CustomInventory
+{
+  Game Doom
+  SpawnID 134
+  +COUNTITEM
+  +INVENTORY.ALWAYSPICKUP
+  Inventory.PickupMessage "Picked up a box of pipebombs."
+  States
+  {
+  Spawn:
+    PBOX A -1
+    Stop
+  Pickup:
+    TNT1 A 0 A_GiveInventory("D2C_Pipebomb")
+    TNT1 A 0 A_GiveInventory("D2C_PipebombAmmo",5)
+    Stop
+  }
+}
+
+//////////////////////////TacticianMachinegun/////////////////////////////
+/////////////////////////////////////////////////////////////////
+
+ACTOR Tactician_Machinegun : Weapon 602
+{ 
+  //$Category Weapons
+  //$Sprite HVMGW0
+  //$Title "Heavy Machinegun"
+	Weapon.Kickback 5
+	Weapon.AmmoType "Clip" 
+	Weapon.AmmoGive 75
+	Weapon.AmmoUse 1
+	Weapon.SlotNumber 4
+	Weapon.SelectionOrder 2500
+	Inventory.PickupSound "misc/w_pkup" 
+	Inventory.PickupMessage "Picked Up a Heavy Machinegun!"
+	Obituary "%o was Ripped a New one by %k and their Heavy Machinegun."
+	AttackSound "weapons/Machinegun"
+ 	Decal BulletChip
+	States 
+	{  
+	Ready: 
+		HVMG A 1 A_WeaponReady 
+		Loop 
+	Deselect: 
+		HVMG A 1 A_Lower 
+		Loop 
+	Select: 
+		HVMG A 1 A_Raise 
+		Loop 
+	Fire: 
+		HVMG B 0 A_GunFlash
+		HVMG B 1 
+		HVMG C 1 A_FireBullets(5, 3, 1, 8, "BulletPuff", 1)  
+		HVMG A 1
+                TNT1 A 0 A_refire
+		goto Ready 
+        Flash:
+		HVMG B 1 Bright A_Light1 
+		HVMG C 1 Bright A_Light0 
+             	Goto LightDone
+        Hold:
+		HVMG B 0 A_GunFlash
+		HVMG B 1 
+		HVMG C 1 A_FireBullets(5, 3, 1, 13, "BulletPuff", 1)  
+		HVMG A 1
+		goto Ready 
+	Spawn:
+		HVMG W -1
+		Stop
+		}
+	} 

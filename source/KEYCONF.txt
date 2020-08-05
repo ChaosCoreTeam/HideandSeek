@@ -16,8 +16,8 @@ addplayerclass TacticianClass
 
 //What are you doing here go away!!!!!!!
 weaponsection HideAndSeek
-setslot 1 VanisherFist BerserkerFists ScoutKnife TerminatorGrenade HunterChaingun NoDamageRocketLauncher TeleportGun
-setslot 2 ScoutPistol TerminatorPlasmaRifle HunterShotgun
+setslot 1 VanisherFist BerserkerFists ScoutKnife TerminatorGrenade HunterChaingun NoDamageRocketLauncher TeleportGun Tactician_Machinegun
+setslot 2 ScoutPistol TerminatorPlasmaRifle HunterShotgun Tactician_Pipebomb Tactician_Detonator
 setslot 3 TerminatorDevastators HunterHook
 
 
