@@ -1,7 +1,7 @@
 //Actives only apply to the Bnashee, Guardian, Illusionist, Hunter, Berserker, Terminator, Polymorphist and the Tactician
 //Terminator only has one active
 
-Actor BansheeFirstCooldown : Ammo { Inventory.Amount 15 Inventory.MaxAmount 15 }
+Actor BansheeFirstCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
 Actor BansheeSecondCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
 Actor BansheeFirstActive : Inventory { }
 Actor BansheeSecondActive : Inventory { }

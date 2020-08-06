@@ -23,7 +23,7 @@ str classNames[12] =
 	"Tactician"
 };
 str abilityData[NUM_POWERUPS][2] = {
-    { "BansheeFirstCooldown", "Life Support"},
+    { "BansheeFirstCooldown", "Energy Field"},
     { "BlazerFirstCooldown", "Dash"},
     { "GuardianFirstCooldown", "Smoke bomb"},
     { "IllusionistFirstCooldown", "Disguise" },
@@ -35,7 +35,7 @@ str abilityData[NUM_POWERUPS][2] = {
     { "TerminatorFirstCooldown", "Laser Shot" },
     { "PolymorphistFirstCooldown", "Lostsoul" },
     { "TacticianFirstCooldown", "Tripmines" },
-    { "BansheeSecondCooldown", "Energy Field" },
+    { "BansheeSecondCooldown", "Life Support" },
     { "BlazerSecondCooldown", "Recall" },
     { "GuardianSecondCooldown", "Invulnerability" },
     { "IllusionistSecondCooldown", "Shrink" },
@@ -57,7 +57,6 @@ function str getItemName(int abilityNum)
 }
 script "giveCooldownForSeconds"(int itemName, int seconds)
 {
-	GiveInventory(itemName, 999);
 	for (int x = 1; x <= seconds; x++)
 	{
 		Delay(35);
@@ -170,25 +169,6 @@ script "hudTrip" (void) clientside
 	HudMessage(s:"You can only have 5 trip mines at a time"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
 }
 
-script "bansheeHeal" (int itemName)
-{
-	printbold(d:itemName);
-	while(CheckInventory("BansheeFirstActive"))
-	{
-		if(CheckInventory("HealingEnergy"))
-		{
-			PlaySound(0, "Banshee/Abilities/LifeSupport", 6);
-			TakeInventory("HealingEnergy", 1);
-			HealThing(1);				
-		}
-		else
-			break;
-		if(GetActorProperty(0, APROP_Health) == 100)
-			break;
-		Delay(12);
-	}
-	ACS_NamedExecuteAlways("giveCooldownForSeconds", 0, itemName, GetAmmoCapacity(itemName));
-}
 
 script "HNS_PrimaryAbility" (int hTaunt, int sTaunt) NET {
 	int classNum = PlayerClass(PlayerNumber());
@@ -201,19 +181,15 @@ script "HNS_PrimaryAbility" (int hTaunt, int sTaunt) NET {
     switch (classNum) {
 	//Banshee Dash Ability
     case CLASS_BANSHEE:
-		if(GetActorProperty(0, APROP_Health) == 100)
-		{
-			HudMessage(s:"You have 100 health"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-			break;
-		}
-		if(!CheckInventory("BansheeFirstActive"))
-		{
-			ACS_NamedExecute("bansheeHeal", 0, itemName);
-			GiveInventory("BansheeFirstActive", 1);
-		}
-		else
-			TakeInventory("BansheeFirstActive", 1);
-		break;
+		Delay(35);
+		GiveInventory("EnergyField", 1);
+		PlaySound(0, "Banshee/Abilities/EnergyField", 6);
+		ACS_NamedExecute("giveActiveforSeconds", 0, 5);
+		Delay(35 * 5);
+		TakeInventory("EnergyField", 1);
+		TakeInventory("BansheeFirstActive", 1);
+		ACS_NamedExecute("giveCooldownForSeconds", 0, "BansheeFirstCooldown", 15);
+        break;
 	//Blazer Dash Ability
     
 	case CLASS_BLAZER:
@@ -256,7 +232,7 @@ script "HNS_PrimaryAbility" (int hTaunt, int sTaunt) NET {
 		PlaySound(0, "Illusionist/Abilities/Morph");
 		ACS_NamedExecute("hudMorph", 0, StrParam(s:classNames[seekerClass], s:"Morph"));
 		ACS_NamedExecute("giveActiveforSeconds", 0, 3, classNum, "First");
-		ACS_NamedExecute("giveCooldownForSeconds", 0, itemName, GetAmmoCapacity(itemName));
+		ACS_NamedExecute("giveCooldownForSeconds", 0, "IllusionistFirstCooldown", 20);
 		break;
     
 	//Rocketeer Rocket Barrage Ability
@@ -341,9 +317,10 @@ script "HNS_PrimaryAbility" (int hTaunt, int sTaunt) NET {
         PrintBold(s: "Class not defined");
         break;
     }
-	//Excluding the banshee and blazer because it has it's own cooldown system
-	if (PlayerClass(PlayerNumber()) != 0 && PlayerClass(PlayerNumber()) != 1)
+	//Excluding the blazer because it has it's own cooldown system
+	if (PlayerClass(PlayerNumber()) != 1)
 	{
+		GiveInventory(itemName, 999);
 		ACS_NamedExecuteAlways("giveCooldownForSeconds", 0, itemName, GetAmmoCapacity(itemName));
 	}
 } 
@@ -357,13 +334,16 @@ script "HNS_SecondAbility" (int hTaunt, int sTaunt) NET {
 	}
     switch (classNum) {
     case CLASS_BANSHEE:
-		Delay(35);
-		GiveInventory("EnergyField", 1);
-		PlaySound(0, "Banshee/Abilities/EnergyField", 6);
-		Delay(35 * 5);
-		TakeInventory("EnergyField", 1);
-		TakeInventory("BansheeFirstActive", 1);
-        break;
+		If (CheckInventory("HealingEnergy") < 50)
+		{
+			ACS_NamedExecute("hudLife", 0, 0);
+			terminate;
+		}
+		TakeInventory("HealingEnergy", 50);
+		GiveInventory("LifeSupport", 1);
+		PlaySound(0, "Banshee/Abilities/LifeSupport", 6);
+		ACS_NamedExecute("hudLife", 0, 1);
+		break;
 	//Blazer Recall ability
 	case CLASS_BLAZER:
 		int recallTid = PlayerNumber() + 500;
@@ -454,6 +434,36 @@ script "HNS_SecondAbility" (int hTaunt, int sTaunt) NET {
 		ACS_NamedExecuteAlways("giveCooldownForSeconds", 0, itemName, GetAmmoCapacity(itemName));
 	}
 }
+
+script "hudLife" (int success) ClientSide
+{
+	if (success == 0)
+	{
+		HudMessage(s:"You need atleast half energy to activate this ability"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		PlaySound(0, "Banshee/Abilities/Fail", 6);
+	}
+	if (success == 1)
+	{
+		While (CheckInventory("LifeSupport"))
+		{
+			For (int x = 3; x > 0; x--)
+			{
+			HudMessage(s:"Life Support Systems last for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+			Delay(35);
+			}
+			ACS_NamedExecute("endLife", 0);
+			terminate;
+		}
+	}
+}
+
+script "endLife" (void) Net
+{
+	TakeInventory("LifeSupport", 1);
+	PlaySound(0, "Banshee/Abilities/LifeSupportOff", 6);
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "BansheeSecondCooldown", 45);
+}
+
 
 script "hudRecall" (int recallTid) Clientside
 {

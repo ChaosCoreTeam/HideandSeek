@@ -27,7 +27,7 @@ Script "rechargeWeapon" (int classNum) //recharging state
 	Switch(classNum)
 	{
 		case CLASS_BANSHEE:
-			GiveInventory("HealingEnergy", 5);
+			GiveInventory("HealingEnergy", 30);
 		break;
 		case CLASS_BLAZER:
 			GiveInventory("BlazerEnergy", 1);
