@@ -1,0 +1,4 @@
+Sentry/Active	DSSENTID
+Sentry/Death	DSSENTDI
+Sentry/Attack	DSSENTFI
+$limit Sentry/Attack	0

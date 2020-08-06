@@ -459,6 +459,12 @@ $random weapons/explode  { weapons/explode1 weapons/explode2 weapons/explode3 we
 //Tactician_Machinegun
 weapons/Machinegun	        DSMCGUNF
 
+//Tactician SentryGun
+Sentry/Active	DSSENTID
+Sentry/Death	DSSENTDI
+Sentry/Attack	DSSENTFI
+$limit Sentry/Attack	0
+
 //Mines
 MINE001		MINE001
 MINE002		MINE002
