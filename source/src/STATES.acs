@@ -63,7 +63,8 @@ Script "rechargeWeapon" (int classNum) //recharging state
 			GiveInventory("Shell",5);
 		break;
 		case CLASS_TACTICIAN:
-			//Nothing to give at the moment
+			GiveInventory("Clip",20);
+			GiveInventory("D2C_PipebombAmmo",5);
 		break;
 	}
 	fadeto(255, 255, 255, 0.03, 0.0);
