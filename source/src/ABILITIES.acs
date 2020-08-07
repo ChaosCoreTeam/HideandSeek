@@ -23,7 +23,7 @@ str classNames[12] =
 	"Tactician"
 };
 str abilityData[NUM_POWERUPS][2] = {
-    { "BansheeFirstCooldown", "Energy Field"},
+    { "BansheeFirstCooldown", "Life Support"},
     { "BlazerFirstCooldown", "Dash"},
     { "GuardianFirstCooldown", "Smoke bomb"},
     { "IllusionistFirstCooldown", "Disguise" },
@@ -35,7 +35,7 @@ str abilityData[NUM_POWERUPS][2] = {
     { "TerminatorFirstCooldown", "Laser Shot" },
     { "PolymorphistFirstCooldown", "Lostsoul" },
     { "TacticianFirstCooldown", "Tripmines" },
-    { "BansheeSecondCooldown", "Life Support" },
+    { "BansheeSecondCooldown", "Energy Field" },
     { "BlazerSecondCooldown", "Recall" },
     { "GuardianSecondCooldown", "Invulnerability" },
     { "IllusionistSecondCooldown", "Shrink" },
@@ -57,11 +57,31 @@ function str getItemName(int abilityNum)
 }
 script "giveCooldownForSeconds"(int itemName, int seconds)
 {
+	GiveInventory(itemName, seconds);
 	for (int x = 1; x <= seconds; x++)
 	{
 		Delay(35);
 		TakeInventory(itemName, 1);
 	}
+}
+
+script "bansheeHeal" (int itemName)
+{
+	while(CheckInventory("BansheeFirstActive"))
+	{
+		if(CheckInventory("HealingEnergy"))
+		{
+			PlaySound(0, "Banshee/Abilities/LifeSupport", 6);
+			TakeInventory("HealingEnergy", 1);
+			HealThing(1);				
+		}
+		else
+			break;
+		if(GetActorProperty(0, APROP_Health) == 100)
+			break;
+		Delay(12);
+	}
+	ACS_NamedExecuteAlways("giveCooldownForSeconds", 0, itemName, GetAmmoCapacity(itemName));
 }
 
 script "cooldownActive" (void) ClientSide
@@ -148,7 +168,7 @@ script "endDual" (void) NET
 
 script "hudBlood" (void) clientside
 {
-	For (int x = 5; x >= 0; x--)
+	For (int x = 3; x >= 0; x--)
 	{
 		HudMessage(s:"Bloodlust lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 0.5, 0.5);
 		Delay(35);
@@ -159,8 +179,9 @@ script "hudBlood" (void) clientside
 script "endBlood" (void) NET
 {
 	TakeInventory("Bloodlust", 1);
-	PlaySound(0, "Berseker/Abilities/LoseBlood");
-	ACS_NamedExecute("giveCooldownForSeconds", 0, "BerserkerFirstCooldown", 60);
+	//PlaySound(0, "Berseker/Abilities/LoseBlood");
+	
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "BerserkerFirstCooldown", 25);
 	terminate;
 }
 
@@ -180,15 +201,19 @@ script "HNS_PrimaryAbility" (int hTaunt, int sTaunt) NET {
     switch (classNum) {
 	//Banshee Dash Ability
     case CLASS_BANSHEE:
-		Delay(35);
-		GiveInventory("EnergyField", 1);
-		PlaySound(0, "Banshee/Abilities/EnergyField", 6);
-		ACS_NamedExecute("giveActiveforSeconds", 0, 5);
-		Delay(35 * 5);
-		TakeInventory("EnergyField", 1);
-		TakeInventory("BansheeFirstActive", 1);
-		ACS_NamedExecute("giveCooldownForSeconds", 0, "BansheeFirstCooldown", 15);
-        break;
+		if(GetActorProperty(0, APROP_Health) == 100)
+		{
+			HudMessage(s:"You have 100 health"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+			break;
+		}
+		if(!CheckInventory("BansheeFirstActive"))
+		{
+			ACS_NamedExecute("bansheeHeal", 0, itemName);
+			GiveInventory("BansheeFirstActive", 1);
+		}
+		else
+			TakeInventory("BansheeFirstActive", 1);
+		break;
 	//Blazer Dash Ability
     
 	case CLASS_BLAZER:
@@ -231,7 +256,7 @@ script "HNS_PrimaryAbility" (int hTaunt, int sTaunt) NET {
 		PlaySound(0, "Illusionist/Abilities/Morph");
 		ACS_NamedExecute("hudMorph", 0, StrParam(s:classNames[seekerClass], s:"Morph"));
 		ACS_NamedExecute("giveActiveforSeconds", 0, 3, classNum, "First");
-		ACS_NamedExecute("giveCooldownForSeconds", 0, "IllusionistFirstCooldown", 20);
+		ACS_NamedExecute("giveCooldownForSeconds", 0, itemName, GetAmmoCapacity(itemName));
 		break;
     
 	//Rocketeer Rocket Barrage Ability
@@ -322,8 +347,10 @@ script "HNS_PrimaryAbility" (int hTaunt, int sTaunt) NET {
         PrintBold(s: "Class not defined");
         break;
     }
+	
+	//this probably should be cleaned up
 	//Excluding the blazer because it has it's own cooldown system
-	if (PlayerClass(PlayerNumber()) != 1)
+	if (PlayerClass(PlayerNumber()) != CLASS_BANSHEE && PlayerClass(PlayerNumber()) != CLASS_BLAZER && PlayerClass(PlayerNumber()) != CLASS_BERSERKER)
 	{
 		GiveInventory(itemName, 999);
 		ACS_NamedExecuteAlways("giveCooldownForSeconds", 0, itemName, GetAmmoCapacity(itemName));

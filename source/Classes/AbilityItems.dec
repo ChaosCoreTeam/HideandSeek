@@ -2,7 +2,7 @@
 //Terminator only has one active
 
 Actor BansheeFirstCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
-Actor BansheeSecondCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
+Actor BansheeSecondCooldown : Ammo { Inventory.Amount 15 Inventory.MaxAmount 15 }
 Actor BansheeFirstActive : Inventory { }
 Actor BansheeSecondActive : Inventory { }
 
@@ -35,7 +35,7 @@ Actor HunterSecondActive : Inventory { }
 Actor ScouterFirstCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
 Actor ScouterSecondCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
 
-Actor BerserkerFirstCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
+Actor BerserkerFirstCooldown : Ammo { Inventory.Amount 25 Inventory.MaxAmount 25 }
 Actor BerserkerSecondCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
 Actor BerserkerFirstActive : Inventory { } 
 Actor BerserkerSecondActive : Inventory { }

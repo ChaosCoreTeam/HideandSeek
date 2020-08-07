@@ -17,7 +17,7 @@ VanishOff 	VANISOFF
 //=======================================================================
 
 Banshee/Abilities/LifeSupport LIFESUPP
-Banshee/Abilities/EnergyShield ENERGYSH
+Banshee/Abilities/EnergyShield ENRGFILD
 Banshee/Weapons/HealingWave HEALWAVE
 
 BlazeDeath1 BLAZDETH
