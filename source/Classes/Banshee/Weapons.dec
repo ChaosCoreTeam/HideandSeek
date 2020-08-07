@@ -42,10 +42,10 @@ ACTOR Rejuvinator : Weapon
 ACTOR HealingEnergy : Ammo
 {
 	Inventory.PickupMessage "Healing Energy!"
-	Inventory.Amount 600
-	Inventory.MaxAmount 600
-	Ammo.BackpackAmount 600
-	Ammo.BackpackMaxAmount 600
+	Inventory.Amount 100
+	Inventory.MaxAmount 100
+	Ammo.BackpackAmount 100
+	Ammo.BackpackMaxAmount 100
 	Inventory.Icon "CELLA0"
 	States
 	{

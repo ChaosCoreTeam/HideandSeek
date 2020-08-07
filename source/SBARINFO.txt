@@ -218,7 +218,7 @@ StatusBar FullScreen, FullScreenOffsets, ForceScaled
 		DrawBar "hudbar12", "hudbar02", lowVanishingPool, Horizontal, -73, -27;
 	}
 	
-	PlayerClass Berserker, Hunter, Terminator, Tactician
+	PlayerClass Hunter, Terminator, Tactician
 	{
 		//Health+Armor Icons
 		DrawImage "hudmdkit", 0, -14;
@@ -230,6 +230,22 @@ StatusBar FullScreen, FullScreenOffsets, ForceScaled
 		DrawNumber 3, HNS_HUD_FONT, Gold, Health, WhenNotZero, 42, -10, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -10; DrawNumber 3, HNS_HUD_FONT, Green, 100, DrawShadow, 68, -10, 0;
 		DrawNumber 3, HNS_HUD_FONT, Black, Armor, DrawShadow, 42, -24, 0;
 		DrawNumber 3, HNS_HUD_FONT, Gold, Armor, WhenNotZero, 42, -24, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -24; DrawNumber 3, HNS_HUD_FONT, Green, 100, DrawShadow, 68, -24, 0;
+	}
+	
+	PlayerClass Berserker,
+	{
+		//Health+Armor Icons
+		DrawImage "hudmdkit", 0, -14;
+		DrawImage "hudgreen", 0, -28;
+		//Bottom Right - Ammo
+		DrawImage "hudritgb", -79, -33;
+		//Health+Armor Display Readouts
+		DrawNumber 3, HNS_HUD_FONT, Black, Health, DrawShadow, 42, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Health, WhenNotZero, 42, -10, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -10; DrawNumber 3, HNS_HUD_FONT, Green, 100, DrawShadow, 68, -10, 0;
+		DrawNumber 3, HNS_HUD_FONT, Black, Armor, DrawShadow, 42, -24, 0;
+		DrawNumber 3, HNS_HUD_FONT, Gold, Armor, WhenNotZero, 42, -24, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -24; DrawNumber 3, HNS_HUD_FONT, Green, 100, DrawShadow, 68, -24, 0;
+		DrawBar "hudbar13", "hudbar03", BerserkerFirstCooldown, Horizontal, 116, -12;
+		DrawBar "hudbar14", "hudbar04", BerserkerecondCooldown, Horizontal, 196, -12;
 	}
 	PlayerClass Polymorphist
 	{
