@@ -44,7 +44,7 @@ str abilityData[NUM_POWERUPS][2] = {
     { "HunterSecondCooldown", "Freeze Gun" },
     { "ScouterSecondCooldown", "Tracking Device" },
     { "BerserkerSecondCooldown", "Charge" },
-    { "TerminatorSecondCooldown", "Hyperdrive" },
+    { "TerminatorSecondCooldown", "Devastators" },
     { "PolymorphistSecondCooldown", "Cybruiser Transformation" },
     { "TacticianSecondCooldown", "Sentry" }
 };
@@ -307,8 +307,11 @@ script "HNS_PrimaryAbility" (int hTaunt, int sTaunt) NET {
 	
 	//logic done
 	case CLASS_TERMINATOR:
-		SpawnProjectile(0, "MaelStromBall", GetActorAngle(0) >> 8, 200, 0,0,0);
+	    PlaySound(0, "Weapons/KarasawaFire", 6);
+		SpawnProjectile(0, "KsawBolt", GetActorAngle(0) >> 8, 200, 0, 0, 0);
 		ACS_NamedExecute("giveCooldownForSeconds", 0, "TerminatorFirstCooldown", 10);
+		delay(35);
+	    PlaySound(0, "Weapons/KarasawaCharge", 6);
         break;
 	
 	//logic done
@@ -449,7 +452,20 @@ script "HNS_SecondAbility" (int hTaunt, int sTaunt) NET {
 		ACS_NamedExecute("giveCooldownForSeconds", 0, "BerserkerFirstCooldown", 25);
 		break;
 	case CLASS_TERMINATOR:
-		break;
+		int devId = PlayerNumber() + 100;
+			while(!CheckInventory("Devastators"))
+			{
+				PlaySound(0, "Terminator/Taunt", 6);
+				SetActorProperty(0, APROP_Speed, 1.5);
+				GiveInventory("TerminatorDevastators", 1);
+				setweapon("TerminatorDevastators");
+				ACS_NamedExecute("DevastatorTime",0, devId);
+				ACS_NamedExecute("giveCooldownForSeconds", 0, "BerserkerSecondCooldown", 25);
+				break;
+			}
+			while(CheckInventory("Devastators"))
+				break;
+
 	case CLASS_POLYMORPHIST:
 		break;
 	case CLASS_TACTICIAN:
@@ -656,6 +672,22 @@ script "sentryLife" (int sentryId) Net
 	}
 	HudMessage(s:"Sentry Destroyed!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
 	SetActorState(sentryId, "Death", true);
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "TacticianSecondCooldown", 60);
+}
+
+script "DevastatorTime" (int devId) Net
+{
+	For (int x = 10; x >= 0; x--)
+	{
+		Delay(35);
+		if (x != 0)
+		{
+			HudMessage(d: x, s:" until Devastators expires."; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		}
+	}
+	HudMessage(s:"Devastators expired!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+	TakeInventory("TerminatorDevastators", 1);
+	SetActorProperty(0, APROP_Speed, 1.0);
 	ACS_NamedExecute("giveCooldownForSeconds", 0, "TacticianSecondCooldown", 60);
 }
 

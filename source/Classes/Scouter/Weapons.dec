@@ -1,22 +1,5 @@
-ACTOR RailClip : Ammo
-{
-  Game Doom
-  Inventory.PickupMessage "Yes."
-  Inventory.Amount 1
-  Inventory.MaxAmount 25
-  Ammo.BackpackAmount 1
-  Ammo.BackpackMaxAmount 25
-  Inventory.Icon "CLIPA0"
-  States
-  {
-  Spawn:
-    CLIP A -1
-    Stop
-  }
-}
-
-
-
+/////////////ScoutPistol////////////
+///////////////////////////////////
 actor ScoutPistol : Weapon
 {
   Weapon.SelectionOrder 500
@@ -44,7 +27,7 @@ actor ScoutPistol : Weapon
     PLPI B 3
 	PLPI A 0 A_GunFlash
     PLPI C 3 A_RailAttack (random(25,45), 0, 1, none, "00 00 FF", 2)
-    PLPI A 8
+    PLPI AAA 8
     BLAG B 0 A_ReFire
 	PLPI A 0
 	PLPI A 3
@@ -59,6 +42,25 @@ actor ScoutPistol : Weapon
   }
 }
 
+ACTOR RailClip : Ammo
+{
+  Game Doom
+  Inventory.PickupMessage "Yes."
+  Inventory.Amount 1
+  Inventory.MaxAmount 25
+  Ammo.BackpackAmount 1
+  Ammo.BackpackMaxAmount 25
+  Inventory.Icon "CLIPA0"
+  States
+  {
+  Spawn:
+    CLIP A -1
+    Stop
+  }
+}
+
+/////////////ScoutKnife//////////////
+////////////////////////////////////
 actor ScoutKnife : Weapon
 {
   Weapon.SelectionOrder 600

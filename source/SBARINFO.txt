@@ -430,8 +430,8 @@ StatusBar FullScreen, FullScreenOffsets, ForceScaled
 	IsSelected Tactician_Pipebomb
 	{
 		//Ammo or Weapon Icon
-		DrawImage "hudrockt", -24, -14;
-		DrawImage "hudthrow", -24, -28;
+		DrawImage "PHUD", -24, -14;
+		DrawImage "PBthrow", -24, -28;
 		//Ammo Display Readout
 		DrawNumber 2, HNS_HUD_FONT, Black, Ammo1, DrawShadow, 264, -10, 0;
 		DrawImage "hnsslash", 269, -10;
@@ -439,10 +439,7 @@ StatusBar FullScreen, FullScreenOffsets, ForceScaled
 		DrawNumber 2, HNS_HUD_FONT, Gold, Ammo1, WhenNotZero, 264, -10, 0, Red, 4, Green, 8;
 		//Pipebomb Throw Strength
 		DrawBar "hudbar11", "hudbar01", Ammo2, Horizontal, 247, -27;
-	}
-	IsSelected Tactician_Detonator
-	{
-		DrawString HNS_HUD_FONT, Red, "DETONATE", 305, -10, 0;
-		DrawString HNS_HUD_FONT, Black, "N", 263, -24, 0; DrawImage "hnsslash", 269, -24; DrawString HNS_HUD_FONT, Black, "A", 288, -24, 0;
+		//Detonator
+		DrawImage "huddet", 0, -43;
 	}
 }
