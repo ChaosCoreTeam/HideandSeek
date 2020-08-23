@@ -552,39 +552,6 @@ ACTOR D2C_PipebombAmmo : Ammo
    }
 }
 
-
-
-ACTOR Pipebomb : Rocket
-{ 
-    Scale 0.1
-	radius 5
-    - NOGRAVITY
-    +Bounceonwalls
-    -NOGRAVITY
-    +DOOMBOUNCE
-    +CANBOUNCEWATER
-    - ROCKETTRAIL
-    Damage 0
-    ExplosionDamage 255
-    ExplosionRadius 128
-    SeeSound "weapons/pbbounce"
-    DeathSound "weapons/pbbounce"
-    Renderstyle Normal
-    Alpha 255
-    States
-    {
-    Spawn:
-      PIPB A 1 Thing_ChangeTid(0,1999)
-      Loop
-    Death:
-      PIPB A 1
-      PIPB A 1 Thing_ChangeTid(0,1999)
-      PIPB A 1 
-      Goto Death+2
-    }
-}
-
-
 ACTOR PipebombBox : CustomInventory
 {
   Game Doom

@@ -15,7 +15,6 @@ ACTOR HunterClass : PlayerPawn
   player.startitem "Shell", 50
   player.startitem "Clip", 200
   player.startitem "greenarmor", 1
-  player.startitem "HunterHook", 1
   player.startitem "Hooks", 5
   player.startitem "isSeeker", 1
   Player.JumpZ 10

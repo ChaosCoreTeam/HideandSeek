@@ -378,18 +378,6 @@ StatusBar FullScreen, FullScreenOffsets, ForceScaled
 		//Alt Ammo Display Readout
 		DrawString HNS_HUD_FONT, Black, "N", 263, -24, 0; DrawImage "hnsslash", 269, -24; DrawString HNS_HUD_FONT, Black, "A", 288, -24, 0;
 	}
-		IsSelected HunterHook
-	{
-		//Ammo or Weapon Icon
-		DrawImage "hudhook", -30, -20;
-		//Ammo Display Readout
-		DrawNumber 3, HNS_HUD_FONT, Black, Ammo1, DrawShadow, 267, -10, 0;
-		DrawImage "hnsslash", 269, -10;
-		DrawNumber 3, HNS_HUD_FONT, Green, 5, DrawShadow, 293, -10, 0;
-		DrawNumber 3, HNS_HUD_FONT, Gold, Ammo1, WhenNotZero, 267, -10, 0, Red, 2, Green, 5;
-		//Alt Ammo Display Readout
-		DrawString HNS_HUD_FONT, Black, "N", 263, -24, 0; DrawImage "hnsslash", 269, -24; DrawString HNS_HUD_FONT, Black, "A", 288, -24, 0;
-	}
 	IsSelected TerminatorPlasmaRifle
 	{
 		//Ammo or Weapon Icon
