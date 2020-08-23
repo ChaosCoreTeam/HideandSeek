@@ -1,7 +1,7 @@
 {
 name = "\cc[HnS]\cuBlazer"
 script = DFULTBOT
-chatlump = Chatfiles/blazer.txt
+chatlump = "chatfiles/blazer.txt"
 gender = male
 color = "00 00 00"
 railcolor = "black"
@@ -20,7 +20,7 @@ perception = 4
 {
 name = "\cc[HnS]\cuVanisher"
 script = DFULTBOT
-chatlump = Chatfiles/vanisher.txt
+chatlump = "chatfiles/vanisher.txt"
 gender = male
 color = "00 00 00"
 railcolor = "black"
@@ -39,7 +39,7 @@ perception = 4
 {
 name = "\cc[HnS]\cuTeleporter"
 script = DFULTBOT
-chatlump = Chatfiles/teleporter.txt
+chatlump = "chatfiles/teleporter.txt"
 gender = male
 color = "00 00 00"
 railcolor = "black"
@@ -58,7 +58,7 @@ perception = 4
 {
 name = "\cc[HnS]\cuRocketeer"
 script = DFULTBOT
-chatlump = Chatfiles/rocketeer.txt
+chatlump = "chatfiles/rocketeer.txt"
 gender = male
 color = "00 00 00"
 railcolor = "black"
@@ -77,7 +77,7 @@ perception = 4
 {
 name = "\cc[HnS]\cfScouter"
 script = DFULTBOT
-chatlump = Chatfiles/scouter.txt
+chatlump = "chatfiles/scouter.txt"
 gender = male
 color = "FF FF 00"
 railcolor = "gold"
@@ -96,7 +96,7 @@ perception = 4
 {
 name = "\cc[HnS]\cfHunter"
 script = DFULTBOT
-chatlump = Chatfiles/hunter.txt
+chatlump = "chatfiles/hunter.txt"
 gender = male
 color = "FF FF 00"
 railcolor = "gold"
@@ -115,7 +115,7 @@ perception = 4
 {
 name = "\cc[HnS]\cfTerminator"
 script = DFULTBOT
-chatlump = Chatfiles/terminator.txt
+chatlump = "chatfiles/terminator.txt"
 gender = male
 color = "FF FF 00"
 railcolor = "gold"
@@ -134,7 +134,7 @@ perception = 4
 {
 name = "\cc[HnS]\cfBerserker"
 script = DFULTBOT
-chatlump = Chatfiles/berserker.txt
+chatlump = "chatfiles/berserker.txt"
 gender = male
 color = "FF FF 00"
 railcolor = "gold"
