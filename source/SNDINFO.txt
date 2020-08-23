@@ -65,12 +65,12 @@ BlazeDeath2 BLAZDTH2
 BlazeDeath3 BLAZDTH3
 $random BlazeDeath { BlazeDeath1 BlazeDeath2 BlazeDeath3 }
 
-BlazerLowPain BLAZPAIN
+BlazerLowPain1 BLAZPAIN
 BlazerMedPain1 BLAZPA75
 BlazerMedPain2 BLAZPA50
 BlazerHighPain2	BLAZPA25
-$random BlazerLowPain { BlazerLowPain BlazerMedPain1 } 
-$random BlazerMedPain { BlazerLowPain BlazerMedPain1 BlazerMedPain2 } 
+$random BlazerLowPain { BlazerLowPain1 BlazerMedPain1 } 
+$random BlazerMedPain { BlazerLowPain1 BlazerMedPain1 BlazerMedPain2 } 
 $random BlazerHighPain { BlazerMedPain2 BlazerHighPain2 } 
 
 $playeralias	Blazer	male	*death		BlazeDeath
@@ -90,7 +90,7 @@ $playersound	Blazer male		*gasp		BLAZGASP
 //Guardian Class Sounds
 //=======================================================================
 
-GuardLowPain GUARPAIN
+GuardLowPain1 GUARPAIN
 GuardMedPain1 GUARPA75
 GuardMedPain2 GUARPA50
 GuardHighPain2	GUARPA25
@@ -98,9 +98,9 @@ GuardHighPain2	GUARPA25
 Smokebomb/Hiss	SMOKEHIS
 Smokebomb/Bang	SMOKEBAG
 
-$random GuardLowPain { GuardLowPain GuardMedPain1 } 
+$random GuardLowPain { GuardLowPain1 GuardMedPain1 } 
 
-$random GuardMedPain { GuardLowPain GuardMedPain1 GuardMedPain2 } 
+$random GuardMedPain { GuardLowPain1 GuardMedPain1 GuardMedPain2 } 
 
 $random GuardHighPain { GuardMedPain2 GuardHighPain2 } 
 
@@ -139,14 +139,14 @@ IllDeath1 ILLUDETH
 IllDeath2 ILLUDTH2
 IllDeath3 ILLUDTH3
 
-IllusionistLowPain ILLUPAIN
+IllusionistLowPain1 ILLUPAIN
 IllusionistMedPain1 ILLUPA75
 IllusionistMedPain2 ILLUPA50
 IllusionistHighPain2	ILLUPA25
 
-$random IllusionistLowPain { IllusionistLowPain IllusionistMedPain1 } 
+$random IllusionistLowPain { IllusionistLowPain1 IllusionistMedPain1 } 
 
-$random IllusionistMedPain { IllusionistLowPain IllusionistMedPain1 IllusionistMedPain2 } 
+$random IllusionistMedPain { IllusionistLowPain1 IllusionistMedPain1 IllusionistMedPain2 } 
 
 $random IllusionistHighPain { IllusionistMedPain2 IllusionistHighPain2 } 
 
@@ -190,14 +190,14 @@ RockDeath1 ROCKDETH
 RockDeath2 ROCKDTH2
 RockDeath3 ROCKDTH3
 
-RocketeerLowPain ROCKPAIN
+RocketeerLowPain1 ROCKPAIN
 RocketeerMedPain1 ROCKPA75
 RocketeerMedPain2 ROCKPA50
 RocketeerHighPain2	ROCKPA25
 
-$random RocketeerLowPain { RocketeerLowPain RocketeerMedPain1 } 
+$random RocketeerLowPain { RocketeerLowPain1 RocketeerMedPain1 } 
 
-$random RocketeerMedPain { RocketeerLowPain RocketeerMedPain1 RocketeerMedPain2 } 
+$random RocketeerMedPain { RocketeerLowPain1 RocketeerMedPain1 RocketeerMedPain2 } 
 
 $random RocketeerHighPain { RocketeerMedPain2 RocketeerHighPain2 } 
 
@@ -422,12 +422,12 @@ ScoutDeath2 SCOUDTH2
 ScoutDeath3 SCOUDTH3
 $random ScoutDeath { ScoutDeath1 ScoutDeath2 ScoutDeath3 }
 
-ScouterLowPain SCOUPAIN
+ScouterLowPain1 SCOUPAIN
 ScouterMedPain1 SCOUPA75
 ScouterMedPain2 SCOUPA50
 ScouterHighPain2	SCOUPA25
-$random ScouterLowPain { ScouterLowPain ScouterMedPain1 } 
-$random ScouterMedPain { ScouterLowPain ScouterMedPain1 ScouterMedPain2 } 
+$random ScouterLowPain { ScouterLowPain1 ScouterMedPain1 } 
+$random ScouterMedPain { ScouterLowPain1 ScouterMedPain1 ScouterMedPain2 } 
 $random ScouterHighPain { ScouterMedPain2 ScouterHighPain2 } 
 
 $playeralias	Scouter	male	*death		ScoutDeath
