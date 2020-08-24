@@ -1,0 +1,78 @@
+#library "Banshee"
+#include "DEFINITIONS.acs"
+
+script "bansheeFirstAbility" (int powerName)
+{
+	if(GetActorProperty(0, APROP_Health) == 100)
+	{
+		HudMessage(s:"You have 100 health"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+	}
+	if(!CheckInventory("BansheeFirstActive"))
+	{
+		ACS_NamedExecute("bansheeHeal", 0, powerName);
+		GiveInventory("BansheeFirstActive", 1);
+	}
+	else
+		TakeInventory("BansheeFirstActive", 1);
+}
+
+script "bansheeHeal" (int powerName)
+{
+	while(CheckInventory("BansheeFirstActive"))
+	{
+		if(CheckInventory("HealingEnergy"))
+		{
+			PlaySound(0, "Banshee/Abilities/LifeSupport", 6);
+			TakeInventory("HealingEnergy", 1);
+			HealThing(1);				
+		}
+		else
+			break;
+		if(GetActorProperty(0, APROP_Health) == 100)
+			break;
+		Delay(12);
+	}
+	ACS_NamedExecuteAlways("giveCooldownForSeconds", 0, powerName, GetAmmoCapacity(powerName));
+}
+
+script "bansheeSecondAbility" (int powerName)
+{
+	If (CheckInventory("HealingEnergy") < 50)
+	{
+		ACS_NamedExecute("hudLife", 0, 0);
+		terminate;
+	}
+	TakeInventory("HealingEnergy", 50);
+	GiveInventory("LifeSupport", 1);
+	PlaySound(0, "Banshee/Abilities/LifeSupport", 6);
+	ACS_NamedExecute("hudLife", 0, 1);
+}
+
+script "hudLife" (int success) ClientSide
+{
+	if (success == 0)
+	{
+		HudMessage(s:"You need atleast half energy to activate this ability"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		PlaySound(0, "Banshee/Abilities/Fail", 6);
+	}
+	if (success == 1)
+	{
+		While (CheckInventory("LifeSupport"))
+		{
+			For (int x = 3; x > 0; x--)
+			{
+			HudMessage(s:"Life Support Systems last for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+			Delay(35);
+			}
+			ACS_NamedExecute("endLife", 0);
+			terminate;
+		}
+	}
+}
+
+script "endLife" (void) Net
+{
+	TakeInventory("LifeSupport", 1);
+	PlaySound(0, "Banshee/Abilities/LifeSupportOff", 6);
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "BansheeSecondCooldown", 45);
+}

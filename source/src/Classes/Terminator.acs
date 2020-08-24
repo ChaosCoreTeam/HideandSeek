@@ -1,0 +1,12 @@
+#library "Terminator"
+#include "DEFINITIONS.acs"
+
+script "TerminatorFirstAbility" (int powerName) NET
+{
+	SpawnProjectile(0, "MaelStromBall", GetActorAngle(0) >> 8, 200, 0,0,0);
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "TerminatorFirstCooldown", 10);
+}
+
+script "TerminatorSecondAbility" (int powerName) NET
+{
+}

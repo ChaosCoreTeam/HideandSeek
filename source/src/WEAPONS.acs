@@ -1,5 +1,4 @@
 #library "WEAPONS"
-#include "zcommon.acs"
 #include "DEFINITIONS.acs"
 
 int pteam[MAXPLAYERS];

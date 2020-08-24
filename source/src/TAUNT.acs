@@ -1,10 +1,9 @@
 #library "TAUNT"
-#include "zcommon.acs"
 #include "DEFINITIONS.acs"
 
 script "HNS_Taunt" (int hTaunt, int sTaunt) net
 {
-    if(PlayerClass(PlayerNumber()) < HIDER_IDENTIFIER) 
+    if(PlayerClass(PlayerNumber()) < SEEKER_CLASS_START) 
     {
         PlaySound(PlayerNumber(), hiderStringToTaunt(hTaunt), 6);
 		

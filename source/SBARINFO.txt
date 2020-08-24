@@ -182,8 +182,8 @@ StatusBar FullScreen, FullScreenOffsets, ForceScaled
 		DrawNumber 3, HNS_HUD_FONT, Black, Armor, DrawShadow, 42, -24, 0;
 		DrawNumber 3, HNS_HUD_FONT, Gold, Armor, WhenNotZero, 42, -24, 0, Red, 26, Green, 51; DrawImage "hnsslash", 44, -24; DrawNumber 3, HNS_HUD_FONT, Green, 200, DrawShadow, 68, -24, 0;
 		//Ammo
-		DrawBar "hudbar13", "hudbar03", GuardianFirstCooldown, Horizontal, 116, -12;
-		DrawBar "hudbar14", "hudbar04", GuardianSecondCooldown, Horizontal, 196, -12;
+		DrawBar "hudbar13", "hudbar03", IllusionistFirstCooldown, Horizontal, 116, -12;
+		DrawBar "hudbar14", "hudbar04", IllusionistSecondCooldown, Horizontal, 196, -12;
 	    DrawBar "hudbar11", "hudbar01", GuardianPower, Horizontal, -73, -12;
 		DrawBar "hudbar12", "hudbar02", lowVanishingPool, Horizontal, -73, -27;
 		//

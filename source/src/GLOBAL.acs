@@ -1,5 +1,4 @@
 #library "Global"
-#include "zcommon.acs"
 #include "DEFINITIONS.acs"
 
 int pteam[MAXPLAYERS];
@@ -294,10 +293,10 @@ function int abs (int x)
     return x;
 }
 
-#define ASPECT_4_3 1.3
-#define ASPECT_5_4 1.25
-#define ASPECT_16_9 1.7
-#define ASPECT_16_10 1.6
+//#define ASPECT_4_3 1.3
+//#define ASPECT_5_4 1.25
+//#define ASPECT_16_9 1.7
+//#define ASPECT_16_10 1.6
 
 function int getaspectratio(void)
 {

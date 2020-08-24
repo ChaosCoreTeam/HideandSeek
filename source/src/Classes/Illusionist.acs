@@ -1,0 +1,105 @@
+#library "Illusionist"
+#include "DEFINITIONS.acs"
+
+script "IllusionistFirstAbility" (int powerName, int classNum) NET
+{
+	if (CheckInventory("Morphed"))
+	{
+		str morphClass = morphName();
+		TakeInventory("Morphed", 1);
+		TakeInventory(morphClass, 1);
+		PlaySound(0, "Illusionist/Abilities/Morph");
+		ACS_NamedExecute("removeCooldownForSeconds", 0, classNum);
+		terminate;
+	}
+	
+	int seekerClass = Random(6,11);
+	GiveInventory("Morphed", 1);
+	GiveInventory(StrParam(s:classNames[seekerClass], s:"Morph"), 1);
+	PlaySound(0, "Illusionist/Abilities/Morph");
+	ACS_NamedExecute("hudMorph", 0, StrParam(s:classNames[seekerClass], s:"Morph"));
+	ACS_NamedExecute("giveActiveforSeconds", 0, 3, classNum, "First");
+	ACS_NamedExecute("giveCooldownForSeconds", 0, powerName, GetAmmoCapacity(powerName));
+}
+
+function str morphName(void) 
+{
+	for (int x = SEEKER_CLASS_START; x <= SEEKER_CLASS_END; x++)
+		if (CheckInventory(StrParam(s:classNames[x], s:"Morph")))
+			str morphClass = StrParam(s:classNames[x], s: "Morph");
+	
+	return morphClass;
+}
+
+script "hudMorph" (int seekerClass) clientside
+{
+	HudMessage(s:"You have transformed into a ", s:seekerClass; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+	While (CheckInventory("Morphed"))
+	{
+		For (int x = 20; x > 0; x--)
+		{
+			If (!CheckInventory("Morphed"))
+			{
+				terminate;
+			}
+			HudMessage(s:"metamorphosis lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+			Delay(35);
+		}
+		ACS_NamedExecute("endMorph", 0);
+		terminate;
+	}
+}
+script "endMorph" (void) NET
+{
+	str morphClass = morphName();
+	
+	TakeInventory("Morphed", 1);
+	TakeInventory(morphClass, 1);
+	PlaySound(0, "Illusionist/Abilities/Morph");
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "IllusionistFirstCooldown", 20);
+	
+	
+	terminate;
+}
+
+script "IllusionistSecondAbility" (int powerName) NET
+{
+	if (CheckInventory("PowerShrink"))
+	{
+		HudMessage(s:"Took Shrink"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		TakeInventory("PowerShrink", 1);
+		PlaySound(0, "Illusionist/Abilities/UnShrink", 6);
+		ACS_NamedExecute("giveCooldownForSeconds", 0, "IllusionistSecondCooldown", 30);
+		terminate;
+	}
+		HudMessage(s:"Obtained Shrink"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		GiveInventory("PowerShrink", 1);
+		PlaySound(0, "Illusionist/Abilities/Shrink", 6);
+		ACS_NamedExecute("hudShrink", 0);
+}
+
+script "hudShrink" (void) Clientside
+{
+	While (CheckInventory("PowerShrink"))
+	{
+		For (int x = 15; x > 0; x--)
+		{
+			HudMessage(s:"shrunken state lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+			Delay(35);
+			If (!CheckInventory("PowerShrink"))
+			{
+				HudMessage(s:"back to normal"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+				terminate;
+			}
+		}
+		ACS_NamedExecute("endShrink", 0);
+		terminate;
+	}
+}
+
+script "endShrink" (void) Net
+{
+	TakeInventory("PowerShrink", 1);
+	PlaySound(0, "Illusionist/Abilities/Unshrink", 6);
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "IllusionistSecondCooldown", 45);
+}

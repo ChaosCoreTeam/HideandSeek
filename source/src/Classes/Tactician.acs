@@ -1,0 +1,61 @@
+#library "Tactician"
+#include "DEFINITIONS.acs"
+
+script "TacticianFirstAbility" (int powerName) NET
+{ 
+		int MineId = PlayerNumber() + 50;
+		int angle = GetActorAngle(0);
+		int x = GetActorX(0) + FixedMul(cos(angle), 64.0);
+		int y = GetActorY(0) + FixedMul(sin(angle), 64.0);
+		int z = GetActorZ(0);
+		if (ThingCount("Mine", PlayerNumber()+20) >= 5)
+		{
+			PlaySound(0, "Tactician/Abilities/Minefail", 6);
+			ACS_NamedExecute("hudTrip", 0);
+		}
+		Spawn("Mine", x, y, z, MineId, 0);
+		PlaySound(0, "MINE001", 6);
+		ACS_NamedExecute("giveCooldownForSeconds", 0, "TacticianFirstCooldown", 3);
+}
+
+script "TacticianSecondAbility" (int powerName) NET
+{
+	int sentryId = PlayerNumber() + 50;
+	int angle = GetActorAngle(0);
+	int x = GetActorX(0) + FixedMul(cos(angle), 64.0);
+	int y = GetActorY(0) + FixedMul(sin(angle), 64.0);
+	int z = GetActorZ(0);
+	
+	while (ThingCount("SentryGun", sentryId) == 1)
+	{
+		PlaySound(0, "Sentry/Active", 6);
+		ACS_NamedExecute("hudsentry", 0);
+		terminate;
+	}
+	while (ThingCount("SentryGun", sentryId) < 1)
+	{
+		Spawn("SentryGun", x, y, z, sentryId, 0);
+		ACS_NamedExecute("sentryLife",0, sentryId);
+		break;
+	}
+}
+
+script "hudsentry" (void) clientside
+{
+	HudMessage(s:"you can only have 1 sentry at a time"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+}
+
+script "sentryLife" (int sentryId) Net
+{
+	For (int x = 20; x >= 0; x--)
+	{
+		Delay(35);
+		if (x != 0)
+		{
+			HudMessage(d: x, s:" until sentry expires."; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		}
+	}
+	HudMessage(s:"Sentry Destroyed!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+	SetActorState(sentryId, "Death", true);
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "TacticianSecondCooldown", 60);
+}
