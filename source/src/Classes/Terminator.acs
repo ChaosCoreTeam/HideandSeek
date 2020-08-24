@@ -3,10 +3,39 @@
 
 script "TerminatorFirstAbility" (int powerName) NET
 {
-	SpawnProjectile(0, "MaelStromBall", GetActorAngle(0) >> 8, 200, 0,0,0);
+	PlaySound(0, "Weapons/KarasawaFire", 6);
+	SpawnProjectile(0, "KsawBolt", GetActorAngle(0) >> 8, 200, 0, 0, 0);
+	delay(35);
+	PlaySound(0, "Weapons/KarasawaCharge", 6);
 	ACS_NamedExecute("giveCooldownForSeconds", 0, "TerminatorFirstCooldown", 10);
 }
 
 script "TerminatorSecondAbility" (int powerName) NET
 {
+	int devId = PlayerNumber() + 1000;
+	if(!CheckInventory("TerminatorDevastators"))
+	{
+		PlaySound(0, "Terminator/Taunt", 6);
+		SetActorProperty(0, APROP_Speed, 1.5);
+		GiveInventory("TerminatorDevastators", 1);
+		setweapon("TerminatorDevastators");
+		ACS_NamedExecute("DevastatorTime",0, devId);
+	}
+}
+
+script "DevastatorTime" (int devId) CLIENTSIDE
+{
+	For (int x = 10; x >= 0; x--)
+	{
+		Delay(35);
+		if (x != 0)
+		{
+			HudMessage(d: x, s:" until Devastators expires."; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		}
+	}
+	HudMessage(s:"Devastators expired!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+	
+	TakeInventory("TerminatorDevastators", 1);
+	SetActorProperty(0, APROP_Speed, 1.0);
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "TerminatorSecondCooldown", 25);
 }

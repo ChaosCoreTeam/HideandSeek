@@ -510,6 +510,7 @@ $playersound	Tactician 	male	*surface		WATR_OUT
 
 TerminatorLowPain1	TERMPAIN
 TerminatorLowPain2	TERMPA75
+Terminator/Taunt    TERMTAUN
 
 $random TerminatorLowPain { TerminatorLowPain1 TerminatorLowPain2 } 
 
@@ -544,10 +545,18 @@ weapons/explode2	        dsboomx2
 weapons/explode3	        dsboomx3
 weapons/explode4	        dsboomx4
 $random weapons/explode  { weapons/explode1 weapons/explode2 weapons/explode3 weapons/explode4 }
+
 //Devastator sounds
 weapons/devshot dsdevsht
 weapons/devlnch dsdevlnc
 weapons/devexpl dsdevxpl
+
+// Lazerblast(ability) sounds
+Weapons/KarasawaHit	    KSAWHIT
+Weapons/KarasawaFly	    KSAWFLY
+Weapons/KarasawaFire	KSAWFIRE
+Weapons/KarasawaIdle	KSAWIDLE
+Weapons/KarasawaCharge	KSAWCHRG
 
 
 //=======================================================================

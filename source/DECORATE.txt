@@ -20,7 +20,6 @@
 #include "classes/Teleporter/Weapons.dec"
 #include "classes/Teleporter/Abilities.dec"
 #include "classes/Hunter/Weapons.dec"
-#include "classes/Hunter/Abilities.dec"
 #include "classes/Hunter/Hunter.dec"
 #include "classes/Scouter/Scouter.dec"
 #include "classes/Scouter/Weapons.dec"
