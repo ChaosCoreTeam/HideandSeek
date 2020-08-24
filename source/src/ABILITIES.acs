@@ -44,7 +44,7 @@ str abilityData[NUM_POWERUPS][2] =
     { "HunterSecondCooldown", "Freeze Gun" },
     { "ScouterSecondCooldown", "Tracking Device" },
     { "BerserkerSecondCooldown", "Charge" },
-    { "TerminatorSecondCooldown", "Hyperdrive" },
+    { "TerminatorSecondCooldown", "Devastators" },
     { "PolymorphistSecondCooldown", "Cybruiser Transformation" },
     { "TacticianSecondCooldown", "Sentry" }
 };

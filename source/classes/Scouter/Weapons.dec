@@ -1,22 +1,5 @@
-ACTOR RailClip : Ammo
-{
-  Game Doom
-  Inventory.PickupMessage "Yes."
-  Inventory.Amount 1
-  Inventory.MaxAmount 25
-  Ammo.BackpackAmount 1
-  Ammo.BackpackMaxAmount 25
-  Inventory.Icon "CLIPA0"
-  States
-  {
-  Spawn:
-    CLIP A -1
-    Stop
-  }
-}
-
-
-
+/////////////ScoutPistol////////////
+///////////////////////////////////
 actor ScoutPistol : Weapon
 {
   Weapon.SelectionOrder 500
@@ -44,7 +27,7 @@ actor ScoutPistol : Weapon
     PLPI B 3
 	PLPI A 0 A_GunFlash
     PLPI C 3 A_RailAttack (random(25,45), 0, 1, none, "00 00 FF", 2)
-    PLPI A 8
+    PLPI AAA 8
     BLAG B 0 A_ReFire
 	PLPI A 0
 	PLPI A 3
@@ -59,6 +42,25 @@ actor ScoutPistol : Weapon
   }
 }
 
+ACTOR RailClip : Ammo
+{
+  Game Doom
+  Inventory.PickupMessage "Yes."
+  Inventory.Amount 1
+  Inventory.MaxAmount 25
+  Ammo.BackpackAmount 1
+  Ammo.BackpackMaxAmount 25
+  Inventory.Icon "CLIPA0"
+  States
+  {
+  Spawn:
+    CLIP A -1
+    Stop
+  }
+}
+
+/////////////ScoutKnife//////////////
+////////////////////////////////////
 actor ScoutKnife : Weapon
 {
   Weapon.SelectionOrder 600
@@ -136,4 +138,88 @@ ACTOR KnifePuffSilent
     PUFF ABCD 4
     Stop
   }
+}
+
+actor Hook : Weapon
+{
+  +WEAPON.WIMPY_WEAPON
+  +WEAPON.MELEEWEAPON
+  +WEAPON.NOALERT
+  Tag "HookShot"
+  weapon.ammouse 1
+  weapon.ammogive 1
+  weapon.ammotype "Hooks"
+  Obituary "%o was tai'd up and hanged."
+  States
+  {
+  Ready:
+    PUNG A 1 A_WeaponReady
+    loop
+  Deselect:
+    PUNG A 1 A_Lower
+    loop
+  Select: 
+    PUNG A 1 A_Raise
+    loop
+  Fire:
+	PUNG BCD 2
+	PUNG E 0 A_PlaySound ("GetOver")
+	PUNG E 1 A_FireCustomMissile("HookShot",0,1,0,0)
+	PUNG A 20
+	Goto Ready
+  }
+}
+
+actor HookShot : LoreShot
+{
+	height 24
+	seesound "HookShot"
+	deathsound "HookHit"
+	damage 5
+	speed 300
+	XScale 1.20
+	YScale 1.20
+	obituary "%o was tai'd up and hanged."
+	-STRIFEDAMAGE
+	states
+	{
+		Spawn:
+			OCLW A 1
+			OCLW A 0 A_SpawnItemEx("HookShotTrail",-8,0,0,0,0,0,0,SXF_ABSOLUTEVELOCITY|SXF_CLIENTSIDE)
+			OCLW A 1 A_SpawnItemEx("HookShotTrail",-16,0,0,0,0,0,0,SXF_ABSOLUTEVELOCITY|SXF_CLIENTSIDE)
+			OCLW A 0 A_SpawnItemEx("HookShotTrail",-24,0,0,0,0,0,0,SXF_ABSOLUTEVELOCITY|SXF_CLIENTSIDE)
+			OCLW A 0 A_SpawnItemEx("HookShotTrail",-8,0,0,0,0,0,0,SXF_ABSOLUTEVELOCITY|SXF_CLIENTSIDE)
+			OCLW A 1 A_SpawnItemEx("HookShotTrail",-16,0,0,0,0,0,0,SXF_ABSOLUTEVELOCITY|SXF_CLIENTSIDE)
+			OCLW A 0 A_SpawnItemEx("HookShotTrail",-24,0,0,0,0,0,0,SXF_ABSOLUTEVELOCITY|SXF_CLIENTSIDE)
+			goto Spawn+1
+	}
+}
+
+actor HookShotTrail
+{
+	+NOBLOCKMAP
+	+NOINTERACTION
+	+CLIENTSIDEONLY
+	states
+	{
+		Spawn:
+			TEND A 14
+			stop
+	}
+}
+
+actor Hooks : Ammo
+{
+	Inventory.Amount 5
+	Inventory.MaxAmount 5
+	Ammo.BackpackAmount 5
+	Ammo.BackpackMaxAmount 5
+	Inventory.PickupMessage "You should not see this message, the weapon is the ammo"
+	Inventory.Icon OCLWA0
+	States
+	{
+	Spawn:
+	  NULL D -1
+	  Loop
+	}
 }

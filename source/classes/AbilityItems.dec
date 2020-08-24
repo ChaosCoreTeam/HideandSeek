@@ -41,7 +41,7 @@ Actor BerserkerFirstActive : Inventory { }
 Actor BerserkerSecondActive : Inventory { }
 
 Actor TerminatorFirstCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
-Actor TerminatorSecondCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
+Actor TerminatorSecondCooldown : Ammo { Inventory.Amount 60 Inventory.MaxAmount 50 }
 Actor TerminatorSecondActive : Inventory { }
 
 Actor PolymorphistFirstCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
