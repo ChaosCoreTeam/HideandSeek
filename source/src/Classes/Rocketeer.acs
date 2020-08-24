@@ -1,0 +1,18 @@
+#library "Rocketeer"
+#include "DEFINITIONS.acs"
+
+script "RocketeerFirstAbility" (int powerName, int classNum) NET
+{ 
+	SpawnProjectile(0, "EscapeRocket", GetActorAngle(0) >> 8, 200, -10, 0, 0);
+	SpawnProjectile(0, "EscapeRocket", GetActorAngle(32) >> 8, 200, -10, 0, 0);
+	SpawnProjectile(0, "EscapeRocket", GetActorAngle(64) >> 8, 200, -10, 0, 0);
+	SpawnProjectile(0, "EscapeRocket", GetActorAngle(96) >> 8, 200, -10, 0, 0);
+	SpawnProjectile(0, "EscapeRocket", GetActorAngle(-32) >> 8, 200, -10, 0, 0);
+	SpawnProjectile(0, "EscapeRocket", GetActorAngle(-64) >> 8, 200, -10, 0, 0);
+	SpawnProjectile(0, "EscapeRocket", GetActorAngle(-96) >> 8, 200, -10, 0, 0);
+	ACS_NamedExecute("giveCooldownForSeconds", 0, classNum);
+}
+
+script "RocketeerSecondAbility" (int powerName) NET
+{ 
+}

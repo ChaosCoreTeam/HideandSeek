@@ -14,8 +14,8 @@ Actor GuardianSecondCooldown : Ammo { Inventory.Amount 34 Inventory.MaxAmount 34
 Actor GuardianFirstActive : Inventory { }
 Actor GuardianSecondActive : Inventory { }
 
-Actor IllusionistFirstCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
-Actor IllusionistSecondCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
+Actor IllusionistFirstCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
+Actor IllusionistSecondCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
 Actor IllusionistFirstActive : Inventory { }
 Actor IllusionistSecondActive : Inventory { }
 

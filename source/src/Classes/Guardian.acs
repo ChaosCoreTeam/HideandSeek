@@ -1,0 +1,74 @@
+#library "Guardian"
+#include "DEFINITIONS.acs"
+
+script "GuardianSecondAbility" (int powerName) NET
+{
+	GiveInventory("GuardianSecondCooldown", GetAmmoCapacity("GuardianSecondCooldown"));
+	ACS_NamedExecuteAlways("giveCooldownForSeconds", 0, "GuardianSecondCooldown", GetAmmoCapacity("GuardianSecondCooldown"));
+	GiveInventory("GuardSphere", 1);
+	SetActorProperty(0, APROP_Invulnerable, 1);
+	Delay(140);
+	TakeInventory("PowerQuarterDamage", 1);
+	SetActorProperty(0, APROP_Invulnerable, 0);
+}
+
+script "hudArmor" (int success) Clientside
+{
+	if (success == 0)
+	{
+		HudMessage(s:"You need armor for this ability"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		terminate;
+	}
+	While (CheckInventory("ArmorShield"))
+	{
+		For (int x = 5; x > 0; x--)
+		{
+			HudMessage(s:"Armor takes full damage for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+			Delay(35);
+		}
+		ACS_NamedExecute("endArmor", 0);
+		terminate;
+	}
+}
+
+script "endArmor" (void) Net
+{
+	TakeInventory("ArmorShield", 1);
+	PlaySound(0, "Guardian/Abilities/LoseArmor", 6);
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "GuardianSecondCooldown", 45);
+}
+
+script "hudOverCharge" (int success) Clientside
+{
+	While (CheckInventory("OverCharge"))
+	{
+		For (int x = 10; x > 0; x--)
+		{
+			HudMessage(s:"Overcharge lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+			Delay(35);
+		}
+		ACS_NamedExecute("endOverCharge", 0);
+		terminate;
+	}
+}
+
+script "endOverCharge" (void) Net
+{
+	TakeInventory("OverCharge", 1);
+	PlaySound(0, "Guardian/Abilities/LoseCharge", 6);
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "TeleporterSecondCooldown", 45);
+}
+
+script "GuardianStunner" (void)
+{
+	if(PlayerClass(PlayerNumber()) >= SEEKER_CLASS_START)
+	{
+		SetFont("BIGFONT");
+		SetPlayerProperty(0, 1, PROP_TOTALLYFROZEN);
+		HudMessage(s:"STUNNED"; HUDMSG_PLAIN, 0, CR_RED, 0.5, 0.5, 3.0, 1.0);
+		FadeTo(255, 255, 255, 0.33, 0);
+		FadeTo(255, 255, 255, 0.0, 3.0);
+		Delay(105);
+		SetPlayerProperty(0, 0, PROP_TOTALLYFROZEN);
+	}
+}

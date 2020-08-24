@@ -1,3 +1,5 @@
+#include "zcommon.acs"
+
 #define MAXPLAYERS 64
 
 #define ALL_OF_IT 0x7FFFFFFF
@@ -17,7 +19,8 @@
 #define CLASS_TACTICIAN 11
 
 #define PLAYER_BASE_TID 1000
-#define HIDER_IDENTIFIER 6
+#define SEEKER_CLASS_START 6
+#define SEEKER_CLASS_END 12
 
 #define teamPlayer_id 0
 #define teamPlayer_distance 1
@@ -33,3 +36,19 @@
 #define ASPECT_5_4 1.25
 #define ASPECT_16_9 1.7
 #define ASPECT_16_10 1.6
+
+str classNames[12] = 
+{
+	"Banshee", 
+	"Blazer", 
+	"Guardian", 
+	"Illusionist", 
+	"Rocketeer",
+	"Teleporter",
+	"Hunter",
+	"Scouter", 
+	"Berserker", 
+	"Terminator", 
+	"Polymorphist", 
+	"Tactician"
+};

@@ -1,0 +1,119 @@
+#library "Blazer"
+#include "DEFINITIONS.acs"
+
+script "BlazerFirstAbility" (int powerName) NET
+{
+	If (!CheckInventory("Dashes"))
+	{
+		PlaySound (0, "Blazer/Abilities/Dashfail", 5);
+		terminate;
+	}
+	
+	ThrustThing(GetActorAngle(0) >> 8, 50, 1, 0);
+	PlaySound (0, "Blazer/Abilities/Dash", 5);
+	TakeInventory("Dashes", 1);
+	If (!CheckInventory("Dashed"))
+	{
+		GiveInventory("Dashed", 1);
+		ACS_NamedExecute("hudDash", 0);
+	}
+}
+
+script "hudDash"(void) clientside
+{
+	while (CheckInventory("BlazerFirstCooldown") > 0)
+		Delay(35);
+
+	ACS_NamedExecute("takeDash", 0, 1);
+}
+
+script "takeDash" (int selector) NET
+{
+	if (selector == 1)
+		TakeInventory("Dashed", 1);
+}
+
+script "BlazerSecondAbility" (int powerName) NET
+{
+	int recallTid = PlayerNumber() + 500;
+	If (ThingCount(T_NONE, recallTid) == 0)
+	{
+		If (CheckInventory("Recall"))
+		{
+			HudMessage(s:"Have recall inventory but no placement"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+			Delay(70);
+			SpawnProjectile(0, "BlazerRecall", GetActorAngle(0) >> 8, 0, 0, 1, recallTid);
+			ACS_NamedExecute("hudRecall", 0, recallTid);
+			terminate;
+		}
+		GiveInventory("Recall", 1);
+		SpawnProjectile(0, "BlazerRecall", GetActorAngle(0) >> 8, 0, 0, 1, recallTid);
+		ACS_NamedExecute("hudRecall", 0, recallTid);
+		terminate;
+	}
+	TakeInventory("Recall", 1);
+	SetActorPosition(0, GetActorX(recallTid), GetActorY(recallTid), GetActorZ(recallTid), 0);
+	PlaySound(recallTid, "Blazer/Abilities/Recall", 6);
+	Thing_Remove(recallTid);
+}
+
+script "hudRecall" (int recallTid) Clientside
+{
+	HudMessage(s:"Recall Initiated"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+	While (ThingCount(T_NONE, recallTid) > 0)
+	{
+		For (int x = 3; x > 0; x--)
+		{
+			HudMessage(d:x, s:" seconds left to recall"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+			Delay(35);
+			If (!CheckInventory("Recall"))
+			{
+				HudMessage(s:"Recall successful"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+				terminate;
+			}
+		}
+		HudMessage(s:"Recall failure"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		ACS_NamedExecute("recallFail", 0, recallTid);
+		terminate;
+	}
+}
+
+script "recallFail" (int recallTid) NET
+{
+	TakeInventory("Recall", 1);
+	Thing_Remove(recallTid);
+	Delay(35);
+	
+	if (!ThingCount(T_NONE, recallTid) && !CheckInventory("Recall"))
+	{
+		HudMessage(s:"Recall process reset"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		terminate;
+	}
+		HudMessage(s:"wtf recall"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+}
+
+script "BlazerDashGiver" ENTER
+{
+	if(PlayerClass(PlayerNumber()) != 1)
+		terminate;
+	while(CheckInventory("Dashes") == 3)
+		Delay(1);	
+	for(int i = 10; i >= 1; i--)
+	{
+		HudMessage(s: "Next Dash comes in ", 
+                           d:i, 
+                           s: " more seconds";
+                           HUDMSG_PLAIN, 12348, CR_YELLOW,
+                           POWERUP_HUD_X_OFFSET,  0.65, 
+                           POWERUP_HUD_TEXT_VISIBLE_SEC);
+	    HudMessage(s: "Total time at ", 
+                           d:i+(2-CheckInventory("Dashes"))*10, 
+                           s: " more seconds";
+                           HUDMSG_PLAIN, 12349, CR_YELLOW,
+                           POWERUP_HUD_X_OFFSET,  0.7, 
+                           POWERUP_HUD_TEXT_VISIBLE_SEC);
+		Delay(35);
+	}
+	GiveInventory("Dashes", 1);
+	restart;
+}

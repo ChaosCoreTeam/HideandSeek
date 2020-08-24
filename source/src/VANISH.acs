@@ -1,5 +1,4 @@
 #library "VANISH"
-#include "zcommon.acs"
 #include "DEFINITIONS.acs"
 
 script "HNS_Vanish" (void) net

@@ -1,6 +1,6 @@
 ACTOR PowerShrink : PowerMorph
 {
-	Powerup.Duration 100
+	Powerup.Duration -30
     PowerMorph.PlayerClass "ShrunkIllusionist"
 	PowerMorph.MorphFlash "SpawnShrinkFlash"
     PowerMorph.UnMorphFlash "SpawnUnShrinkFlash"

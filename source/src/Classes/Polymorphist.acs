@@ -1,0 +1,21 @@
+#library "Polymorphist"
+#include "DEFINITIONS.acs"
+
+script "PolymorphistFirstAbility" (int powerName) NET
+{ 
+	if (CheckInventory("PowerSoulMorph"))
+	{
+		TakeInventory("PowerSoulMorph", 1);
+		PlaySound(0, "Polymorphist/Abilities/Morph", 6);
+		ACS_NamedExecute("giveCooldownForSeconds", 0, "PolymorphistFirstCooldown", 25);
+		terminate;
+	}
+	
+	GiveInventory("PowerSoulMorph", 1);
+	PlaySound(0, "Polymorphist/Abilities/Morph", 6);
+	ACS_NamedExecute("giveCooldownForSeconds", 0, "PolymorphistFirstCooldown", 3);
+}
+
+script "PolymorphistSecondAbility" (int powerName) NET
+{ 
+}

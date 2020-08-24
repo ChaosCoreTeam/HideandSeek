@@ -1,5 +1,4 @@
 #library "RADAR"
-#include "zcommon.acs"
 #include "DEFINITIONS.acs"
 
 int radarteam[MAXPLAYERS];
