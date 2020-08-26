@@ -15,6 +15,8 @@ ACTOR TeleporterClass : PlayerPawn
   player.startitem "MegaSphere", 1
   player.startitem "TeleporterSuit", 1
   player.startitem "lowVanishingPool", 45
+  player.startitem "TeleporterFirstCooldown", 999
+  player.startitem "TeleporterSecondCooldown", 999
   player.startitem "ProxMine", 3
   Player.JumpZ 12
   Species "Hider"

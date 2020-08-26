@@ -19,6 +19,8 @@ ACTOR GuardianClass : PlayerPawn
 	player.startitem "medVanishingPool", 50
 	player.startitem "GuardianArmor", 1
 	player.startitem "GuardianPower", 500
+	player.startitem "GuardianFirstCooldown", 999
+	player.startitem "GuardianSecondCooldown", 999
 	player.startitem "Vanishing", 125
 	Species "Hider"
 	damagefactor "rocket", 0

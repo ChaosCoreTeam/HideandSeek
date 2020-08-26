@@ -1,10 +1,10 @@
 #library "Teleporter"
 #include "DEFINITIONS.acs"
 
-script "TeleporterFirstAbility" (int powerName) NET
+script "TeleporterFirstAbility" (int cooldownTime) NET
 {
 	SpawnProjectile(0, "TranslocatorModule", GetActorAngle(0) >> 8, 200, 0,0,PlayerNumber()+2100);
-	GiveInventory("TeleporterFirstCooldown", 30);
+	GiveInventory("TeleporterFirstCooldown", cooldownTime);
 	If (!CheckInventory("Translocator"))
 		{
 			GiveInventory("Translocator", 1);
@@ -12,9 +12,9 @@ script "TeleporterFirstAbility" (int powerName) NET
 		}
 }
 
-script "TeleporterSecondAbility" (int powerName) NET
+script "TeleporterSecondAbility" (int cooldownTime) NET
 {
 	GiveInventory("Overcharge", 1);
 	PlaySound(0, "Teleporter/Abilities/Overcharge", 6);
-	ACS_NamedExecute("hudTele", 0);
 }
+

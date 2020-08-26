@@ -6,11 +6,6 @@ const int countt = 2;
 //
 // ------------------------------------------------------------------------------------------------
 
-
-ACTOR Morphed : Inventory
-{
-}
-
 ACTOR PowerDisguise : PowerMorph
 {
 	Powerup.Duration -30

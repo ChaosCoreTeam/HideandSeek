@@ -62,10 +62,10 @@ addmenukey "Activate Second Ability" HNS_SecondAbility
 alias HNS_SecondAbility "pukename HNS_SecondAbility"
 defaultbind 2 HNS_SecondAbility
 
-addmenukey "Class Description" HNS_ClassDescriptions
-alias +HNS_ClassDescriptions "pukename HNS_ClassDescription; -HNS_ClassDescriptions $cl_description"
-alias -HNS_ClassDescriptions "pukename HNS_ClassDescriptionOff; rebind +HNS_ClassDescriptions"
-defaultbind . HNS_ClassDescriptions
+addmenukey "Class Descriptions" HNS_ClassInfoOn
+alias HNS_ClassInfoOn "pukename HNS_ClassDescriptionOn; rebind HNS_ClassInfoOff"
+alias HNS_ClassInfoOff "pukename HNS_ClassDescriptionOff; rebind HNS_ClassInfoOn"
+defaultbind f1 HNS_ClassInfoOn
 
 //setup alias
 alias setup "DMFlags 807940; DMFlags2 0; ZADMFlags 2049; CompatFlags 0; ZACompatFlags 0; sv_defaultdmflags false; teamlms 1; map hns01"

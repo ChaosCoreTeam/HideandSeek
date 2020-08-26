@@ -83,7 +83,7 @@ ACTOR MorphAmmo : Ammo
     Ammo.BackpackAmount 2
     Ammo.BackpackMaxAmount 2
     Inventory.PickupMessage "You obtained another charge of Polymorph"
-    Inventory.Icon PLSCA0
+    Inventory.Icon EGGCA0
     States
     {
     Spawn:

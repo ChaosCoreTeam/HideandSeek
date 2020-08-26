@@ -108,8 +108,6 @@ ACTOR EscapeRocket
 	loop
 	Death:
 		MISL B 0 bright A_SpawnItem(BOOMY,0)
-		MISL B 0 bright A_SpawnItem(BOOMY,0)
-		MISL B 0 bright A_SpawnItem(BOOMY,0)
 		MISL B 8 bright A_Explode
 		MISL C 6 bright
 		MISL D 4 bright

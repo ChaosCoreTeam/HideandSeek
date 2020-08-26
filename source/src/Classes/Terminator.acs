@@ -1,41 +1,40 @@
 #library "Terminator"
 #include "DEFINITIONS.acs"
 
-script "TerminatorFirstAbility" (int powerName) NET
+script "TerminatorFirstAbility" (int cooldownTime) NET
 {
 	PlaySound(0, "Weapons/KarasawaFire", 6);
 	SpawnProjectile(0, "KsawBolt", GetActorAngle(0) >> 8, 200, 0, 0, 0);
+	ACS_NamedExecute("activateCooldown", 0, "TerminatorFirstCooldown", cooldownTime);
 	delay(35);
 	PlaySound(0, "Weapons/KarasawaCharge", 6);
-	ACS_NamedExecute("giveCooldownForSeconds", 0, "TerminatorFirstCooldown", 10);
 }
 
-script "TerminatorSecondAbility" (int powerName) NET
+script "TerminatorSecondAbility" (int cooldownTime) NET
 {
-	int devId = PlayerNumber() + 1000;
-	if(!CheckInventory("TerminatorDevastators"))
-	{
-		PlaySound(0, "Terminator/Taunt", 6);
-		SetActorProperty(0, APROP_Speed, 1.5);
-		GiveInventory("TerminatorDevastators", 1);
-		setweapon("TerminatorDevastators");
-		ACS_NamedExecute("DevastatorTime",0, devId);
-	}
+	GiveInventory("TerminatorSecondActive", 1);
+	GiveInventory("TerminatorDevastators", 1);
+	SetWeapon("TerminatorDevastators");
+	PlaySound(0, "Terminator/Taunt", 6);
+	SetActorProperty(0, APROP_Speed, 1.5);
+	ACS_NamedExecute("DevastatorTime",0, cooldownTime);
 }
 
-script "DevastatorTime" (int devId) CLIENTSIDE
+script "DevastatorTime" (int cooldownTime) CLIENTSIDE
 {
-	For (int x = 10; x >= 0; x--)
+	For (int x = 3; x > 0; x--)
 	{
+		HudMessage(d: x, s:" until Devastators expires."; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
 		Delay(35);
-		if (x != 0)
-		{
-			HudMessage(d: x, s:" until Devastators expires."; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-		}
 	}
+	TakeInventory("TerminatorSecondActive", 1);
 	HudMessage(s:"Devastators expired!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-	
-	TakeInventory("TerminatorDevastators", 1);
+	ACS_NamedExecute("endDevastator", 0, cooldownTime);
+}
+
+script "endDevastator" (int cooldownTime) NET
+{
 	SetActorProperty(0, APROP_Speed, 1.0);
-	ACS_NamedExecute("giveCooldownForSeconds", 0, "TerminatorSecondCooldown", 25);
+	TakeInventory("TerminatorDevastators", 1);
+	ACS_NamedExecute("activateSecondaryCooldown", 0, "TerminatorSecondCooldown", cooldownTime);
 }

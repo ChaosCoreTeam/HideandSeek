@@ -15,6 +15,8 @@ ACTOR ScouterClass : PlayerPawn
   player.startitem "RailClip", 25
   player.startitem "JetFuel", 100
   player.startitem "GreenArmor", 1
+  player.startitem "ScouterFirstCooldown", 999
+  player.startitem "ScouterSecondCooldown", 999
   player.startitem "isSeeker", 1
   Player.ForwardMove 0.85, 0.85
   Player.SideMove 0.85, 0.85

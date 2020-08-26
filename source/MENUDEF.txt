@@ -17,7 +17,7 @@ OptionMenu "HNSOptions"
 	Control "Taunt",								"HNS_Taunts"
 	Control "Use Ability",							"HNS_PrimaryAbility"
 	Control "Use Second Ability",					"HNS_SecondAbility"
-	Control "Class Description",					"HNS_ClassDescription"
+	Control "Class Description",					"HNS_ClassInfoOn"
 	StaticText 	""
 	StaticText 	"Hider Controls",1
 	StaticText 	""

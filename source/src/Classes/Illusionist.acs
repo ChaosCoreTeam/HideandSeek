@@ -1,25 +1,43 @@
 #library "Illusionist"
 #include "DEFINITIONS.acs"
 
-script "IllusionistFirstAbility" (int powerName, int classNum) NET
+script "IllusionistFirstAbility" (int cooldownTime) NET
 {
-	if (CheckInventory("Morphed"))
+	if (CheckInventory("IllusionistFirstActive"))
 	{
-		str morphClass = morphName();
-		TakeInventory("Morphed", 1);
-		TakeInventory(morphClass, 1);
-		PlaySound(0, "Illusionist/Abilities/Morph");
-		ACS_NamedExecute("removeCooldownForSeconds", 0, classNum);
+		ACS_NamedExecuteAlways("endDisguise", 0, cooldownTime);
 		terminate;
 	}
 	
 	int seekerClass = Random(6,11);
-	GiveInventory("Morphed", 1);
+	GiveInventory("IllusionistFirstActive", 1);
 	GiveInventory(StrParam(s:classNames[seekerClass], s:"Morph"), 1);
 	PlaySound(0, "Illusionist/Abilities/Morph");
-	ACS_NamedExecute("hudMorph", 0, StrParam(s:classNames[seekerClass], s:"Morph"));
-	ACS_NamedExecute("giveActiveforSeconds", 0, 3, classNum, "First");
-	ACS_NamedExecute("giveCooldownForSeconds", 0, powerName, GetAmmoCapacity(powerName));
+	ACS_NamedExecuteAlways("hudDisguise", 0, StrParam(s:classNames[seekerClass], s:"Morph"), cooldownTime);
+}
+
+script "hudDisguise" (int seekerClass, int cooldownTime) CLIENTSIDE
+{
+	HudMessage(s:"You've morphed into a ", s:seekerClass; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+	
+	For (int x = 60; x > 0; x--)
+	{
+		HudMessage(s:"Disguise lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		Delay(35);
+		if (!CheckInventory("IllusionistFirstActive"))
+			terminate;
+	}
+	ACS_NamedExecuteAlways("endDisguise", 0, cooldownTime);
+}
+
+script "endDisguise" (int cooldownTime) NET
+{
+	str morphClass = morphName();
+	TakeInventory(morphClass, 1);
+	TakeInventory("IllusionistFirstActive", 1);
+	ACS_NamedExecuteAlways("unmorphHud", 0);
+	PlaySound(0, "Illusionist/Abilities/Morph");
+	ACS_NamedExecuteAlways("activateCooldown", 0, "IllusionistFirstCooldown", cooldownTime);
 }
 
 function str morphName(void) 
@@ -31,75 +49,41 @@ function str morphName(void)
 	return morphClass;
 }
 
-script "hudMorph" (int seekerClass) clientside
+script "IllusionistSecondAbility" (int cooldownTime) NET
 {
-	HudMessage(s:"You have transformed into a ", s:seekerClass; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-	While (CheckInventory("Morphed"))
-	{
-		For (int x = 20; x > 0; x--)
-		{
-			If (!CheckInventory("Morphed"))
-			{
-				terminate;
-			}
-			HudMessage(s:"metamorphosis lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-			Delay(35);
-		}
-		ACS_NamedExecute("endMorph", 0);
+	if (CheckInventory("IllusionistSecondActive"))
+	{	
+		ACS_NamedExecuteAlways("endShrink", 0, cooldownTime);
 		terminate;
 	}
-}
-script "endMorph" (void) NET
-{
-	str morphClass = morphName();
-	
-	TakeInventory("Morphed", 1);
-	TakeInventory(morphClass, 1);
-	PlaySound(0, "Illusionist/Abilities/Morph");
-	ACS_NamedExecute("giveCooldownForSeconds", 0, "IllusionistFirstCooldown", 20);
-	
-	
-	terminate;
-}
-
-script "IllusionistSecondAbility" (int powerName) NET
-{
-	if (CheckInventory("PowerShrink"))
-	{
-		HudMessage(s:"Took Shrink"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-		TakeInventory("PowerShrink", 1);
-		PlaySound(0, "Illusionist/Abilities/UnShrink", 6);
-		ACS_NamedExecute("giveCooldownForSeconds", 0, "IllusionistSecondCooldown", 30);
-		terminate;
-	}
-		HudMessage(s:"Obtained Shrink"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-		GiveInventory("PowerShrink", 1);
+		GiveInventory("ShrinkMorph", 1);
+		GiveInventory("IllusionistSecondActive", 1);
 		PlaySound(0, "Illusionist/Abilities/Shrink", 6);
-		ACS_NamedExecute("hudShrink", 0);
+		ACS_NamedExecuteAlways("hudShrink", 0, cooldownTime);
 }
 
-script "hudShrink" (void) Clientside
+script "hudShrink" (int cooldownTime) CLIENTSIDE
 {
-	While (CheckInventory("PowerShrink"))
+	For (int x = 15; x > 0; x--)
 	{
-		For (int x = 15; x > 0; x--)
-		{
-			HudMessage(s:"shrunken state lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-			Delay(35);
-			If (!CheckInventory("PowerShrink"))
-			{
-				HudMessage(s:"back to normal"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-				terminate;
-			}
-		}
-		ACS_NamedExecute("endShrink", 0);
-		terminate;
+		HudMessage(s:"shrunken state lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		Delay(35);
+		if (!CheckInventory("IllusionistSecondActive"))
+			terminate;
 	}
+	ACS_NamedExecuteAlways("endShrink", 0, cooldownTime);
 }
 
-script "endShrink" (void) Net
+script "endShrink" (int cooldownTime) NET
 {
-	TakeInventory("PowerShrink", 1);
+	TakeInventory("ShrinkMorph", 1);
+	TakeInventory("IllusionistSecondActive", 1);
+	ACS_NamedExecuteAlways("unmorphHud", 0);
 	PlaySound(0, "Illusionist/Abilities/Unshrink", 6);
-	ACS_NamedExecute("giveCooldownForSeconds", 0, "IllusionistSecondCooldown", 45);
+	ACS_NamedExecuteAlways("activateSecondaryCooldown", 0, "IllusionistSecondCooldown", cooldownTime);
+}
+
+script "unmorphHud" (void) CLIENTSIDE
+{
+	HudMessage(s:"Morphed back to normal"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
 }

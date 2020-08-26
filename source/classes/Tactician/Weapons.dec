@@ -321,6 +321,11 @@ ACTOR ThrownPipeB1
    }
 }
 
+ACTOR Thrownpipe1 : ThrownPipeB1
+{
+   Speed 1
+}
+
 ACTOR Thrownpipe2 : ThrownPipeB1
 {
    Speed 2
@@ -545,25 +550,6 @@ ACTOR D2C_PipebombAmmo : Ammo
    Spawn:
       PIPB C   -1     
    }
-}
-
-ACTOR PipebombBox : CustomInventory
-{
-  Game Doom
-  SpawnID 134
-  +COUNTITEM
-  +INVENTORY.ALWAYSPICKUP
-  Inventory.PickupMessage "Picked up a box of pipebombs."
-  States
-  {
-  Spawn:
-    PBOX A -1
-    Stop
-  Pickup:
-    TNT1 A 0 A_GiveInventory("D2C_Pipebomb")
-    TNT1 A 0 A_GiveInventory("D2C_PipebombAmmo",5)
-    Stop
-  }
 }
 
 //////////////////////////TacticianMachinegun/////////////////////////////

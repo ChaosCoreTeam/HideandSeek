@@ -15,18 +15,18 @@ Actor BloodLust : CustomInventory
 Actor BloodLustRage : PowerDoubleFiringSpeed
 {
 	Powerup.Color Redmap
-	Powerup.duration 105
+	Powerup.duration -30
 }
 
 Actor BloodLustSpeed : PowerSpeed
 {
 	Speed 1.35
-	Powerup.duration 105
+	Powerup.duration -30
 }
 
 Actor BloodLustJump: PowerHighJump
 {
-	Powerup.duration 105
+	Powerup.duration -30
 }
 
 ACTOR	MaelStromBall

@@ -258,11 +258,16 @@ Berserker/Leap BERSJMP2
 Berserker/PunchBlast PUNBLAST
 Berserker/PunchThunder PUNTHUND
 Berserker/Abilities/BloodLust BLOODLUS
+Berserker/Abilities/HammerThrow HAMFIR
+Berserker/Abilities/HammerIdle HAMFLY
+
 dsjugstp	dsjugstp
 PUNCHHIT	PUNCHHIT
 PUNCHMIS	PUNCHMIS
 PUNCHWAL 	PUNCHWAL
 
+
+$random Berserker/Abilities/HammerHit { HAMHIT1 HAMHIT2 }
 $random BDEATH	{ BDEATH1  BDEATH2  BDEATH3 }
 
 BDEATH1	BRSDTH1
