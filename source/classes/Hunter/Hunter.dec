@@ -16,6 +16,8 @@ ACTOR HunterClass : PlayerPawn
   player.startitem "Clip", 200
   player.startitem "greenarmor", 1
   player.startitem "isSeeker", 1
+  player.startitem "HunterFirstCooldown", 999
+  player.startitem "HunterSecondCooldown", 999
   Player.JumpZ 10
   damagefactor "rocket", 0
   limitedtoteam 1

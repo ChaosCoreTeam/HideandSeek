@@ -1,11 +1,11 @@
 #library "Scouter"
 #include "DEFINITIONS.acs"
 
-script "ScouterFirstAbility" (int powerName) NET
+script "ScouterFirstAbility" (int cooldownTime) NET
 { 
 	PlaySound (0, "Scouter/Abilities/Hookshot", 6);
 	SpawnProjectile(0, "HookShot", GetActorAngle(0) >> 8, 1000, 0,0,0);
-	ACS_NamedExecute("giveCooldownForSeconds", 0, "ScouterFirstCooldown", 15);
+	ACS_NamedExecute("activateCooldown", 0, "ScouterFirstCooldown", cooldownTime);
 }
 
 script "ScouterSecondAbility" (int powerName) NET

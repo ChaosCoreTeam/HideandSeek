@@ -14,6 +14,8 @@ ACTOR RocketeerClass : PlayerPawn
 	player.startitem "NoDamageRocketAmmo", 25
 	player.startitem "medVanishingPool", 85
 	player.startitem "megasphere", 1
+	player.startitem "RocketeerFirstCooldown", 999
+    player.startitem "RocketeerSecondCooldown", 999
 	damagefactor "rocket", 0
 	Species "Hider"
 	limitedtoteam 0

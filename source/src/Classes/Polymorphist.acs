@@ -1,21 +1,51 @@
 #library "Polymorphist"
 #include "DEFINITIONS.acs"
 
-script "PolymorphistFirstAbility" (int powerName) NET
+script "PolymorphistFirstAbility" (int cooldownTime) NET
 { 
-	if (CheckInventory("PowerSoulMorph"))
+	if (CheckInventory("PolymorphistFirstActive"))
 	{
-		TakeInventory("PowerSoulMorph", 1);
-		PlaySound(0, "Polymorphist/Abilities/Morph", 6);
-		ACS_NamedExecute("giveCooldownForSeconds", 0, "PolymorphistFirstCooldown", 25);
+		TakeInventory("PolymorphistFirstActive", 1);
+		ACS_NamedExecute("endSoulMorph", 0, cooldownTime);
 		terminate;
 	}
-	
 	GiveInventory("PowerSoulMorph", 1);
+	GiveInventory("PolymorphistFirstActive", 1);
 	PlaySound(0, "Polymorphist/Abilities/Morph", 6);
-	ACS_NamedExecute("giveCooldownForSeconds", 0, "PolymorphistFirstCooldown", 3);
+	While (CheckInventory("PolymorphistFirstActive"))
+	{
+		ACS_NamedExecute("hudSoulMorph", 0);
+	}
+	ACS_NamedExecute("endSoulMorph", 0, cooldownTime);
 }
 
-script "PolymorphistSecondAbility" (int powerName) NET
+script "endSoulMorph" (int cooldownTime) NET
+{
+	TakeInventory("PowerSoulMorph", 1);
+	TakeInventory("SoulFlyer", 1);
+	PlaySound(0, "Polymorphist/Abilities/Morph", 6);
+	ACS_NamedExecute("unmorphHud", 0);
+	ACS_NamedExecute("activateCooldown", 0, "PolymorphistFirstCooldown", cooldownTime);
+}
+
+script "hudSoulMorph" (void) CLIENTSIDE
+{
+	For (int x = 15; x > 0; x--)
+	{	
+		if (!CheckInventory("PolymorphistFirstActive"))
+			terminate;
+		HudMessage(s:"Lost Soul Transformation lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		Delay(35);
+	}
+	TakeInventory("PolymorphistFirstActive", 1);
+}
+
+script "PolymorphistSecondAbility" (int cooldownTime) NET
 { 
+	HudMessage(s:"Not implemented yet"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+}
+
+script "unmorphHud" (void) CLIENTSIDE
+{
+	HudMessage(s:"Morphed back to normal"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
 }

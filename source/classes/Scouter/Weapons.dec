@@ -215,7 +215,6 @@ actor Hooks : Ammo
 	Ammo.BackpackAmount 5
 	Ammo.BackpackMaxAmount 5
 	Inventory.PickupMessage "You should not see this message, the weapon is the ammo"
-	Inventory.Icon OCLWA0
 	States
 	{
 	Spawn:

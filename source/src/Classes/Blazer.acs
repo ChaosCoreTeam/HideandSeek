@@ -1,39 +1,41 @@
 #library "Blazer"
 #include "DEFINITIONS.acs"
 
-script "BlazerFirstAbility" (int powerName) NET
+script "BlazerFirstAbility" (int cooldownTime) NET
 {
-	If (!CheckInventory("Dashes"))
+	if (!CheckInventory("Dashes"))
 	{
-		PlaySound (0, "Blazer/Abilities/Dashfail", 5);
+		ACS_NamedExecuteAlways("cooldownActive", 0);
 		terminate;
 	}
 	
-	ThrustThing(GetActorAngle(0) >> 8, 50, 1, 0);
+	if (CheckInventory("Dashes") == 3)
+	{
+		TakeInventory("DashCooldown", 10);
+		ACS_NamedExecuteAlways("dashCoolProcess", 0);
+	}
+	
+	ThrustThing(GetActorAngle(0) >> 8, 75, 1, 0);
 	PlaySound (0, "Blazer/Abilities/Dash", 5);
 	TakeInventory("Dashes", 1);
-	If (!CheckInventory("Dashed"))
+}
+
+script "dashCoolProcess" (void) CLIENTSIDE
+{
+	While (CheckInventory("Dashes") < 3)
 	{
-		GiveInventory("Dashed", 1);
-		ACS_NamedExecute("hudDash", 0);
+		for (int x = 0; x <= 10; x++)
+		{
+			Delay(35);
+			GiveInventory("DashCooldown", 1);
+		}
+		GiveInventory("Dashes", 1);
+		If (CheckInventory("Dashes") < 3)
+			TakeInventory("DashCooldown", 10);
 	}
 }
 
-script "hudDash"(void) clientside
-{
-	while (CheckInventory("BlazerFirstCooldown") > 0)
-		Delay(35);
-
-	ACS_NamedExecute("takeDash", 0, 1);
-}
-
-script "takeDash" (int selector) NET
-{
-	if (selector == 1)
-		TakeInventory("Dashed", 1);
-}
-
-script "BlazerSecondAbility" (int powerName) NET
+script "BlazerSecondAbility" (int cooldownTime) NET
 {
 	int recallTid = PlayerNumber() + 500;
 	If (ThingCount(T_NONE, recallTid) == 0)
@@ -48,7 +50,7 @@ script "BlazerSecondAbility" (int powerName) NET
 		}
 		GiveInventory("Recall", 1);
 		SpawnProjectile(0, "BlazerRecall", GetActorAngle(0) >> 8, 0, 0, 1, recallTid);
-		ACS_NamedExecute("hudRecall", 0, recallTid);
+		ACS_NamedExecute("hudRecall", 0, recallTid, cooldownTime);
 		terminate;
 	}
 	TakeInventory("Recall", 1);
@@ -57,7 +59,7 @@ script "BlazerSecondAbility" (int powerName) NET
 	Thing_Remove(recallTid);
 }
 
-script "hudRecall" (int recallTid) Clientside
+script "hudRecall" (int recallTid, int cooldownTime) Clientside
 {
 	HudMessage(s:"Recall Initiated"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
 	While (ThingCount(T_NONE, recallTid) > 0)
@@ -69,6 +71,7 @@ script "hudRecall" (int recallTid) Clientside
 			If (!CheckInventory("Recall"))
 			{
 				HudMessage(s:"Recall successful"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+				ACS_NamedExecuteAlways("activateSecondaryCooldown", 0, "BlazerSecondCooldown", cooldownTime);
 				terminate;
 			}
 		}
@@ -90,30 +93,4 @@ script "recallFail" (int recallTid) NET
 		terminate;
 	}
 		HudMessage(s:"wtf recall"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-}
-
-script "BlazerDashGiver" ENTER
-{
-	if(PlayerClass(PlayerNumber()) != 1)
-		terminate;
-	while(CheckInventory("Dashes") == 3)
-		Delay(1);	
-	for(int i = 10; i >= 1; i--)
-	{
-		HudMessage(s: "Next Dash comes in ", 
-                           d:i, 
-                           s: " more seconds";
-                           HUDMSG_PLAIN, 12348, CR_YELLOW,
-                           POWERUP_HUD_X_OFFSET,  0.65, 
-                           POWERUP_HUD_TEXT_VISIBLE_SEC);
-	    HudMessage(s: "Total time at ", 
-                           d:i+(2-CheckInventory("Dashes"))*10, 
-                           s: " more seconds";
-                           HUDMSG_PLAIN, 12349, CR_YELLOW,
-                           POWERUP_HUD_X_OFFSET,  0.7, 
-                           POWERUP_HUD_TEXT_VISIBLE_SEC);
-		Delay(35);
-	}
-	GiveInventory("Dashes", 1);
-	restart;
 }

@@ -14,6 +14,8 @@ ACTOR TacticianClass : PlayerPawn
   player.startitem "Tactician_Machinegun", 1
   player.startitem "Tactician_Pipebomb", 1
   player.startitem "D2C_PipebombAmmo", 15
+  player.startitem "TacticianFirstCooldown", 999
+  player.startitem "TacticianSecondCooldown", 999
   player.startitem "greenarmor", 1
   player.startitem "clip", 200
   player.startitem "isSeeker", 1

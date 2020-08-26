@@ -1,12 +1,18 @@
 #library "Hunter"
 #include "DEFINITIONS.acs"
 
-script "HunterFirstAbility" (int powerName) NET
+script "HunterFirstAbility" (int cooldownName) NET
 {
-	GiveInventory("DualHunter", 1);
-	
-	PlaySound(0, "Hunter/Abilities/DualWeapons");
-	ACS_NamedExecute("hudDual", 0);
+	GiveInventory("HunterFirstActive", 1);
+	While (CheckInventory("HunterFirstActive"))
+	{
+		GiveInventory("DualHunter", 1);
+		PlaySound(0, "Hunter/Abilities/DualWeapons");
+		ACS_NamedExecute("hudDual", 0);
+	}
+	TakeInventory("DualHunter", 1);
+	PlaySound(0, "Hunter/Abilities/LoseDual");
+	ACS_NamedExecute("activateCooldown", 0, "HunterFirstCooldown", cooldownName);
 }
 
 script "hudDual" (void) clientside
@@ -16,41 +22,29 @@ script "hudDual" (void) clientside
 		HudMessage(s:"Dual Weapons lasts for", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
 		Delay(35);
 	}
-	ACS_NamedExecute("endDual", 0);
+	TakeInventory("HunterFirstActive", 1);
 }
 
-script "endDual" (void) NET
+script "HunterSecondAbility" (int cooldownName) NET
 {
-	TakeInventory("DualHunter", 1);
-	PlaySound(0, "Hunter/Abilities/LoseDual");
-	ACS_NamedExecute("giveCooldownForSeconds", 0, "HunterFirstCooldown", 30);
-	terminate;
-}
-
-script "HunterSecondAbility" (int powerName) NET
-{
-	GiveInventory("Freezegun", 1);
-	PlaySound(0, "Hunter/Abilities/Freezegun", 6);
-	ACS_NamedExecute("hudFreeze", 0);
+	GiveInventory("HunterSecondActive", 1);
+	While (CheckInventory("HunterSecondActive"))
+	{
+		GiveInventory("Freezegun", 1);
+		PlaySound(0, "Hunter/Abilities/Freezegun", 6);
+		ACS_NamedExecute("hudFreeze", 0);
+	}
+	TakeInventory("FreezeGun", 1);
+	PlaySound(0, "Hunter/Abilities/LoseFreeze", 6);
+	ACS_NamedExecute("activateSecondaryCooldown", 0, cooldownName);
 }
 
 script "hudFreeze" (void) Clientside
 {
-	While (CheckInventory("FreezeGun"))
+	For (int x = 5; x > 0; x--)
 	{
-		For (int x = 5; x > 0; x--)
-		{
-			HudMessage(s:"Freezegun lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-			Delay(35);
-		}
-		ACS_NamedExecute("endOverCharge", 0);
-		terminate;
+		HudMessage(s:"Freezegun lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		Delay(35);
 	}
-}
-
-script "endFreeze" (void) Net
-{
-	TakeInventory("FreezeGun", 1);
-	PlaySound(0, "Hunter/Abilities/LoseFreeze", 6);
-	ACS_NamedExecute("removeCooldownForSeconds", 0, 15);
+	TakeInventory("HunterSecondActive", 1);
 }

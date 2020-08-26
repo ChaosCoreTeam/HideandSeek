@@ -1,55 +1,56 @@
 //Actives only apply to the Bnashee, Guardian, Illusionist, Hunter, Berserker, Terminator, Polymorphist and the Tactician
 //Terminator only has one active
 
-Actor BansheeFirstCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
-Actor BansheeSecondCooldown : Ammo { Inventory.Amount 15 Inventory.MaxAmount 15 }
+Actor BansheeFirstCooldown : Ammo { Inventory.Amount 15 Inventory.MaxAmount 15 }
+Actor BansheeSecondCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
 Actor BansheeFirstActive : Inventory { }
 Actor BansheeSecondActive : Inventory { }
 
-Actor BlazerFirstCooldown : Ammo { Inventory.Amount 3 Inventory.MaxAmount 3 }
+Actor BlazerFirstCooldown : Ammo { Inventory.Amount 10 Inventory.MaxAmount 10 }
+Actor DashCooldown : Ammo { Inventory.Amount 10 Inventory.MaxAmount 10 }
 Actor BlazerSecondCooldown : Ammo { Inventory.Amount 20 Inventory.MaxAmount 20 }
 
-Actor GuardianFirstCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
-Actor GuardianSecondCooldown : Ammo { Inventory.Amount 34 Inventory.MaxAmount 34 }
+Actor GuardianFirstCooldown : Ammo { Inventory.Amount 25  Inventory.MaxAmount 25  }
+Actor GuardianSecondCooldown : Ammo { Inventory.Amount 45  Inventory.MaxAmount 45  }
 Actor GuardianFirstActive : Inventory { }
 Actor GuardianSecondActive : Inventory { }
 
-Actor IllusionistFirstCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
-Actor IllusionistSecondCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
+Actor IllusionistFirstCooldown : Ammo { Inventory.Amount 25 Inventory.MaxAmount 25 }
+Actor IllusionistSecondCooldown : Ammo { Inventory.Amount 45 Inventory.MaxAmount 45 }
 Actor IllusionistFirstActive : Inventory { }
 Actor IllusionistSecondActive : Inventory { }
 
-Actor RocketeerFirstCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
-Actor RocketeerSecondCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
+Actor RocketeerFirstCooldown : Ammo { Inventory.Amount 15  Inventory.MaxAmount 15 }
+Actor RocketeerSecondCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
 
-Actor TeleporterFirstCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
-Actor TeleporterSecondCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
+Actor TeleporterFirstCooldown : Ammo { Inventory.Amount 10 Inventory.MaxAmount 10 }
+Actor TeleporterSecondCooldown : Ammo { Inventory.Amount 45 Inventory.MaxAmount 45 }
 Actor TeleporterFirstActive : Inventory { } 
 Actor TeleporterSecondActive : Inventory { }
 
-Actor HunterFirstCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
-Actor HunterSecondCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
+Actor HunterFirstCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
+Actor HunterSecondCooldown : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
 Actor HunterFirstActive : Inventory { } 
 Actor HunterSecondActive : Inventory { }
 
-Actor ScouterFirstCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
-Actor ScouterSecondCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
+Actor ScouterFirstCooldown : Ammo { Inventory.Amount 10 Inventory.MaxAmount 10 }
+Actor ScouterSecondCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
 
-Actor BerserkerFirstCooldown : Ammo { Inventory.Amount 25 Inventory.MaxAmount 25 }
-Actor BerserkerSecondCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
+Actor BerserkerFirstCooldown : Ammo { Inventory.Amount 45 Inventory.MaxAmount 45 }
+Actor BerserkerSecondCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
 Actor BerserkerFirstActive : Inventory { } 
 Actor BerserkerSecondActive : Inventory { }
 
-Actor TerminatorFirstCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
-Actor TerminatorSecondCooldown : Ammo { Inventory.Amount 60 Inventory.MaxAmount 50 }
+Actor TerminatorFirstCooldown : Ammo { Inventory.Amount 10 Inventory.MaxAmount 10 }
+Actor TerminatorSecondCooldown : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
 Actor TerminatorSecondActive : Inventory { }
 
-Actor PolymorphistFirstCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
-Actor PolymorphistSecondCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
+Actor PolymorphistFirstCooldown : Ammo { Inventory.Amount 15 Inventory.MaxAmount 15 }
+Actor PolymorphistSecondCooldown : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
 Actor PolymorphistFirstActive : Inventory { }
 Actor PolymorphistSecondActive : Inventory { }
 
-Actor TacticianFirstCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
-Actor TacticianSecondCooldown : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
+Actor TacticianFirstCooldown : Ammo { Inventory.Amount 3 Inventory.MaxAmount 3 }
+Actor TacticianSecondCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
 Actor TacticianFirstActive : Inventory { }
 Actor TacticianSecondActive : Inventory { }

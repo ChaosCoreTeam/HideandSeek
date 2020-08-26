@@ -12,7 +12,6 @@
 #include "classes/Illusionist/Disguises.dec"
 #include "classes/Rocketeer/Rocketeer.dec"
 #include "classes/Rocketeer/Weapons.dec"
-#include "classes/Rocketeer/Abilities.dec"
 #include "classes/Polymorphist/Polymorphist.dec"
 #include "classes/Polymorphist/Weapons.dec"
 #include "classes/Polymorphist/Abilities.dec"
@@ -28,7 +27,9 @@
 #include "classes/Tactician/Tactician.dec"
 #include "classes/Tactician/Weapons.dec"
 #include "classes/Terminator/Terminator.dec"
-#include "classes/Vanishing.dec"
+#include "classes/Terminator/Weapons.dec"
+#include "classes/Hiders.dec"
+#include "classes/Seekers.dec"
 #include "classes/AbilityItems.dec"
 
 projectile Glass //Glass Shard

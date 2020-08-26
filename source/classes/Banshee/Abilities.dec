@@ -1,12 +1,5 @@
-Actor EnergyField : InvulnerabilitySphere
+Actor LifeSupportSystem : InvulnerabilitySphere
 {
-	Powerup.Duration 1000
+	Powerup.Duration -30
 	Powerup.Color GreenMap
-}
-
-Actor LifeSupportSystem : BlueArmor
-{
-	Inventory.Icon "ARM2A0"
-	Armor.SavePercent 100
-	Armor.SaveAmount 100
 }

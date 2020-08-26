@@ -13,9 +13,6 @@
 #import "Polymorphist.acs"
 #import "Tactician.acs"
 
-#define FIRST_ABILITY_INDEX 0
-#define SECOND_ABILITY_INDEX 12
-
 // We need a way to go from the 'item name' to a readable English name when we
 // show it in the player HUD. This will allow us to do that where we look up
 // by the first value (item name), and if the player has it then we will use
@@ -31,7 +28,7 @@ str abilityData[NUM_POWERUPS][2] =
     { "TeleporterFirstCooldown", "Translocator" },
     { "HunterFirstCooldown", "Dual Wield" },
     { "ScouterFirstCooldown", "Hookshot" },
-    { "BerserkerFirstCooldown", "Bloodlust" },
+    { "BerserkerFirstCooldown", "AxeThrow" },
     { "TerminatorFirstCooldown", "Laser Shot" },
     { "PolymorphistFirstCooldown", "Lostsoul" },
     { "TacticianFirstCooldown", "Tripmines" },
@@ -43,31 +40,15 @@ str abilityData[NUM_POWERUPS][2] =
     { "TeleporterSecondCooldown", "Overcharge" },
     { "HunterSecondCooldown", "Freeze Gun" },
     { "ScouterSecondCooldown", "Tracking Device" },
-    { "BerserkerSecondCooldown", "Charge" },
+    { "BerserkerSecondCooldown", "Bloodlust" },
     { "TerminatorSecondCooldown", "Devastators" },
     { "PolymorphistSecondCooldown", "Cybruiser Transformation" },
     { "TacticianSecondCooldown", "Sentry" }
 };
 
-function bool onCoolDown(int abilityNum) 
+function bool onCoolDown(int abilityIndex, int cooldownTime) 
 {
-	return CheckInventory(StrParam(s:abilityData[PlayerClass(PlayerNumber())+abilityNum][POWERUP_ITEM_NAME])) > 0;
-}
-
-function str getPowerName(int abilityNum)
-{
-	return StrParam(s:abilityData[abilityNum][POWERUP_ENGLISH_NAME]);
-}
-
-script "giveCooldownForSeconds"(int powerName, int seconds)
-{
-	GiveInventory(powerName, seconds);
-	
-	for (int x = 0; x < seconds; x++)
-	{
-		Delay(35);
-		TakeInventory(powerName, 1);
-	}
+	return CheckInventory(StrParam(s:abilityData[PlayerClass(PlayerNumber())+abilityIndex][POWERUP_COOLDOWN])) < cooldownTime;
 }
 
 script "cooldownActive" (void) CLIENTSIDE
@@ -76,12 +57,62 @@ script "cooldownActive" (void) CLIENTSIDE
 	PlaySound (0, "CooldownActive", 3); 
 }
 
+function bool isActive (int abilityIndex, int classNum)
+{
+	str abilityNum = "Second";
+	if (abilityIndex == 0)
+		abilityNum = "First";
+	return CheckInventory(StrParam(s:classNames[0]+classNum,s:abilityNum,s:"Active")) > 0;
+}
+
+script "abilityActive" (void) CLIENTSIDE
+{
+	HudMessage(s:"Ability is currently active!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+	PlaySound (0, "CooldownActive", 3); 
+}
+
+script "activateCooldown"(int cooldownName, int cooldownTime) NET
+{
+	TakeInventory(cooldownName, cooldownTime);
+	
+	for (int x = 0; x <= cooldownTime; x++)
+	{
+		Delay(35);
+		GiveInventory(cooldownName, 1);
+	}
+	ACS_NamedExecuteAlways("abilityRestoreMessage", 0, FIRST_ABILITY_INDEX);
+}
+
+script "activateSecondaryCooldown"(int cooldownName, int cooldownTime) NET
+{
+	TakeInventory(cooldownName, cooldownTime);
+	
+	for (int x = 0; x <= cooldownTime; x++)
+	{
+		Delay(35);
+		GiveInventory(cooldownName, 1);
+	}
+	
+	ACS_NamedExecuteAlways("abilityRestoreMessage", 0, SECOND_ABILITY_INDEX);
+}
+
+script "abilityRestoreMessage"(int abilityIndex) CLIENTSIDE
+{
+	str abilityName = StrParam(s:abilityData[PlayerClass(PlayerNumber())+abilityIndex][POWERUP_NAME]);
+	print(d:abilityIndex);
+	if (abilityIndex == FIRST_ABILITY_INDEX)
+		HudMessage(s:abilityName, s:" can now be reused"; HUDMSG_FADEOUT, 1001, -1,  0.03, 0.55, 3.5, 3.0);
+	else
+		HudMessage(s:abilityName, s:" can now be reused"; HUDMSG_FADEOUT, 1002, -1, 0.03, 0.85, 3.5, 3.0);
+}
+
 script "HNS_PrimaryAbility" (int hTaunt, int sTaunt) NET 
 {
 	int classNum = PlayerClass(PlayerNumber());
-	str powerName = StrParam(s:abilityData[PlayerClass(PlayerNumber())][POWERUP_ITEM_NAME]);
+	str cooldownName = StrParam(s:abilityData[PlayerClass(PlayerNumber())][POWERUP_COOLDOWN]);
+	int cooldownTime = GetAmmoCapacity(cooldownName);
 	
-	if (onCoolDown(FIRST_ABILITY_INDEX))
+	if (onCoolDown(FIRST_ABILITY_INDEX, cooldownTime))
 	{
 		ACS_NamedExecuteAlways("cooldownActive", 0);
 		terminate;
@@ -90,72 +121,94 @@ script "HNS_PrimaryAbility" (int hTaunt, int sTaunt) NET
     switch (classNum) 
 	{
     case CLASS_BANSHEE:
-		ACS_NamedExecuteAlways("BansheeFirstAbility", 0, powerName);
+		if (isActive(FIRST_ABILITY_INDEX, classNum))
+		{
+			ACS_NamedExecuteAlways("abilityActive", 0);
+			terminate;
+		}
+		ACS_NamedExecuteAlways("BansheeFirstAbility", 0, cooldownTime);
 		break;
 		
 	case CLASS_BLAZER:
-		ACS_NamedExecuteAlways("BlazerFirstAbility", 0, powerName);
+		ACS_NamedExecuteAlways("BlazerFirstAbility", 0, cooldownTime);
         break;
 	
     case CLASS_GUARDIAN:
 		Spawn("SmokeCanister", GetActorX(0), GetActorY(0), GetActorZ(0));
+		ACS_NamedExecute("activateCooldown", 0, "GuardianFirstCooldown", cooldownTime);
 		break;
 		
 	case CLASS_ILLUSIONIST:
-		ACS_NamedExecuteAlways("IllusionistFirstAbility", 0, powerName, classNum);
+		if (isActive(SECOND_ABILITY_INDEX, classNum))
+		{
+			
+			ACS_NamedExecuteAlways("abilityActive", 0);
+			terminate;
+		}
+		ACS_NamedExecuteAlways("IllusionistFirstAbility", 0, cooldownTime, classNum);
 		break;
     
 	case CLASS_ROCKETEER:
-		ACS_NamedExecuteAlways("RocketeerFirstAbility", 0, powerName, classNum);
+		ACS_NamedExecuteAlways("RocketeerFirstAbility", 0, cooldownTime, classNum);
         break;
 	
 	case CLASS_TELEPORTER:
-		ACS_NamedExecuteAlways("TeleporterFirstAbility", 0, powerName);
+		ACS_NamedExecuteAlways("TeleporterFirstAbility", 0, cooldownTime);
         break;
 		
 	case CLASS_HUNTER:
-		ACS_NamedExecuteAlways("HunterFirstAbility", 0, powerName);
+		if (isActive(FIRST_ABILITY_INDEX, classNum))
+		{
+			ACS_NamedExecuteAlways("abilityActive", 0);
+			terminate;
+		}
+		ACS_NamedExecuteAlways("HunterFirstAbility", 0, cooldownTime);
         break;
 	
 	case CLASS_SCOUTER:
-		ACS_NamedExecuteAlways("ScouterFirstAbility", 0, powerName);
+		ACS_NamedExecuteAlways("ScouterFirstAbility", 0, cooldownTime);
         break;
 	
 	case CLASS_BERSERKER:
-		ACS_NamedExecuteAlways("BersekerFirstAbility", 0, powerName);
-        break;
+		if (isActive(FIRST_ABILITY_INDEX, classNum))
+		{
+			ACS_NamedExecuteAlways("abilityActive", 0);
+			terminate;
+		}
+		
+		ACS_NamedExecuteAlways("BerserkerFirstAbility", 0, cooldownTime);
+		break;
 	
 	case CLASS_TERMINATOR:
-		ACS_NamedExecuteAlways("TerminatorFirstAbility", 0, powerName);
+		ACS_NamedExecuteAlways("TerminatorFirstAbility", 0, cooldownTime);
         break;
 	
 	case CLASS_POLYMORPHIST:
-		ACS_NamedExecuteAlways("PolymorphistFirstAbility", 0, powerName);
+		if (isActive(FIRST_ABILITY_INDEX, classNum))
+		{
+			ACS_NamedExecuteAlways("abilityActive", 0);
+			terminate;
+		}
+		ACS_NamedExecuteAlways("PolymorphistFirstAbility", 0, cooldownTime);
 		break;
 		
 	case CLASS_TACTICIAN:
-		ACS_NamedExecuteAlways("TacticianFirstAbility", 0, powerName);
+		ACS_NamedExecuteAlways("TacticianFirstAbility", 0, cooldownTime);
 		break;
 		
     default:
         PrintBold(s: "Class not defined");
         break;
     }
-	
-	//Excluding the blazer because it has it's own cooldown system
-	if (PlayerClass(PlayerNumber()) != CLASS_BANSHEE && PlayerClass(PlayerNumber()) != CLASS_BLAZER && PlayerClass(PlayerNumber()) != CLASS_BERSERKER)
-	{
-		GiveInventory(powerName, 999);
-		ACS_NamedExecuteAlways("giveCooldownForSeconds", 0, powerName, GetAmmoCapacity(powerName));
-	}
+	Delay(70);
 } 
 script "HNS_SecondAbility" (int hTaunt, int sTaunt) NET 
 {
-
 	int classNum = PlayerClass(PlayerNumber());
-	str powerName = StrParam(s:abilityData[PlayerClass(PlayerNumber())+12][POWERUP_ITEM_NAME]);
+	str cooldownName = StrParam(s:abilityData[PlayerClass(PlayerNumber())+SECOND_ABILITY_INDEX][POWERUP_COOLDOWN]);
+	int cooldownTime = GetAmmoCapacity(cooldownName);
 	
-	if (onCoolDown(SECOND_ABILITY_INDEX))
+	if (onCoolDown(SECOND_ABILITY_INDEX, cooldownTime))
 	{
 		ACS_NamedExecuteAlways("cooldownActive", 0);
 		terminate;
@@ -164,79 +217,124 @@ script "HNS_SecondAbility" (int hTaunt, int sTaunt) NET
     switch (classNum) 
 	{
 	case CLASS_BANSHEE:
-		ACS_NamedExecuteAlways("BansheeSecondAbility", 0, powerName);
+		if (isActive(SECOND_ABILITY_INDEX, classNum))
+		{
+			ACS_NamedExecuteAlways("abilityActive", 0);
+			terminate;
+		}
+		ACS_NamedExecuteAlways("BansheeSecondAbility", 0, cooldownTime);
 		break;
 	case CLASS_BLAZER:
-		ACS_NamedExecuteAlways("BlazerSecondAbility", 0, powerName);
+		if (isActive(SECOND_ABILITY_INDEX, classNum))
+		{
+			ACS_NamedExecuteAlways("abilityActive", 0);
+			terminate;
+		}
+		ACS_NamedExecuteAlways("BlazerSecondAbility", 0, cooldownTime);
 		break;
 	case CLASS_GUARDIAN:
-		ACS_NamedExecuteAlways("GuardianSecondAbility", 0, powerName);
+		if (isActive(SECOND_ABILITY_INDEX, classNum))
+		{
+			ACS_NamedExecuteAlways("abilityActive", 0);
+			terminate;
+		}
+		ACS_NamedExecuteAlways("GuardianSecondAbility", 0, cooldownTime);
 		break;
 	case CLASS_ILLUSIONIST:
-		ACS_NamedExecuteAlways("IllusionistSecondAbility", 0, powerName);
+		if (isActive(FIRST_ABILITY_INDEX, classNum))
+		{
+			ACS_NamedExecuteAlways("abilityActive", 0);
+			terminate;
+		}
+		ACS_NamedExecuteAlways("IllusionistSecondAbility", 0, cooldownTime);
 		break;
 	case CLASS_ROCKETEER:
-		ACS_NamedExecuteAlways("RocketeerSecondAbility", 0, powerName);
+		ACS_NamedExecuteAlways("RocketeerSecondAbility", 0, cooldownTime);
 		break;
 	case CLASS_TELEPORTER:
-		ACS_NamedExecuteAlways("TeleporterSecondAbility", 0, powerName);
+		if (isActive(SECOND_ABILITY_INDEX, classNum))
+		{
+			ACS_NamedExecuteAlways("abilityActive", 0);
+			terminate;
+		}
+		ACS_NamedExecuteAlways("TeleporterSecondAbility", 0, cooldownTime);
 		break;
 	case CLASS_HUNTER:
-		ACS_NamedExecuteAlways("HunterSecondAbility", 0, powerName);
+		if (isActive(SECOND_ABILITY_INDEX, classNum))
+		{
+			ACS_NamedExecuteAlways("abilityActive", 0);
+			terminate;
+		}
+		ACS_NamedExecuteAlways("HunterSecondAbility", 0, cooldownTime);
 		break;
 	case CLASS_SCOUTER:
-		ACS_NamedExecuteAlways("ScouterSecondAbility", 0, powerName);
+		if (isActive(SECOND_ABILITY_INDEX, classNum))
+		{
+			ACS_NamedExecuteAlways("abilityActive", 0);
+			terminate;
+		}
+		ACS_NamedExecuteAlways("ScouterSecondAbility", 0, cooldownTime);
 		break;
 	case CLASS_BERSERKER:
-		ACS_NamedExecuteAlways("BerserkerSecondAbility", 0, powerName, sTaunt);
+		ACS_NamedExecuteAlways("BerserkerSecondAbility", 0, cooldownTime, sTaunt);
 		break;
 	case CLASS_TERMINATOR:
-		ACS_NamedExecuteAlways("TerminatorSecondAbility", 0, powerName);
+		if (isActive(SECOND_ABILITY_INDEX, classNum))
+		{
+			ACS_NamedExecuteAlways("abilityActive", 0);
+			terminate;
+		}
+		ACS_NamedExecuteAlways("TerminatorSecondAbility", 0, cooldownTime);
 		break;
 	case CLASS_POLYMORPHIST:
-		ACS_NamedExecuteAlways("PolymorphistSecondAbility", 0, powerName);
+		if (isActive(SECOND_ABILITY_INDEX, classNum))
+		{
+			ACS_NamedExecuteAlways("abilityActive", 0);
+			terminate;
+		}
+		ACS_NamedExecuteAlways("PolymorphistSecondAbility", 0, cooldownTime);
 		break;
 	case CLASS_TACTICIAN:
-		ACS_NamedExecuteAlways("TacticianSecondAbility", 0, powerName);
+		if (isActive(SECOND_ABILITY_INDEX, classNum))
+		{
+			ACS_NamedExecuteAlways("abilityActive", 0);
+			terminate;
+		}
+		ACS_NamedExecuteAlways("TacticianSecondAbility", 0, cooldownTime);
 		break;
 	}
-	//Excluding the guardian because it has it's own cooldown system
-	if(PlayerClass(PlayerNumber()) != 2)
-    {
-		GiveInventory(powerName, 999);
-		ACS_NamedExecuteAlways("giveCooldownForSeconds", 0, powerName, GetAmmoCapacity(powerName));
-	}
+	Delay(70);
 }
 
-script "Client_Powerup_HudMessage" ENTER CLIENTSIDE {
-    while (true) {
+//script "Client_Powerup_HudMessage" ENTER CLIENTSIDE {
+    //while (true) {
         // Inside the loop because it's possible while this script sleeps for
         // another script to change the hud dimensions. We want a clean slate
         // every single iteration.
-        SetHudSize(640, 480, false);
-        int offsetY = POWERUP_HUD_Y_OFFSET;
-        int powerupCountFound = 0;
+       //SetHudSize(640, 480, false);
+        //int offsetY = POWERUP_HUD_Y_OFFSET;
+        //int powerupCountFound = 0;
         
-        for (int powerupIndex = 0; powerupIndex < NUM_POWERUPS; powerupIndex++) {
-            int secondsLeft = CheckInventory(abilityData[powerupIndex][POWERUP_ITEM_NAME]);
+        //for (int powerupIndex = 0; powerupIndex < NUM_POWERUPS; powerupIndex++) {
+            //int secondsLeft = CheckInventory(abilityData[powerupIndex][POWERUP_ITEM_NAME]);
             
-            if (secondsLeft > 0) {
-                HudMessage(s: "Cooldown for ", 
-                           s: abilityData[powerupIndex][POWERUP_ENGLISH_NAME], 
-                           s: " lasts ", 
-                           d: secondsLeft, 
-                           s: " more seconds";
-                           HUDMSG_PLAIN, 123456 + powerupIndex, CR_YELLOW,
-                           POWERUP_HUD_X_OFFSET, offsetY, 
-                           POWERUP_HUD_TEXT_VISIBLE_SEC);            
+            //if (secondsLeft > 0) {
+                //HudMessage(s: "Cooldown for ", 
+                           //s: abilityData[powerupIndex][POWERUP_ENGLISH_NAME], 
+                           //s: " lasts ", 
+                           //d: secondsLeft, 
+                           //s: " more seconds";
+                           //HUDMSG_PLAIN, 123456 + powerupIndex, CR_YELLOW,
+                           //POWERUP_HUD_X_OFFSET, offsetY, 
+                           //POWERUP_HUD_TEXT_VISIBLE_SEC);            
                            
-                offsetY -= 20.0;
-                powerupCountFound++;
-			{
+                //offsetY -= 20.0;
+                //powerupCountFound++;
+			//{
 				
-			}
-            }
-        }
-        delay(1);
-    }
-}
+			//}
+            //}
+        //}
+        //delay(1);
+    //}
+//}

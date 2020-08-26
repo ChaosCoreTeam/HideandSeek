@@ -14,6 +14,8 @@ ACTOR PolymorphistClass : PlayerPawn
   player.startitem "MorphAmmo", 1
   player.startitem "Shell", 50
   player.startitem "greenarmor", 1
+  player.startitem "PolymorphistFirstCooldown", 999
+  player.startitem "PolymorphistSecondCooldown", 999
   player.startitem "isSeeker", 1
   Player.JumpZ 10
   damagefactor "rocket", 0

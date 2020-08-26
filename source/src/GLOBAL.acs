@@ -15,13 +15,27 @@ int FadeOutValue = 0;
 
 		 10001031 - Players
 		 1050-1081 - Spectating/Disconnected Players
-		 2050-2081 - Teleporter Projectiles
+		 2050-2081 - T eleporter Projectiles
 		 3000-3031 - Teleporter Portals
 */
 
 /* ************************************************** */
 /*               START UNIVERSAL SCRIPTS              */
 /* ************************************************** */
+
+bool classInfoOn;
+
+Script "HNS_ClassDescriptionOn" (int class)
+{
+	SetHudSize (640, 480, 1);
+	SetFont("HUDDESC");
+	HudMessage (s: "A";HUDMSG_PLAIN,9900,CR_UNTRANSLATED,320.0,240.0,5.0);
+}
+
+Script "HNS_ClassDescriptionOff" (void)
+{
+	HudMessage(s:""; 0, 9900, 0, 0, 0, 0);
+}
 
 Script "hudTimer" open //Timer
 {	

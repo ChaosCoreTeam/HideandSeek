@@ -1,41 +1,44 @@
 #library "Berserker"
 #include "DEFINITIONS.acs"
 
-script "BerserkerFirstAbility" (int powerName) NET
+script "BerserkerFirstAbility" (int cooldownTime) NET
 {
-		GiveInventory("BloodLust", 1);
-		PlaySound(0, "Berserker/Abilities/Bloodlust", 6);
-		ACS_NamedExecute("hudBlood", 0);
+	GiveInventory("BloodLust", 1);
+	GiveInventory("BerserkerFirstActive", 1);
+	PlaySound(0, "Berserker/Abilities/Bloodlust", 6);
+	ACS_NamedExecuteAlways("hudBlood", 0, cooldownTime);
 }
-script "hudBlood" (void) CLIENTSIDE
+script "hudBlood" (int cooldownTime) CLIENTSIDE
 {
-	For (int x = 3; x >= 0; x--)
+	For (int x = 5; x >= 0; x--)
 	{
 		HudMessage(s:"Bloodlust lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 0.5, 0.5);
 		Delay(35);
 	}
-	ACS_NamedExecute("endBlood", 0);
+	ACS_NamedExecuteAlways("endBlood", 0, cooldownTime);
 }
 
-script "endBlood" (void) NET
+script "endBlood" (int cooldownTime) NET
 {
-	TakeInventory("Bloodlust", 1);
 	//PlaySound(0, "Berseker/Abilities/LoseBlood");
-	
-	ACS_NamedExecute("giveCooldownForSeconds", 0, "BerserkerFirstCooldown", 25);
-	terminate;
+	TakeInventory("BloodLustRage", 1);
+	TakeInventory("BloodLustSpeed", 1);
+	TakeInventory("BloodLustJump", 1);
+	TakeInventory("BloodLust", 1);
+	ACS_NamedExecuteAlways("activateCooldown", 0, "BerserkerFirstCooldown", cooldownTime);
 }
 
-script "BerserkerSecondAbility" (int powerName, int sTaunt) NET
+script "BerserkerSecondAbility" (int cooldownTime, int sTaunt) NET
 {
-	Thing_Stop(0);
-	PlaySound(0, "Berserker/Leap", 6);
-	ThrustThing(GetActorAngle(0) >> 8, 35, 1, 0);
-	ThrustThingZ(0, 60, 0, 0);
-	Delay(35);
-	ACS_NamedExecute("HNS_Taunt", 0, 0, sTaunt);
-	Delay(35);
-	PlaySound(0, "Berserker/PunchBlast", 6);
-	SpawnProjectile(0, "MaelStromBall", GetActorAngle(0) >> 8, 200, 0,0,0);
-	ACS_NamedExecute("giveCooldownForSeconds", 0, "BerserkerFirstCooldown", 25);
+	str weapon = GetWeapon();
+	SetPlayerProperty(0, 1, PROP_INSTANTWEAPONSWITCH);
+	GiveInventory("BerserkerHammer", 1);
+	GiveInventory("ThrowingAxe", 1);
+	SetWeapon("BerserkerHammer");
+	While (CheckInventory("ThrowingAxe"))
+		Delay(1);
+	SetWeapon(weapon);
+	TakeInventory("BerserkerHammer", 1);
+	Delay(3);
+	SetPlayerProperty(0, 0, PROP_INSTANTWEAPONSWITCH);
 }

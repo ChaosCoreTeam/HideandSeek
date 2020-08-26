@@ -17,7 +17,7 @@ Actor SoulFlyer : PowerupGiver
   Inventory.MaxAmount 0
   Inventory.Icon "TNT1A0"
   Powerup.Type SoulFlight
-  Powerup.Duration 8
+  Powerup.Duration -30
   +Inventory.AutoActivate
   States
   {

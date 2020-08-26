@@ -12,6 +12,11 @@ graphic hudbar13, 77, 24 { XScale 2.0 YScale 2.0 Patch hudbar13, 0, 0 }
 graphic hudbar04, 77, 24 { XScale 2.0 YScale 2.0 Patch hudbar04, 0, 0 }
 graphic hudbar14, 77, 24 { XScale 2.0 YScale 2.0 Patch hudbar14, 0, 0 }
 graphic hudabil, 123, 37 { XScale 2.0 YScale 2.0 Patch hudabil, 0, 0 }
+graphic hudabrd, 142, 40 { XScale 2.0 YScale 2.0 Patch hudabrd, 0, 0 }
+graphic dashbar0, 117, 38 { XScale 2.0 YScale 2.0 Patch dashbar0, 0, 0 }
+graphic dashbar1, 117, 38 { XScale 2.0 YScale 2.0 Patch dashbar1, 0, 0 }
+graphic dashbar2, 117, 38 { XScale 2.0 YScale 2.0 Patch dashbar2, 0, 0 }
+graphic dashbar3, 117, 38 { XScale 2.0 YScale 2.0 Patch dashbar3, 0, 0 }
 //graphic hudradar, 158, 158 { XScale 2.0 YScale 2.0 Patch hudradar, 0, 0 }
 graphic hudnone, 48, 28 { XScale 2.0 YScale 2.0 Patch hudnone, 0, 0 }
 graphic hudammo, 48, 28 { XScale 2.0 YScale 2.0 Patch hudammo, 0, 0 }
@@ -32,9 +37,9 @@ graphic hudjetpk, 48, 28 { XScale 2.0 YScale 2.0 Patch hudjetpk, 0, 0 }
 graphic hudchick, 48, 28 { XScale 2.0 YScale 2.0 Patch hudchick, 0, 0 }
 graphic hudmin, 80, 80 { XScale 3.0 YScale 3.0 Patch hudmin, 0, 0 }
 graphic hudserp, 80, 80 { XScale 3.0 YScale 3.0 Patch hudserp, 0, 0 }
+graphic huddash, 19, 23 { XScale 2.0 YScale 2.0 Patch huddash, 0, 0 }
 graphic hudafrit, 80, 80 { XScale 3.0 YScale 3.0 Patch hudafrit, 0, 0 }
 graphic hudsmoke, 25, 31 { XScale 3.0 YScale 3.0 Patch hudsmoke, 0, 0 }
-graphic huddash, 83, 64 { XScale 6.0 YScale 6.0 Patch huddash, 0, 0 }
 //font hud gfx
 graphic hnsfont0, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont0, 0, 0 }
 graphic hnsfont1, 7, 12 { XScale 2.0 YScale 2.0 Patch hnsfont1, 0, 0 }

@@ -15,6 +15,9 @@ ACTOR BlazerClass : PlayerPawn
 	player.startitem "blazerenergy", 5
 	player.startitem "Dashes", 3
 	player.startitem "lowVanishingPool", 45
+	player.startitem "DashCooldown", 999
+	player.startitem "BlazerFirstCooldown", 999
+	player.startitem "BlazerSecondCooldown", 999
 	Player.CrouchSprite "BSRC"
 	Player.ForwardMove 1.00, 1.00
 	Player.SideMove 0.90, 0.90
