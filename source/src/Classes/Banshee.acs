@@ -1,5 +1,9 @@
 #library "Banshee"
 #include "DEFINITIONS.acs"
+#import "FUNCTION.acs"
+
+#define BANSHEE_HEAL_RADIUS 96.0
+#define BANSHEE_HEAL_AMOUNT 25
 
 script "bansheeFirstAbility" (int cooldownTime)
 {
@@ -42,6 +46,29 @@ script "bansheeHeal" (int cooldownTime) CLIENTSIDE
 		Delay(6);
 	}
 	ACS_NamedExecuteAlways("activateCooldown", 0, cooldownTime);
+}
+
+script "bansheeAltFireHeal" (void)
+{
+	int healerTid = PLAYER_BASE_TID + PlayerNumber();
+
+	for (int p = 0; p < MAXPLAYERS; p++)
+	{
+		if (p == PlayerNumber())
+			continue;
+			
+		int targetTid = PLAYER_BASE_TID + p;
+		if (CheckActorInventory(targetTid, "isSeeker"))
+			continue;
+		
+		if (fixedDistance(healerTid, targetTid) >= BANSHEE_HEAL_RADIUS)
+			continue;
+		
+		int currentHealth = GetActorProperty(targetTid, APROP_HEALTH);
+		int healthToGive = min(100 - currentHealth, BANSHEE_HEAL_AMOUNT);
+		if (healthToGive > 0)
+			GiveActorInventory(targetTid, "HealthBonus", healthToGive);
+	}
 }
 
 script "bansheeSecondAbility" (int cooldownTime)

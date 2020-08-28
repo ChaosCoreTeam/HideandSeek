@@ -1,0 +1,36 @@
+#library "Function"
+
+function int abs(int n)
+{
+    if (n < 0)
+        return -n;
+    return n;
+}
+
+function int min(int a, int b)
+{
+	if (a < b)
+		return a;
+	return b;
+}
+
+function int max(int a, int b)
+{
+	if (a > b)
+		return a;
+	return b;
+}
+
+function int fixedDistance(int tid1, int tid2)
+{
+	int x = GetActorX(tid1) - GetActorX(tid2);
+	int y = GetActorY(tid1) - GetActorY(tid2);
+	int ang = vectorangle(x, y);
+
+	int len = 0;	
+	if (((ang + 0.125) % 0.5) > 0.25)
+		len = fixeddiv(y, sin(ang));
+	else 
+		len = fixeddiv(x, cos(ang));
+	return len;
+}
