@@ -30,7 +30,7 @@ ACTOR TeleporterClass : PlayerPawn
     TELP A 0
 	TELP A 35
 	TELP A 0 A_JumpIf (health>=50, 2)
-	TELP A 0 ACS_NamedExecute("regenHealth",0)
+	TELP A 0 ACS_NamedExecute("regenHealth",0,0)
 	TELP A 0 A_JumpIfInventory("TeleporterAmmo", 5, "Spawn")
 	TELP A 35
 	TELP A 0 ACS_NamedExecute("rechargeWeapon",0,5)

@@ -32,7 +32,7 @@ ACTOR BlazerClass : PlayerPawn
 		BRSP A 0
 		BRSP A 35
 		BRSP A 0 A_JumpIf (health>=50, 2)
-		BRSP A 0 ACS_NamedExecute("regenHealth",0)
+		BRSP A 0 ACS_NamedExecute("regenHealth",0,0)
 		BRSP A 0 A_JumpIfInventory("BlazerEnergy", 5, "Spawn")
 		BRSP A 35
 		BRSP A 0 ACS_NamedExecute("rechargeWeapon",0,1)
