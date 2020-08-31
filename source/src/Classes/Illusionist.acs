@@ -1,5 +1,77 @@
 #library "Illusionist"
 #include "DEFINITIONS.acs"
+#import "GLOBAL.acs"
+
+script "handleDecoyId" (int selector)
+{
+	int activator = PlayerNumber()+1000;
+	int decoyId = PlayerNumber() + DECOY_TID_INDEX;
+
+	if (selector == 0)
+	{
+		Thing_ChangeTid(4999, decoyId);
+		ACS_NamedExecuteAlways("takeDecoyEnergy", 0, decoyId);	
+	}	
+
+	if (selector == 1)
+	{
+		SetActorState(decoyId, "Death", true);
+	}
+}
+
+script "takeDecoyEnergy" (int decoyId) NET
+{
+		While (CheckInventory("decoySpawned"))
+		{
+			TakeInventory("DecoyEnergy", 1);
+			Delay(35);
+			if (CheckInventory("DecoyEnergy" == 0))
+			{
+				SetActorState(decoyId, "Death", true);
+				TakeInventory("decoySpawned", 1);
+				terminate;
+			}
+		}
+}
+
+script "vanishDecoy" (int selector)
+{
+	int activator = PlayerNumber()+1000;
+	//SetActivator(activator);
+	int decoyId = PlayerNumber() + DECOY_TID_INDEX;
+	
+	if (!IsTIDUsed(decoyId))
+	{
+		HudMessage(s:"You don't have a decoy!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 0.5, 0.5);
+		terminate;
+	}
+	
+	if (selector == 0)
+	{
+		SetActorState(decoyId, "Vanish", true);
+		ACS_NamedExecute("decoyEnergyVanish", 0);
+	}
+	
+	if (selector == 1)
+	{
+		SetActorState(decoyId, "VanishOff", true);
+	}	
+}
+
+script "decoyEnergyVanish" (int decoyId) NET
+{
+	While (CheckInventory("decoySpawned") && CheckInventory("decoyVanished"))
+	{
+		TakeInventory("DecoyEnergy", 1);
+		Delay(35);
+		if (CheckInventory("DecoyEnergy" == 0))
+		{
+			SetActorState(decoyId, "Death", true);
+			TakeInventory("decoySpawned", 1);
+			terminate;
+		}
+	}
+}
 
 script "IllusionistFirstAbility" (int cooldownTime) NET
 {
@@ -12,13 +84,14 @@ script "IllusionistFirstAbility" (int cooldownTime) NET
 	int seekerClass = Random(6,11);
 	GiveInventory("IllusionistFirstActive", 1);
 	GiveInventory(StrParam(s:classNames[seekerClass], s:"Morph"), 1);
-	PlaySound(0, "Illusionist/Abilities/Morph");
-	ACS_NamedExecuteAlways("hudDisguise", 0, StrParam(s:classNames[seekerClass], s:"Morph"), cooldownTime);
+	PlaySound(0, "Illusionist/Abilities/Disguise");
+	ACS_NamedExecuteAlways("hudDisguise", 0, StrParam(s:classNames[seekerClass]), cooldownTime);
 }
 
-script "hudDisguise" (int seekerClass, int cooldownTime) CLIENTSIDE
+script "hudDisguise" (int seekerClass, int cooldownTime) NET CLIENTSIDE
 {
-	HudMessage(s:"You've morphed into a ", s:seekerClass; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+	
+	HudMessage(s:"You've morphed into a ", s:seekerClass; HUDMSG_FADEOUT, 8, -1, 1.5, 0.45, 3.5, 3.0);
 	
 	For (int x = 60; x > 0; x--)
 	{
@@ -27,6 +100,7 @@ script "hudDisguise" (int seekerClass, int cooldownTime) CLIENTSIDE
 		if (!CheckInventory("IllusionistFirstActive"))
 			terminate;
 	}
+	Delay(10);
 	ACS_NamedExecuteAlways("endDisguise", 0, cooldownTime);
 }
 
@@ -38,6 +112,7 @@ script "endDisguise" (int cooldownTime) NET
 	ACS_NamedExecuteAlways("unmorphHud", 0);
 	PlaySound(0, "Illusionist/Abilities/Morph");
 	ACS_NamedExecuteAlways("activateCooldown", 0, "IllusionistFirstCooldown", cooldownTime);
+	ACS_NamedExecuteAlways("vanishingSetup",0);
 }
 
 function str morphName(void) 
@@ -54,23 +129,23 @@ script "IllusionistSecondAbility" (int cooldownTime) NET
 	if (CheckInventory("IllusionistSecondActive"))
 	{	
 		ACS_NamedExecuteAlways("endShrink", 0, cooldownTime);
-		terminate;
 	}
-		GiveInventory("ShrinkMorph", 1);
 		GiveInventory("IllusionistSecondActive", 1);
+		GiveInventory("ShrinkMorph", 1);
 		PlaySound(0, "Illusionist/Abilities/Shrink", 6);
 		ACS_NamedExecuteAlways("hudShrink", 0, cooldownTime);
 }
 
-script "hudShrink" (int cooldownTime) CLIENTSIDE
+script "hudShrink" (int cooldownTime) NET CLIENTSIDE
 {
-	For (int x = 15; x > 0; x--)
+	For (int x = 3; x > 0; x--)
 	{
 		HudMessage(s:"shrunken state lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
 		Delay(35);
 		if (!CheckInventory("IllusionistSecondActive"))
 			terminate;
 	}
+	Delay(10);
 	ACS_NamedExecuteAlways("endShrink", 0, cooldownTime);
 }
 
@@ -81,6 +156,7 @@ script "endShrink" (int cooldownTime) NET
 	ACS_NamedExecuteAlways("unmorphHud", 0);
 	PlaySound(0, "Illusionist/Abilities/Unshrink", 6);
 	ACS_NamedExecuteAlways("activateSecondaryCooldown", 0, "IllusionistSecondCooldown", cooldownTime);
+	ACS_NamedExecuteAlways("vanishingSetup", 0);
 }
 
 script "unmorphHud" (void) CLIENTSIDE

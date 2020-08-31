@@ -28,8 +28,8 @@ ACTOR PolymorphistClass : PlayerPawn
 	PLA2 A 35
 	PLA2 A 0 A_JumpIf (health>=50, 2)
 	PLA2 A 0 ACS_NamedExecute("regenHealth", 0)
-	PLA2 A 0 A_JumpIfInventory("Shell", 0, 2)
-	PLA2 A 0 ACS_Execute(112,0)
+	PLA2 A 0 A_JumpIfInventory("Shell", 0, "Spawn")
+	PLA2 A 0 ACS_NamedExecute("rechargeWeapon",10)
     Loop
   See:
 	TNT1 A 0

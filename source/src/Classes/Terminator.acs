@@ -20,13 +20,14 @@ script "TerminatorSecondAbility" (int cooldownTime) NET
 	ACS_NamedExecute("DevastatorTime",0, cooldownTime);
 }
 
-script "DevastatorTime" (int cooldownTime) CLIENTSIDE
+script "DevastatorTime" (int cooldownTime) NET
 {
-	For (int x = 3; x > 0; x--)
+	For (int x = 10; x > 0; x--)
 	{
 		HudMessage(d: x, s:" until Devastators expires."; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
 		Delay(35);
 	}
+	Delay(10);
 	TakeInventory("TerminatorSecondActive", 1);
 	HudMessage(s:"Devastators expired!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
 	ACS_NamedExecute("endDevastator", 0, cooldownTime);

@@ -1,16 +1,6 @@
 #library "STATES"
 #include "DEFINITIONS.acs"
 
-int buttons;
-int nobuttons;
-int FadeInValue = 0;
-int FadeOutValue = 0;
-
-function bool isVanished(int pNumber)
-{	
-	return GetActorProperty(pNumber, APROP_Alpha) < 1.0;
-}
-
 Script "regenHealth" (void)
 {
 	LocalAmbientSound("misc/i_pkup",127);
@@ -35,7 +25,7 @@ Script "rechargeWeapon" (int classNum) //recharging state
 			GiveInventory("GuardianPower", 15);
 		break;
 		case CLASS_ILLUSIONIST:
-			GiveInventory("IllusionistEnergy", 15);
+			GiveInventory("DecoyEnergy", 15);
 		break;
 		case CLASS_ROCKETEER:
 			GiveInventory("NoDamageRocketAmmo", 5);
@@ -58,27 +48,14 @@ Script "rechargeWeapon" (int classNum) //recharging state
 			GiveInventory("Cell",30);
 		break;
 		case CLASS_POLYMORPHIST:
-			GiveInventory("Clip",20);
 			GiveInventory("Shell",5);
 		break;
 		case CLASS_TACTICIAN:
 			GiveInventory("Clip",20);
-			GiveInventory("D2C_PipebombAmmo",5);
+			GiveInventory("D2C_PipebombAmmo",3);
 		break;
 	}
 	fadeto(255, 255, 255, 0.03, 0.0);
 	Delay(5);
 	fadeto(255, 255, 255, 0.0, 0.0);
-}
-
-Script "jetSpeedOn" (void)
-//Set a reduced speed for the jetpacking player while enabling use of his jetpack.
-{
-	SetActorProperty(0, APROP_Speed, 0.75);
-}
-
-Script "jetSpeedOff" (void)
-//After he's done jetpacking, give him back his original speed.
-{
-	SetActorProperty(0, APROP_Speed, 1.00);
 }

@@ -1,37 +1,43 @@
 #library "TAUNT"
 #include "DEFINITIONS.acs"
 
-script "HNS_Taunt" (int hTaunt, int sTaunt) net
+script "HNS_Taunt" (int hTaunt, int sTaunt) NET CLIENTSIDE
 {
-    if(PlayerClass(PlayerNumber()) < SEEKER_CLASS_START) 
+	int pNum = PlayerNumber() + PLAYER_BASE_TID;
+	int cNum = PlayerClass(PlayerNumber());
+	SetActivator(pNum);
+	
+	Delay(10);
+	
+    if(cNum < SEEKER_CLASS_START) 
     {
-        PlaySound(PlayerNumber(), hiderStringToTaunt(hTaunt), 6);
-		
-		switch(PlayerClass(PlayerNumber()) + 1){
-			case 1:
-				GiveInventory("Vanishing", 15);
+        PlaySound(pNum, hiderStringToTaunt(hTaunt), 6);
+		switch(PlayerClass(PlayerNumber()))
+		{
+			case CLASS_BANSHEE:
+				GiveActorInventory(pNum, "Vanishing", 15);
 			break;
-			case 2:
-				GiveInventory("lowVanishingPool", 15);
+			case CLASS_BLAZER:
+				GiveActorInventory(pNum, "lowVanishingPool", 15);
 			break;
-			case 3:
-				GiveInventory("medVanishingPool", 15);
+			case CLASS_GUARDIAN:
+				GiveActorInventory(pNum, "medVanishingPool", 15);
 			break;
-			case 4:
-				GiveInventory("lowVanishingPool", 15);
+			case CLASS_ILLUSIONIST:
+				GiveActorInventory(pNum, "lowVanishingPool", 15);
 			break;
-			case 5:
-				GiveInventory("medVanishingPool", 15);
+			case CLASS_ROCKETEER:
+				GiveActorInventory(pNum, "medVanishingPool", 15);
 			break;
-			case 6:
-				GiveInventory("lowVanishingPool", 15);
+			case CLASS_TELEPORTER:
+				GiveActorInventory(pNum, "lowVanishingPool", 15);
 			break;
 		}
 		Delay(100);
     }
     else
     {
-        PlaySound(PlayerNumber(), seekerStringToTaunt(sTaunt), 6);
+        PlaySound(pNum, seekerStringToTaunt(sTaunt), 6);
 		Delay(50);
     }
 }
@@ -54,9 +60,8 @@ function int seekerStringToTaunt(int taunt) {
         return "DukeTaunt";
 	case 3:
         return "ZedekTaunt";
-	case 3:
+	case 4:
         return "VisorTaunt";
-		
     default:
         break;
     }

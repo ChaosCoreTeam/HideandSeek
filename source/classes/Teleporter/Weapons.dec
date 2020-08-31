@@ -1,12 +1,8 @@
 ACTOR TeleporterGun : Weapon
 {
-   Weapon.SelectionOrder 350
-   Inventory.PickupSound "misc/w_pkup"
-   Inventory.PickupMessage "You got the Teleporter!"
    Weapon.AmmoType "TeleporterAmmo"
-   Weapon.AmmoGive 7
+   Weapon.AmmoGive 5
    Weapon.AmmoUse 1
-   Weapon.AmmoUse2 1
    Weapon.AmmoType2 "Vanishing"
    Weapon.Kickback 0
    Weapon.YAdjust 0
@@ -16,7 +12,7 @@ ACTOR TeleporterGun : Weapon
    {
    Spawn:
       TLPP A -1
-      Loop
+      Stop
    Ready:
       TLPG A 1 A_WeaponReady
       Loop
@@ -25,14 +21,14 @@ ACTOR TeleporterGun : Weapon
       Loop
    Select:
       TLPG A 1 A_Raise
-      Goto Select
+      Loop
    Fire:
 	  TLPG A 0 A_JumpIfNoAmmo("NoAmmo")
 	  TLPG A 0 bright A_PlaySound("Teleporter/Weapons/TeleporterFire")
 	  TLPG A 0 A_GunFlash
 	  TLPG AABBC 3 bright
       TLPG A 0 A_PlayWeaponSound("Teleporter/Weapons/TeleporterShot")
-	  TLPG A 0 bright ACS_NamedExecuteAlways("identifyPlayer",0)
+	  TLPG A 0 bright ACS_NamedExecuteAlways("identifyPlayer",0, 0)
 	  TLPG C 3 bright A_FireCustomMissile("TeleporterProjectile",0,0,0,0,0)
       TLPG CCBB 7 bright
 	  TLPG A 0 A_Refire
@@ -43,7 +39,7 @@ ACTOR TeleporterGun : Weapon
 	  TLPG A 0 A_GunFlash
 	  TLPG AABBC 3 bright
       TLPG A 0 A_PlayWeaponSound("Teleporter/Weapons/TeleporterShot")
-	  TLPG A 0 bright ACS_NamedExecuteAlways("identifyPlayer",0)
+	  TLPG A 0 bright ACS_NamedExecuteAlways("identifyPlayer",0, 0)
 	  TLPG C 3 bright A_FireCustomMissile("TeleporterDecoyProjectile",0,0,0,0,0)
       TLPG CCBB 7 bright
 	  TLPG A 0 A_Refire
@@ -75,6 +71,12 @@ ACTOR TeleporterAmmo : Ammo
 	}
 }
 
+ACTOR TeleporterDecoyAmmo : TeleporterAmmo
+{
+	Inventory.MaxAmount 3
+	Ammo.BackpackMaxAmount 3
+}
+
 ACTOR TeleporterProjectile
 {
 	Speed 200
@@ -94,7 +96,7 @@ ACTOR TeleporterProjectile
 	Spawn:
 		APLS A 0
 		APLS A 0 Thing_ChangeTID(0, 1999)
-		APLS A 0 ACS_NamedExecuteAlways("changeProjId", 0)
+		APLS A 0 ACS_NamedExecuteAlways("changeProjId", 0, 0)
 		APLS AB 1 bright
 		goto spawn+3
 	Death:
@@ -104,6 +106,26 @@ ACTOR TeleporterProjectile
 		APBX A 0 ACS_NamedExecuteAlways("spawnDestination", 0)
 		APBX ABCDE 5 bright
 		stop
+	}
+}
+
+ACTOR TeleporterDestination
+{
+	Radius 16
+	Height 56
+	Speed 0
+	+SOLID
+	+NOBLOCKMAP
+	+NOLIFTDROP
+	+NOGRAVITY
+	+TELESTOMP
+	Translation "80:127=192:207", "224:231=192:199", "160:167=192:199"
+	States
+	{
+	Spawn:
+		TFOG A 0 ACS_NamedExecuteAlways("teleportPlayer", 0, 0)
+		TFOG ABCDCB 3 bright
+	Loop
 	}
 }
 
@@ -139,7 +161,74 @@ ACTOR TeleporterDecoyProjectile
 	}
 }
 
-ACTOR TeleporterDestination
+Actor ProxLauncher : Weapon
+{
+  Weapon.AmmoType ProxAmmo
+  Weapon.AmmoGive 5
+  Weapon.AmmoUse 1
+  States
+  {
+  Spawn:
+    PRXP A -1
+    Loop
+  Ready:
+    PRXL A 1 A_WeaponReady
+    Loop
+  Select:
+    PRXL A 1 A_Raise
+    Loop
+  Deselect:
+    PRXL A 1 A_Lower
+    Loop
+  Fire:
+    PRXL A 0 bright A_PlaySound("Weapons/ProxFire")
+    PRXL B 3
+	PRXL B 1 A_SpawnItemEx("ProximityTranslocationModule", 0, 0, 0, 0, 0, 0, 0, SXF_SETMASTER, 0, 3999)
+	TNT1 A 0 A_TakeInventory("ProxAmmo",1)
+	PRXL B 1 ACS_NamedExecuteAlways("launchProx", 0)
+	PRXL CD 5
+    PRXL E 4
+    PRXL A 24
+    Goto Ready
+  AltFire:
+    PRXL A 0 
+    PRXL D 5 ACS_NamedExecuteAlways("changeCamera", 0)
+    PRXL E 5 
+    PRXL A 5
+    Goto Ready
+  }
+}
+
+Actor ProximityTranslocationModule
+{
+	Health 25
+	Scale 0.85
+	Radius 10
+	Height 6
+	DONTHURTSHOOTER
+	+NOBLOOD
+	+MoveWithSector
+	-SlidesOnWalls
+	+SHOOTABLE
+	+NOTAUTOAIMED
+	+NOTELEFRAG
+	+THRUACTORS
+	States
+	{
+	Spawn:
+		PROX ABC 4
+		Loop
+	Death:
+		TNT1 A 0 A_PlaySound("Teleporter/Weapons/ModuleDetonate")
+		TNT1 A 0 ACS_NamedExecuteAlways("proxKilled", 0)
+		MISL B 8
+		MISL C 6
+		MISL D 4
+		Stop
+	}
+}
+
+Actor ProxTeleDestination
 {
 	Radius 16
 	Height 56
@@ -148,13 +237,29 @@ ACTOR TeleporterDestination
 	+NOBLOCKMAP
 	+NOLIFTDROP
 	+NOGRAVITY
-	+TELESTOMP
 	Translation "80:127=192:207", "224:231=192:199", "160:167=192:199"
 	States
 	{
 	Spawn:
-		TFOG A 0 ACS_NamedExecuteAlways("teleportPlayer", 0)
 		TFOG ABCDCB 3 bright
 	Loop
 	}
 }
+
+ACTOR ProxAmmo : Ammo
+{
+	Inventory.PickupMessage "Proximity Ammo!"
+	Inventory.Amount 1
+	Inventory.MaxAmount 5
+	Ammo.BackpackAmount 1
+	Ammo.BackpackMaxAmount 5
+	Inventory.Icon "CELLA0"
+	States
+	{
+	Spawn:
+		CELL A -1
+		stop
+	}
+}
+
+Actor Planted : Inventory { }

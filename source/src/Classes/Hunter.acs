@@ -15,7 +15,7 @@ script "HunterFirstAbility" (int cooldownName) NET
 	ACS_NamedExecute("activateCooldown", 0, "HunterFirstCooldown", cooldownName);
 }
 
-script "hudDual" (void) clientside
+script "hudDual" (void) NET
 {
 	For (int x = 10; x > 0; x--)
 	{
@@ -39,7 +39,7 @@ script "HunterSecondAbility" (int cooldownName) NET
 	ACS_NamedExecute("activateSecondaryCooldown", 0, cooldownName);
 }
 
-script "hudFreeze" (void) Clientside
+script "hudFreeze" (void) NET
 {
 	For (int x = 5; x > 0; x--)
 	{

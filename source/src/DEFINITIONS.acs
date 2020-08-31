@@ -1,3 +1,4 @@
+#library "DEFINITIONS.acs"
 #include "zcommon.acs"
 
 #define MAXPLAYERS 64
@@ -25,6 +26,9 @@
 #define PLAYER_BASE_TID 1000
 #define SEEKER_CLASS_START 6
 #define SEEKER_CLASS_END 12
+
+#define DECOY_TID_INDEX 3400
+#define TRANSLOCATIONMODULE_TID_INDEX 3600
 
 #define teamPlayer_id 0
 #define teamPlayer_distance 1

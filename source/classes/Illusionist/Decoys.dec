@@ -1,0 +1,132 @@
+Actor Decoy
+{
+	Radius 16
+	Height 56
+	Mass 200
+	+MoveWithSector
+	-SlidesOnWalls
+	+THRUACTORS
+	+FLOORHUGGER
+	Translation "112:127=[66,66,66]:[00,00,00]"
+	States
+	{
+		Death:
+		TNT1 A 1 A_SpawnItemEx("DecoyDeath", 0, 0, 32, 0, 0, 0, 0, 0)
+		Stop
+	}
+}
+
+Actor DecoyDeath
+{
+	Radius 16
+	Height 56
+	Mass 200
+	RenderStyle Translucent
+	Scale 1.5
+	+NOGRAVITY
+	States
+	{
+	Spawn:
+	NULL A 0
+	Goto Death
+	Death:
+	FHFX STUVW 4 A_SetTranslucent(0.5)
+	Stop
+	}
+}
+
+Actor BansheeDecoy : Decoy
+{
+	States
+	{
+	Spawn:
+		CRSH A 2
+		Loop
+	Vanish:
+		CRSH A 2 A_SetTranslucent(0.15, 1)
+		Loop
+	VanishOff:
+		CRSH A 1 A_SetTranslucent(1, 0)
+		Goto Spawn
+	}
+}
+
+Actor BlazerDecoy : Decoy
+{
+	States
+	{
+	Spawn:
+		BRSP A 2
+		Loop
+	Vanish:
+		BRSP A 2 A_SetTranslucent(0.15, 1)
+		Loop
+	VanishOff:
+		BRSP A 1 A_SetTranslucent(1, 0)
+		Goto Spawn
+	}
+}
+
+Actor GuardianDecoy : Decoy
+{
+	States
+	{
+	Spawn:
+		AGRD A 2
+		Loop
+	Vanish:
+		AGRD A 2 A_SetTranslucent(0.15, 1)
+		Loop
+	VanishOff:
+		AGRD A 1 A_SetTranslucent(1, 0)
+		Goto Spawn
+	}
+}
+
+Actor IllusionistDecoy : Decoy
+{
+	States
+	{
+	Spawn:
+		VSHP A 2
+		Loop
+	Vanish:
+		VSHP A 2 A_SetTranslucent(0.15, 1)
+		Loop
+	VanishOff:
+		VSHP A 1 A_SetTranslucent(1, 0)
+		Goto Spawn
+	}
+}
+
+Actor RocketeerDecoy : Decoy
+{
+	States
+	{
+	Spawn:
+		RKTP A 2
+		Loop
+	Vanish:
+		RKTP A 2 A_SetTranslucent(0.15, 1)
+		Loop
+	VanishOff:
+		RKTP A 1 A_SetTranslucent(1, 0)
+		Goto Spawn
+	}
+}
+
+Actor TeleporterDecoy : Decoy
+{
+	States
+	{
+	Spawn:
+		TELP A 2
+		Loop
+	Vanish:
+		TELP A 2 A_SetTranslucent(0.15, 1)
+		Loop
+	VanishOff:
+		TELP A 1 A_SetTranslucent(1, 0)
+		Goto Spawn
+	}
+}
