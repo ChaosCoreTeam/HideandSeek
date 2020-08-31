@@ -1,6 +1,7 @@
 ACTOR PowerShrink : PowerMorph
 {
 	Powerup.Duration -30
+	PowerMorph.MorphStyle ( MRF_FULLHEALTH )
 	PowerMorph.MorphFlash "SpawnShrinkFlash"
     PowerMorph.UnMorphFlash "SpawnUnShrinkFlash"
 }
@@ -10,6 +11,8 @@ ACTOR ShrinkMorph : PowerShrink
 	PowerMorph.PlayerClass "ShrunkIllusionist"
 }
 
+
+
 ACTOR ShrunkIllusionist : IllusionistClass
 {
 	Radius 4
@@ -18,8 +21,6 @@ ACTOR ShrunkIllusionist : IllusionistClass
     PainSound "MiniPain"
     Player.ViewHeight 10
     Player.SoundClass "mini"
-
-    -PICKUP
 }
 
 

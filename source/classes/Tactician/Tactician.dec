@@ -31,8 +31,7 @@ ACTOR TacticianClass : PlayerPawn
   XXLF A 0 A_JumpIf (health>=50, 2)
   XXLF A 0 ACS_NamedExecute("regenHealth", 0)
   XXLF A 0 A_JumpIfInventory("Clip", 0, "Spawn")
-  XXLF A 0 ACS_Execute(112,0)
-  XXLF A 0 ACS_NamedExecute("rechargeWeapon",0,1)
+  XXLF A 0 ACS_NamedExecute("rechargeWeapon",11)
     Loop
   See:
   TNT1 A 0 A_AlertMonsters

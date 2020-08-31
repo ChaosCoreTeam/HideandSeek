@@ -168,6 +168,7 @@ MiniOof		DSMOOF
 Illusionist/Abilities/Shrink		DSSHRINK
 Illusionist/Abilities/UnShrink		DSLARGE
 Illusionist/Abilities/Disguise DISGUISE
+Illusionist/Weapons/SpawnDecoy DECOY
 
 $playersound	mini	male	*death		dsmdeth
 $playersound	mini	male	*xdeath		dsmdiehi
@@ -225,6 +226,9 @@ Teleporter/Weapons/TeleporterHit	DSPORTH
 Teleporter/Weapons/TeleporterNo	    DSTPNOAM
 Teleporter/Abilities/Mine		MINE001
 Teleporter/Abilities/Mine2      MINE002
+Teleporter/Weapons/SecurityCamera SECCAM
+Teleporter/Weapons/ModuleLand PROXBOUN
+Teleporter/Weapons/ModuleDetonate PROXBEEP
 
 //=======================================================================
 

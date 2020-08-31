@@ -20,7 +20,7 @@ script "BlazerFirstAbility" (int cooldownTime) NET
 	TakeInventory("Dashes", 1);
 }
 
-script "dashCoolProcess" (void) CLIENTSIDE
+script "dashCoolProcess" (void) NET
 {
 	While (CheckInventory("Dashes") < 3)
 	{
@@ -59,7 +59,7 @@ script "BlazerSecondAbility" (int cooldownTime) NET
 	Thing_Remove(recallTid);
 }
 
-script "hudRecall" (int recallTid, int cooldownTime) Clientside
+script "hudRecall" (int recallTid, int cooldownTime) NET
 {
 	HudMessage(s:"Recall Initiated"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
 	While (ThingCount(T_NONE, recallTid) > 0)

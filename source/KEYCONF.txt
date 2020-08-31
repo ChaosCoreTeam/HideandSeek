@@ -16,9 +16,12 @@ addplayerclass TacticianClass
 
 //What are you doing here go away!!!!!!!
 weaponsection HideAndSeek
-setslot 1 VanisherFist BerserkerFists ScoutKnife TerminatorGrenade HunterChaingun NoDamageRocketLauncher TeleportGun Tactician_Machinegun
-setslot 2 ScoutPistol TerminatorPlasmaRifle HunterShotgun Tactician_Pipebomb
-setslot 3 TerminatorDevastators
+setslot 1 Blazerfist BerserkerFists ScoutKnife TeleporterGun TerminatorGrenade HunterChaingun NoDamageRocketLauncher Tactician_Machinegun IllusionistBansheeDecoy
+setslot 2 ScoutPistol TerminatorPlasmaRifle HunterShotgun Tactician_Pipebomb ProxLauncher IllusionistBlazerDecoy
+setslot 3 TerminatorDevastators IllusionistGuardianDecoy
+setslot 4 IllusionistIllusionistDecoy
+setslot 5 IllusionistRocketeerDecoy
+setslot 6 IllusionistTeleporterDecoy
 
 
 
@@ -32,10 +35,6 @@ addmenukey "Toggle Radar" ToggleRadarHNSOff
 alias ToggleRadarHNSOn "HNS_ShowRadar 1; echo Radar On!; rebind ToggleRadarHNSOff"
 alias ToggleRadarHNSOff "HNS_ShowRadar 2; echo Radar Off!; rebind ToggleRadarHNSOn"
 defaultbind Q ToggleRadarHNSOff
-addmenukey "Toggle Berserker Scream" ToggleOldScream
-alias ToggleNewScream "HNS_Scream 1; echo Get Angry!!!!; rebind ToggleOldScream"
-alias ToggleOldScream "HNS_Scream 2; echo Get Serious!!!!; rebind ToggleNewScream"
-defaultbind E ToggleOldScream
 
 
 // ====================================

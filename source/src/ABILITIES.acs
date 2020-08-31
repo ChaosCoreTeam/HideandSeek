@@ -51,7 +51,7 @@ function bool onCoolDown(int abilityIndex, int cooldownTime)
 	return CheckInventory(StrParam(s:abilityData[PlayerClass(PlayerNumber())+abilityIndex][POWERUP_COOLDOWN])) < cooldownTime;
 }
 
-script "cooldownActive" (void) CLIENTSIDE
+script "cooldownActive" (void) NET
 {
 	HudMessage(s:"Cooldown still active!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
 	PlaySound (0, "CooldownActive", 3); 
@@ -60,12 +60,12 @@ script "cooldownActive" (void) CLIENTSIDE
 function bool isActive (int abilityIndex, int classNum)
 {
 	str abilityNum = "Second";
-	if (abilityIndex == 0)
+	if (abilityIndex < SECOND_ABILITY_INDEX)
 		abilityNum = "First";
 	return CheckInventory(StrParam(s:classNames[0]+classNum,s:abilityNum,s:"Active")) > 0;
 }
 
-script "abilityActive" (void) CLIENTSIDE
+script "abilityActive" (void) NET
 {
 	HudMessage(s:"Ability is currently active!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
 	PlaySound (0, "CooldownActive", 3); 
@@ -96,10 +96,9 @@ script "activateSecondaryCooldown"(int cooldownName, int cooldownTime) NET
 	ACS_NamedExecuteAlways("abilityRestoreMessage", 0, SECOND_ABILITY_INDEX);
 }
 
-script "abilityRestoreMessage"(int abilityIndex) CLIENTSIDE
+script "abilityRestoreMessage"(int abilityIndex) NET
 {
 	str abilityName = StrParam(s:abilityData[PlayerClass(PlayerNumber())+abilityIndex][POWERUP_NAME]);
-	print(d:abilityIndex);
 	if (abilityIndex == FIRST_ABILITY_INDEX)
 		HudMessage(s:abilityName, s:" can now be reused"; HUDMSG_FADEOUT, 1001, -1,  0.03, 0.55, 3.5, 3.0);
 	else
@@ -141,7 +140,6 @@ script "HNS_PrimaryAbility" (int hTaunt, int sTaunt) NET
 	case CLASS_ILLUSIONIST:
 		if (isActive(SECOND_ABILITY_INDEX, classNum))
 		{
-			
 			ACS_NamedExecuteAlways("abilityActive", 0);
 			terminate;
 		}
@@ -175,16 +173,20 @@ script "HNS_PrimaryAbility" (int hTaunt, int sTaunt) NET
 			ACS_NamedExecuteAlways("abilityActive", 0);
 			terminate;
 		}
-		
 		ACS_NamedExecuteAlways("BerserkerFirstAbility", 0, cooldownTime);
 		break;
 	
 	case CLASS_TERMINATOR:
+		if (isActive(FIRST_ABILITY_INDEX, classNum))
+		{
+			ACS_NamedExecuteAlways("abilityActive", 0);
+			terminate;
+		}
 		ACS_NamedExecuteAlways("TerminatorFirstAbility", 0, cooldownTime);
         break;
 	
 	case CLASS_POLYMORPHIST:
-		if (isActive(FIRST_ABILITY_INDEX, classNum))
+		if (isActive(SECOND_ABILITY_INDEX, classNum))
 		{
 			ACS_NamedExecuteAlways("abilityActive", 0);
 			terminate;
@@ -200,7 +202,7 @@ script "HNS_PrimaryAbility" (int hTaunt, int sTaunt) NET
         PrintBold(s: "Class not defined");
         break;
     }
-	Delay(70);
+	Delay(35);
 } 
 script "HNS_SecondAbility" (int hTaunt, int sTaunt) NET 
 {
@@ -303,7 +305,7 @@ script "HNS_SecondAbility" (int hTaunt, int sTaunt) NET
 		ACS_NamedExecuteAlways("TacticianSecondAbility", 0, cooldownTime);
 		break;
 	}
-	Delay(70);
+	Delay(10);
 }
 
 //script "Client_Powerup_HudMessage" ENTER CLIENTSIDE {

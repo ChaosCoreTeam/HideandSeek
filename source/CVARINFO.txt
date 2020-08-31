@@ -1,8 +1,6 @@
 // [Cata] No more console command to set up flags. Use cvarinfo instead, it is easier.
 server	int		hns_timelimitseconds =	240; //timer for hide and seek. Default 240 seconds (4 mins)
-
 user	int		hns_showradar = 1;	//scout radar, on by default.
-user	int		hns_scream = 1;		//I think this toggles the old/new berserker scream. Not sure.
 user int  cl_hidertaunt    =   1;	 // 1 = MG, 2 = SG, 3 = NG
 user int  cl_seekertaunt    =   1;	 // 1 = MG, 2 = SG, 3 = NG
 user int cl_description = 1; // 1 = image, 2 = acs

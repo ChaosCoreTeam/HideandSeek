@@ -1,34 +1,27 @@
 #library "Polymorphist"
 #include "DEFINITIONS.acs"
 
+int armor;
+int health;
+
 script "PolymorphistFirstAbility" (int cooldownTime) NET
 { 
-	if (CheckInventory("PolymorphistFirstActive"))
-	{
-		TakeInventory("PolymorphistFirstActive", 1);
-		ACS_NamedExecute("endSoulMorph", 0, cooldownTime);
-		terminate;
-	}
+	//if (CheckInventory("PolymorphistFirstActive"))
+	//{
+		//TakeInventory("PolymorphistFirstActive", 1);
+		//ACS_NamedExecute("endSoulMorph", 0, cooldownTime);
+		//print(d:armor, s:" ...and... ", d:health);
+		//terminate;
+	//}
+	//armor = CheckInventory("BasicArmor");
+	//print(d:armor, s:" ...and... ", d:GetActorProperty(PlayerNumber(), "APROP_Health"));
 	GiveInventory("PowerSoulMorph", 1);
 	GiveInventory("PolymorphistFirstActive", 1);
 	PlaySound(0, "Polymorphist/Abilities/Morph", 6);
-	While (CheckInventory("PolymorphistFirstActive"))
-	{
-		ACS_NamedExecute("hudSoulMorph", 0);
-	}
-	ACS_NamedExecute("endSoulMorph", 0, cooldownTime);
+	ACS_NamedExecute("hudSoulMorph", 0, cooldownTime);
 }
 
-script "endSoulMorph" (int cooldownTime) NET
-{
-	TakeInventory("PowerSoulMorph", 1);
-	TakeInventory("SoulFlyer", 1);
-	PlaySound(0, "Polymorphist/Abilities/Morph", 6);
-	ACS_NamedExecute("unmorphHud", 0);
-	ACS_NamedExecute("activateCooldown", 0, "PolymorphistFirstCooldown", cooldownTime);
-}
-
-script "hudSoulMorph" (void) CLIENTSIDE
+script "hudSoulMorph" (int cooldownTime) NET
 {
 	For (int x = 15; x > 0; x--)
 	{	
@@ -37,7 +30,19 @@ script "hudSoulMorph" (void) CLIENTSIDE
 		HudMessage(s:"Lost Soul Transformation lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
 		Delay(35);
 	}
+	Delay(10);
 	TakeInventory("PolymorphistFirstActive", 1);
+	ACS_NamedExecute("endSoulMorph", 0, cooldownTime);
+}
+
+script "endSoulMorph" (int cooldownTime) NET
+{
+	TakeInventory("PowerSoulMorph", 1);
+	PlaySound(0, "Polymorphist/Abilities/Morph", 6);
+	//GiveInventory("ArmorBonus", armor);
+	//GiveInventory("HealthBonus", health);
+	ACS_NamedExecute("unmorphHud", 0);
+	ACS_NamedExecute("activateCooldown", 0, "PolymorphistFirstCooldown", cooldownTime);
 }
 
 script "PolymorphistSecondAbility" (int cooldownTime) NET

@@ -11,7 +11,7 @@ script "GuardianSecondAbility" (int cooldownTime) NET
 	ACS_NamedExecuteAlways("activateCooldown", 0, "GuardianSecondCooldown", cooldownTime);
 }
 
-script "hudArmor" (int success) Clientside
+script "hudArmor" (int success) NET
 {
 	if (success == 0)
 	{

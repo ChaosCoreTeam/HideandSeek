@@ -1,10 +1,10 @@
 #library "Global"
 #include "DEFINITIONS.acs"
+#import "STATES.acs"
 
 int pteam[MAXPLAYERS];
 int radarteam[MAXPLAYERS];
 int NumPlayers = 0;
-int WoahWhat;
 int buttons;
 int nobuttons;
 int FadeInValue = 0;
@@ -13,7 +13,7 @@ int FadeOutValue = 0;
 /*
 		 			TID ASSIGNMENTS
 
-		 10001031 - Players
+		 10001063 - Players
 		 1050-1081 - Spectating/Disconnected Players
 		 2050-2081 - T eleporter Projectiles
 		 3000-3031 - Teleporter Portals
@@ -59,26 +59,30 @@ Script "hudTimer" open //Timer
 	{
 		SetFont("BIGFONT");
 		HudMessageBold(s:"Round Ends In: \cm0:00"; HUDMSG_PLAIN, 2, CR_WHITE, 0.03, 0.85, 5);
-		if(pteam[i]==1) thing_damage(1000+i,999,0);
+		if(pteam[i]==1) thing_damage(PLAYER_BASE_TID+i,999,0);
 	}
 }
 
 script "playerEnter" enter //Sets TIDs, HUD Scaling for our custom HUD, and executes the scripts!!
 {
-	thing_changetid(0,playernumber()+1000);
+	thing_changetid(0,playernumber()+PLAYER_BASE_TID);
 	pteam[playernumber()]=playerteam();
 	Acs_ExecuteAlways(117, 0, 0, 0, 0); //Scouter Radar
 	delay(1);
-	Acs_ExecuteAlways(118, 0, 0, 0, 0); //Scouter Jetpack & Vanisher Visibility Fades
+	Acs_ExecuteAlways(118, 0, 0, 0, 0); //Scouter Jetpack & Vanisher Visibility Fades\
+	delay(1);
+	ACS_NamedExecuteAlways("vanishingSetup",0);
 }
 
 script "playerRespawn" respawn //Sets TIDs, HUD Scaling for our custom HUD, and executes the scripts!!
 {
-	thing_changetid(0,playernumber()+1000);
+	thing_changetid(0,playernumber()+PLAYER_BASE_TID);
 	pteam[playernumber()]=playerteam();
 	Acs_ExecuteAlways(117, 0, 0, 0, 0); //Scouter Radar
 	delay(1);
 	Acs_ExecuteAlways(118, 0, 0, 0, 0); //Scouter Jetpack & Vanisher Visibility Fades
+	delay(1);
+	ACS_NamedExecuteAlways("vanishingSetup",0);
 }
 
 Script "playerDisconnect" (int gone) disconnect
@@ -90,20 +94,20 @@ Script "playerDisconnect" (int gone) disconnect
 Script "playerDeath" death
 //Should change the TID of anyone who freakin' died.
 {
-	Thing_ChangeTID(1000+PlayerNumber(), 1050+PlayerNumber());
+	Thing_ChangeTID(PLAYER_BASE_TID+PlayerNumber(), 1050+PlayerNumber());
 }
 
-script 103 (int active, int inactive, int misc) net //State control, misc is wildcard checker
+script "stateChange" (int active, int inactive, int misc) NET //State control, misc is wildcard checker
 {
 	if(active == 1)
 	{
 			if (misc == 5) // Jetpack GO!
 			{
-				SetActorState(1000 + PlayerNumber(), "Jetpack", true);
+				SetActorState(PLAYER_BASE_TID + PlayerNumber(), "Jetpack", true);
 			}
 			if (misc == 15) //Jetpack state switch after firing
 			{
-				SetActorState(1000 + PlayerNumber(), "JetpackHasFired", true);
+				SetActorState(PLAYER_BASE_TID + PlayerNumber(), "JetpackHasFired", true);
 			}
 			if (misc == 20)
 			{
@@ -112,19 +116,19 @@ script 103 (int active, int inactive, int misc) net //State control, misc is wil
 			}
 			if (misc == 6) //Scream
 			{
-				SetActorState(1000 + PlayerNumber(), "Scream", true);
+				SetActorState(PLAYER_BASE_TID + PlayerNumber(), "Scream", true);
 			}
 			if (misc == 7) //Old Scream
 			{
-				SetActorState(1000 + PlayerNumber(), "OldScream", true);
+				SetActorState(PLAYER_BASE_TID + PlayerNumber(), "OldScream", true);
 			}
 			if (misc == 9) //Fade In
 			{
-				SetActorState(1000 + PlayerNumber(), "FadeIn", true);
+				SetActorState(PLAYER_BASE_TID + PlayerNumber(), "FadeIn", true);
 			}
 			if (misc == 10) //Visible
 			{
-				SetActorState(1000 + PlayerNumber(), "Visible", true);
+				SetActorState(PLAYER_BASE_TID + PlayerNumber(), "Visible", true);
 			}
 
 	}
@@ -132,91 +136,25 @@ script 103 (int active, int inactive, int misc) net //State control, misc is wil
 	{
 			if (misc == 3) //Jetpack disengaging
 			{
-				SetActorState(1000 + PlayerNumber(), "NoJetpack", true);
+				SetActorState(PLAYER_BASE_TID + PlayerNumber(), "NoJetpack", true);
 			}
 			if (misc == 4) //Silence
 			{
-				SetActorState(1000 + PlayerNumber(), "Silent", true);
+				SetActorState(PLAYER_BASE_TID + PlayerNumber(), "Silent", true);
 			}
 			if (misc == 8) //Fade out
 			{
-				SetActorState(1000 + PlayerNumber(), "FadeOut", true);
+				SetActorState(PLAYER_BASE_TID + PlayerNumber(), "FadeOut", true);
 			}
 	}
 }
 
 /* ************************************************** */
-/*  END UNIVERSAL SCRIPTS ; START TELEPORTER SCRIPTS  */
+/*  END UNIVERSAL SCRIPTS ; */
 /* ************************************************** */
 
-
-Script 105 (void)
-//Returns a trackable number across multiple scripts so we know which player triggered it
-{
-	WoahWhat=playernumber();
-}
-
-Script 106 (void)
-//Changes the projectile to be tied to the player via TID stuff then resets the variable for the next player
-{
-	thing_changetid(1999,WoahWhat+2000);
-	WoahWhat=0;
-}
-
-Script 107 (void)
-//Executed by a projectile impact to spawn a teleporter at it's current location
-{
-	int ProjectileTID;
-	int ProjectileOwner;
-	int NewTeleporterTID;
-	int SpawnZCoord;
-
-	ProjectileTID = ActivatorTID();
-	ProjectileOwner = (ProjectileTID - 1000);
-	if(ProjectileTID < 2000)
-	{
-		Terminate;
-	}
-
-	NewTeleporterTID = (1000 + (ProjectileTID));
-
-	if((GetActorCeilingZ(ProjectileTID) - GetActorFloorZ(ProjectileTID)) < 56.0)
-	{
-		Terminate; //Not enough room to teleport.
-	}
-
-	SpawnZCoord = (GetActorZ(ProjectileTID)+8) - 28.0;
-
-	if(((GetActorZ(ProjectileTID)+8) - GetActorFloorZ(ProjectileTID)) < 28.0)
-	{
-		SpawnZCoord = GetActorFloorZ(ProjectileTID);
-	}
-
-	if((GetActorCeilingZ(ProjectileTID) - (GetActorZ(ProjectileTID)+8)) < 28.0)
-	{
-		SpawnZCoord = GetActorCeilingZ(ProjectileTID) - 56.0;
-	}
-
-	Spawn("TeleporterDestination", GetActorX(ProjectileTID), GetActorY(ProjectileTID), SpawnZCoord, NewTeleporterTID, 0);
-}
-
-Script 108 (void)
-//Executed by a teleporter to bring the player there
-{
-	int FinalTeleporterTID;
-	int PlayerTID;
-	
-	FinalTeleporterTID = ActivatorTID();
-	PlayerTID = (FinalTeleporterTID - 2000);
-
-	SetActorPosition(PlayerTID, GetActorX(FinalTeleporterTID), GetActorY(FinalTeleporterTID), GetActorZ(FinalTeleporterTID), 0);
-	TakeActorInventory(PlayerTID, "TeleporterAmmo", 1);
-	Thing_Remove(FinalTeleporterTID);
-}
-
-
 /* ************************************************** */
-/* END TELEPORTER SCRIPTS ; START CLASS SPECIFIC SHIT */
+/* START CLASS SPECIFIC SHIT */
 /* ************************************************** */
 
 
@@ -259,20 +197,10 @@ Script 109 respawn CLIENTSIDE
 	}
 }
 
-Script 110 (void)
-//Health Regen Script
-{
-	LocalAmbientSound("misc/i_pkup",127);
-	GiveInventory("HSRegen",2);
-	fadeto(0, 0, 255, 0.03, 0.0);
-	Delay(5);
-	fadeto(0, 0, 255, 0.0, 0.0);
-}
-
 Script 111 death
 //Should change the TID of anyone who freakin' died.
 {
-	Thing_ChangeTID(1000+PlayerNumber(), 1050+PlayerNumber());
+	Thing_ChangeTID(PLAYER_BASE_TID+PlayerNumber(), 10000+PlayerNumber());
 }
 
 /* ************************************************** */
@@ -344,7 +272,7 @@ function int getaspectratio(void)
 	return ASPECT_4_3;
 }
 
-Script 117 (void) clientside
+Script 117 (void) CLIENTSIDE
 //Radar for Scouter. Detection radius range is 1024 units by default, fine tuned to 1/2: 512 units
 {
 	if(consoleplayernumber() != playernumber()) terminate;
@@ -354,7 +282,7 @@ Script 117 (void) clientside
 	{
 		int P,PT,PN,PX,PY,PD,PA;
 		SetHudSize(640,400,1);
-		while (GetActorProperty(1000 + PlayerNumber(),APROP_Health) > 0 && GetCVar("hns_togglevanish")==1)
+		while (GetActorProperty(1000 + PlayerNumber(),APROP_Health) > 0)
 		{
 			P=1000; PT=0; PN=PlayerNumber();
 			while (P<1000+MAXPLAYERS)
@@ -375,10 +303,8 @@ Script 117 (void) clientside
 							SetFont("RADAB0");
 							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (569.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
 						}else if(radarteam[PT]==0 && PN != PT){
-							if(GetActorVelX(P) != 0 || GetActorVelY(P) != 0 || PlayerClass(PT) == 1){
 								SetFont("RADAC0");
 								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (569.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
-							}
 						}else if(radarteam[PT]!=0){
 							SetFont("RADBA0");
 							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (569.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
@@ -394,10 +320,8 @@ Script 117 (void) clientside
 							SetFont("RADAB0");
 							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (570.0 - (PX * 1.0)), (58.0 - (PY * 1.0)), 1.0, 1.0);
 						}else if(radarteam[PT]==0 && PN != PT){
-							if(GetActorVelX(P) != 0 || GetActorVelY(P) != 0 || PlayerClass(PT) == 1){
 								SetFont("RADAC0");
 								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (570.0 - (PX * 1.0)), (58.0 - (PY * 1.0)), 1.0, 1.0);
-							}
 						}else if(radarteam[PT]!=0){
 							SetFont("RADBA0");
 							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (570.0 - (PX * 1.0)), (58.0 - (PY * 1.0)), 1.0, 1.0);
@@ -413,10 +337,8 @@ Script 117 (void) clientside
 							SetFont("RADAB0");
 							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (676.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
 						}else if(radarteam[PT]==0 && PN != PT){
-							if(GetActorVelX(P) != 0 || GetActorVelY(P) != 0 || PlayerClass(PT) == 1){
 								SetFont("RADAC0");
 								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (676.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
-							}
 						}else if(radarteam[PT]!=0){
 							SetFont("RADBA0");
 							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (676.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
@@ -432,10 +354,7 @@ Script 117 (void) clientside
 							SetFont("RADAB0");
 							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (633.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
 						}else if(radarteam[PT]==0 && PN != PT){
-							if(GetActorVelX(P) != 0 || GetActorVelY(P) != 0 || PlayerClass(PT) == 1){
 								SetFont("RADAC0");
-								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (633.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
-							}
 						}else if(radarteam[PT]!=0){
 							SetFont("RADBA0");
 							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (633.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
@@ -451,16 +370,14 @@ Script 117 (void) clientside
 	}
 }
 
-Script 118 (void) clientside
+Script 118 (void) CLIENTSIDE
 //Jumpin Jetpacks Lots of notes cause this shit confuses The Xen.
 {
-	if(consoleplayernumber() != playernumber()) terminate;
-
 	int HnSVariable;
 	int HnSVariabl3;
 	if(PlayerClass(PlayerNumber())==7) //Scouter check
 	{
-		while (GetActorProperty(1000 + PlayerNumber(),APROP_Health) > 0)
+		while (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(),APROP_Health) > 0)
 		{
 			buttons = GetPlayerInput(-1, INPUT_BUTTONS);
 			nobuttons = GetPlayerInput(-1, INPUT_OLDBUTTONS);
@@ -470,12 +387,12 @@ Script 118 (void) clientside
 				{
 					if (nobuttons & BT_ATTACK && HnSVariable == 1)
 					{
-						RequestScriptpuke(103, 1, 0, 20);
+						ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 20);
 						//This is what happens when you hold down the fire button. Basically for fuel bullshit.
 					}
 					if (buttons & BT_ATTACK && HnSVariable == 1)
 					{
-						RequestScriptpuke(103, 1, 0, 15);
+						ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 15);
 						//If our great jetpack champion fires and changes his state, he is promptly reverted back so the jetpack flames and smoke don't vanish!
 					}
 				}
@@ -484,7 +401,7 @@ Script 118 (void) clientside
 					if ((GetActorZ(0) - GetActorFloorZ(0)) > 24.0 && (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0))
 					{
 						HnSVariable = 1;
-						RequestScriptpuke(103, 1, 0, 5);
+						ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 5);
 						//If the player presses Jump while at a reasonable height and isn't DEAD, their jetpack kicks in!
 					}
 				}
@@ -494,7 +411,7 @@ Script 118 (void) clientside
 				if (nobuttons & BT_JUMP && HnSVariable == 1)
 				{
 					HnSVariable = 0;
-						RequestScriptpuke(103, 0, 1, 3);
+						ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 3);
 					//Release the Jump button and down to Earth you go!
 				}
 				else
@@ -505,72 +422,14 @@ Script 118 (void) clientside
 		delay(1);
 		}
 	}
-	if(PlayerClass(PlayerNumber()) < 7) //Hider check
+	if(PlayerClass(PlayerNumber()) < SEEKER_CLASS_START) //Hider check
 	{
-		while (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0)
+		while (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(), APROP_Health) > 0)
 		{
-			while (isVanished(1000 + PlayerNumber()) == true)
-			{
-				if (CheckActorInventory(1000 + PlayerNumber(), "Vanishing") > 0)
-				{
-					TakeActorInventory(1000 + PlayerNumber(), "Vanishing", 1);
-				}
-				
-				if (CheckActorInventory(1000 + PlayerNumber(), "lowVanishingPool") > 0)
-				{
-					TakeActorInventory(1000 +  PlayerNumber(), "lowVanishingPool", 1);
-				}
-				
-				if (CheckActorInventory(1000 + PlayerNumber(), "medVanishingPool") > 0)
-				{
-					TakeActorInventory(PlayerNumber() + 1000, "medVanishingPool", 1);
-				}
-				
-				switch (PlayerClass(PlayerNumber() + 1000))
-				{
-					case 1:
-						if (CheckActorInventory(1000 + PlayerNumber(), "Vanishing") == 0)
-						{
-							ACS_NamedExecuteAlways("HNS_NoVanish", 0);
-						}
-					break;
-					case 2:
-						if (CheckActorInventory(1000 + PlayerNumber(), "lowVanishingPool") == 0)
-						{
-							ACS_NamedExecuteAlways("HNS_NoVanish", 0);
-						}
-					break;
-					case 3:
-						if (CheckActorInventory(1000 + PlayerNumber(), "medVanishingPool") == 0)
-						{
-							ACS_NamedExecuteAlways("HNS_NoVanish", 0);
-						}
-					break;
-					case 4:
-						if (CheckActorInventory(1000 + PlayerNumber(), "lowVanishingPool") == 0)
-						{
-							ACS_NamedExecuteAlways("HNS_NoVanish", 0);
-						}
-					break;
-					case 5:
-						if (CheckActorInventory(1000 + PlayerNumber(), "medVanishingPool") == 0)
-						{
-							ACS_NamedExecuteAlways("HNS_NoVanish", 0);
-						}
-					break;
-					case 6:
-						if (CheckActorInventory(1000 + PlayerNumber(), "lowVanishingPool") == 0)
-						{
-							ACS_NamedExecuteAlways("HNS_NoVanish", 0);
-						}
-					break;
-				}
-				delay(15);
-			}
 			buttons = GetPlayerInput(-1, INPUT_BUTTONS);
 			nobuttons = GetPlayerInput(-1, INPUT_OLDBUTTONS);
 				//For people with running on
-				if (GetCVar("CL_Run")==1 && isVanished(1000 + PlayerNumber()) == true)
+				if (GetCVar("CL_Run")==1 && isVanished(PLAYER_BASE_TID + PlayerNumber()) == true)
 				{
 					if (HnSVariabl3 == 0) { HnSVariabl3 = 2; }
 					if (buttons & BT_SPEED)
@@ -581,16 +440,16 @@ Script 118 (void) clientside
 								if (HnSVariabl3 == 1)
 								{
 									HnSVariabl3 = 2;
-									RequestScriptpuke(103, 0, 1, 8);
+									ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
 									//Unless you transition from walking while holding down shift, thena you go invisible.
 								}
 							}
 							else
 							{
-								if (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0)
+								if (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(), APROP_Health) > 0)
 								{
 									HnSVariable = 1;
-									RequestScriptpuke(103, 0, 1, 8);
+									ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
 									//Become invisible when walking.
 								}
 							}
@@ -603,24 +462,24 @@ Script 118 (void) clientside
 							if (HnSVariable == 1)
 							{
 								HnSVariable = 0;
-								RequestScriptpuke(103, 1, 0, 9);
+								ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 9);
 								//Become visible if going from walking to running!
 							}
 							if (HnSVariabl3 == 1)
 							{
 								HnSVariable = 0;
 								HnSVariabl3 = 2;
-								RequestScriptpuke(103, 1, 0, 9);
+								ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 9);
 								//Toggling CL_Run won't get you very far.
 							}
 						}
 						else
 						{
-							if (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0)
+							if (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(), APROP_Health) > 0)
 							{
 								HnSVariable = 0;
 								HnSVariabl3 = 2;
-								RequestScriptpuke(103, 1, 0, 9);
+								ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 9);
 								//If the player isn't dead and is running around turn visible!
 							}
 						}
@@ -629,7 +488,7 @@ Script 118 (void) clientside
 					{
 						if (nobuttons & (BT_FORWARD | BT_BACK | BT_MOVELEFT | BT_MOVERIGHT | BT_ATTACK))
 						{
-							RequestScriptpuke(103, 0, 1, 8);
+							ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
 							//Release the movement keys and you are the invisible man.
 						}
 						else
@@ -638,7 +497,7 @@ Script 118 (void) clientside
 						}
 					}
 				}
-				if (GetCVar("CL_Run")==0 && isVanished(1000 + PlayerNumber()) == true)
+				if (GetCVar("CL_Run")==0 && isVanished(PLAYER_BASE_TID + PlayerNumber()) == true)
 				//For people with running off (however few there are!)
 				{
 				if (HnSVariabl3 == 0) { HnSVariabl3 = 1; }
@@ -650,16 +509,16 @@ Script 118 (void) clientside
 							if (HnSVariabl3 == 2)
 							{
 								HnSVariabl3 = 1;
-								RequestScriptpuke(103, 1, 0, 9);
+								ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 9);
 								//Unless you transition from running while holding down shift, then you stay visible.
 							}
 						}
 						else
 						{
-							if (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0)
+							if (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(), APROP_Health) > 0)
 							{
 								HnSVariable = 1;
-								RequestScriptpuke(103, 1, 0, 9);
+								ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 9);
 								//Turn visible while running!
 							}
 						}
@@ -672,24 +531,24 @@ Script 118 (void) clientside
 							if (HnSVariable == 1)
 							{
 								HnSVariable = 0;
-								RequestScriptpuke(103, 0, 1, 8);
+								ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
 								//Start walking invisibly if going from running to walking.
 							}
 							if (HnSVariabl3 == 2)
 							{
 								HnSVariable = 0;
 								HnSVariabl3 = 1;
-								RequestScriptpuke(103, 0, 1, 8);
+								ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
 								//Toggling CL_Run won't get you very far.
 							}
 						}
 						else
 						{
-							if (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0)
+							if (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(), APROP_Health) > 0)
 							{
 								HnSVariable = 0;
 								HnSVariabl3 = 1;
-								RequestScriptpuke(103, 0, 1, 8);
+								ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
 								//If the player isn't dead and is walking around then don't turn visible.
 							}
 						}
@@ -698,7 +557,7 @@ Script 118 (void) clientside
 					{
 						if (nobuttons & (BT_FORWARD | BT_BACK | BT_MOVELEFT | BT_MOVERIGHT | BT_ATTACK | BT_SPEED))
 						{
-							RequestScriptpuke(103, 0, 1, 8);
+							ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
 							//Release the movement keys and you are the invisible man.
 						}
 						else
@@ -713,18 +572,69 @@ Script 118 (void) clientside
 	}
 }
 
-Script 119 (void)
+Script "vanishingSetup" (void) CLIENTSIDE 
+{
+	int pNum = PlayerNumber() + PLAYER_BASE_TID;
+	
+	if(PlayerClass(PlayerNumber()) < SEEKER_CLASS_START) //Hider check
+	{
+		while (isVanished(pNum) == true)
+		{
+			switch (PlayerClass(PlayerNumber()))
+			{
+				case CLASS_BANSHEE:
+					if (CheckActorInventory(pNum, "Vanishing") > 0)
+					{
+						TakeActorInventory(pNum, "Vanishing", 1);
+					}
+					break;
+				case CLASS_BLAZER:
+					if (CheckActorInventory(pNum, "lowVanishingPool") > 0)
+					{
+						TakeActorInventory(pNum, "lowVanishingPool", 1);
+					}
+					break;
+				case CLASS_GUARDIAN:
+					if (CheckActorInventory(pNum, "medVanishingPool") > 0)
+					{
+						TakeActorInventory(pNum, "medVanishingPool", 1);
+					}
+				break;
+				case CLASS_ILLUSIONIST:
+					if (CheckActorInventory(pNum, "lowVanishingPool") > 0)
+					{
+						TakeActorInventory(pNum, "lowVanishingPool", 1);
+					}
+				break;
+				case CLASS_ROCKETEER:
+					if (CheckActorInventory(pNum, "medVanishingPool") > 0)
+					{
+						TakeActorInventory(pNum, "medVanishingPool", 1);
+					}
+				break;
+				case CLASS_TELEPORTER:
+					if (CheckActorInventory(pNum, "lowVanishingPool") > 0)
+					{
+						TakeActorInventory(pNum, "lowVanishingPool", 1);
+					}
+				break;
+			}
+			delay(15);
+		}
+	}
+}
+
+Script "jetSpeedOn" (void)
 //Set a reduced speed for the jetpacking player while enabling use of his jetpack.
 {
 	SetActorProperty(0, APROP_Speed, 0.75);
 }
 
-Script 120 (void)
+Script "jetSpeedOff" (void)
 //After he's done jetpacking, give him back his original speed.
 {
 	SetActorProperty(0, APROP_Speed, 1.00);
 }
-
 
 function bool isVanished(int pNumber)
 {	
@@ -734,4 +644,3 @@ function bool isVanished(int pNumber)
 	}
 		return false;
 }
-
