@@ -1,10 +1,13 @@
 #library "STATES"
 #include "DEFINITIONS.acs"
 
-Script "regenHealth" (void)
+Script "regenHealth" (int selector)
 {
 	LocalAmbientSound("misc/i_pkup",127);
-	GiveInventory("HSRegen",2);
+	if (selector == 0)
+		GiveInventory("HSRegen",2);
+	if (selector == 1)
+		GiveInventory("HSRegen2",2);
 	fadeto(0, 0, 255, 0.03, 0.0);
 	Delay(5);
 	fadeto(0, 0, 255, 0.0, 0.0);

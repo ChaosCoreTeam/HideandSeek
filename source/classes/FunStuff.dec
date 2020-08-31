@@ -44,6 +44,19 @@ ACTOR HSRegen : Health
   }
 }
 
+ACTOR HSRegen2 : Health
+{
+  Inventory.Amount 2
+  Inventory.MaxAmount 100
+  States
+  {
+  Spawn:
+    TNT1 A -1
+    Stop
+  }
+}
+
+
 Actor HealthCheck : Inventory
 {
   Inventory.Amount 1

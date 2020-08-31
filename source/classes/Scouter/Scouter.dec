@@ -31,7 +31,7 @@ ACTOR ScouterClass : PlayerPawn
     SCP1 A 0
 	SCP1 A 35
 	SCP1 A 0 A_JumpIf (health>=50, 2)
-	SCP1 A 0 ACS_NamedExecute("regenHealth",0)
+	SCP1 A 0 ACS_NamedExecute("regenHealth",0,0)
 	SCP1 A 0 A_JumpIfInventory("JetFuel", 100, 2)
 	SCP1 A 0 ACS_NamedExecute("rechargeWeapon",0,7)
 	Loop

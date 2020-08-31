@@ -28,7 +28,7 @@ ACTOR HunterClass : PlayerPawn
 	HNP1 A 0
 	HNP1 A 35
 	HNP1 A 0 A_JumpIf (health>=50, 2)
-	HNP1 A 0 ACS_NamedExecute("regenHealth",0)
+	HNP1 A 0 ACS_NamedExecute("regenHealth",0,0)
 	HNP1 A 0 A_JumpIfInventory("Shell", 0, 2)
 	HNP1 A 0 ACS_NamedExecute("rechargeWeapon",0,6)
 	Loop
