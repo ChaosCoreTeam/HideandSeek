@@ -1,5 +1,6 @@
 #library "TAUNT"
-#include "DEFINITIONS.acs"
+#import "DEFINITIONS.acs"
+#include "zcommon.acs"
 
 script "HNS_Taunt" (int hTaunt, int sTaunt) NET CLIENTSIDE
 {

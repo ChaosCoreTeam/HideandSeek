@@ -1,11 +1,12 @@
 #library "Blazer"
-#include "DEFINITIONS.acs"
+#import "DEFINITIONS.acs"
+#include "zcommon.acs"
 
-script "BlazerFirstAbility" (int cooldownTime) NET
+script "BlazerFirstAbility" (void)
 {
 	if (!CheckInventory("Dashes"))
 	{
-		ACS_NamedExecuteAlways("cooldownActive", 0);
+		ACS_NamedExecuteAlways("abilityCallFail", 0, 1, 1);
 		terminate;
 	}
 	
@@ -20,7 +21,7 @@ script "BlazerFirstAbility" (int cooldownTime) NET
 	TakeInventory("Dashes", 1);
 }
 
-script "dashCoolProcess" (void) NET
+script "dashCoolProcess" (void) 
 {
 	While (CheckInventory("Dashes") < 3)
 	{
@@ -35,7 +36,7 @@ script "dashCoolProcess" (void) NET
 	}
 }
 
-script "BlazerSecondAbility" (int cooldownTime) NET
+script "BlazerSecondAbility" (void) 
 {
 	int recallTid = PlayerNumber() + 500;
 	If (ThingCount(T_NONE, recallTid) == 0)
@@ -50,7 +51,7 @@ script "BlazerSecondAbility" (int cooldownTime) NET
 		}
 		GiveInventory("Recall", 1);
 		SpawnProjectile(0, "BlazerRecall", GetActorAngle(0) >> 8, 0, 0, 1, recallTid);
-		ACS_NamedExecute("hudRecall", 0, recallTid, cooldownTime);
+		ACS_NamedExecute("hudRecall", 0, recallTid);
 		terminate;
 	}
 	TakeInventory("Recall", 1);
@@ -59,7 +60,7 @@ script "BlazerSecondAbility" (int cooldownTime) NET
 	Thing_Remove(recallTid);
 }
 
-script "hudRecall" (int recallTid, int cooldownTime) NET
+script "hudRecall" (int recallTid) CLIENTSIDE
 {
 	HudMessage(s:"Recall Initiated"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
 	While (ThingCount(T_NONE, recallTid) > 0)
@@ -71,7 +72,7 @@ script "hudRecall" (int recallTid, int cooldownTime) NET
 			If (!CheckInventory("Recall"))
 			{
 				HudMessage(s:"Recall successful"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-				ACS_NamedExecuteAlways("activateSecondaryCooldown", 0, "BlazerSecondCooldown", cooldownTime);
+				ACS_NamedExecuteAlways("activateCooldown", 0, 2);
 				terminate;
 			}
 		}
@@ -81,7 +82,7 @@ script "hudRecall" (int recallTid, int cooldownTime) NET
 	}
 }
 
-script "recallFail" (int recallTid) NET
+script "recallFail" (int recallTid)
 {
 	TakeInventory("Recall", 1);
 	Thing_Remove(recallTid);

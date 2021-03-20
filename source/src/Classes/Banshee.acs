@@ -1,5 +1,6 @@
 #library "Banshee"
-#include "DEFINITIONS.acs"
+#import "DEFINITIONS.acs"
+#include "zcommon.acs"
 #import "FUNCTION.acs"
 #define BANSHEE_HEAL_RADIUS 96.0
 #define BANSHEE_HEAL_AMOUNT 25
@@ -28,7 +29,7 @@ script "bansheeAltFireHeal" (void)
 	}
 }
 
-script "bansheeFirstAbility" (int cooldownTime) NET
+script "bansheeFirstAbility" (void) CLIENTSIDE
 {
 	if(GetActorProperty(0, APROP_Health) == 100)
 	{
@@ -36,10 +37,10 @@ script "bansheeFirstAbility" (int cooldownTime) NET
 		terminate;
 	}
 	GiveInventory("BansheeFirstActive", 1);
-	ACS_NamedExecute("bansheeHeal", 0, cooldownTime);
+	ACS_NamedExecute("bansheeHeal", 0);
 }
 
-script "bansheeHeal" (int cooldownTime) NET
+script "bansheeHeal" (void)
 {
 	while(CheckInventory("BansheeFirstActive"))
 	{
@@ -68,10 +69,10 @@ script "bansheeHeal" (int cooldownTime) NET
 		}
 		Delay(6);
 	}
-	ACS_NamedExecuteAlways("activateCooldown", 0, cooldownTime);
+	ACS_NamedExecuteAlways("activateCooldown", 0, 1);
 }
 
-script "bansheeSecondAbility" (int cooldownTime) NET
+script "bansheeSecondAbility" (void)
 {
 	If (!CheckInventory("HealingEnergy" < 50))
 	{
@@ -88,11 +89,5 @@ script "bansheeSecondAbility" (int cooldownTime) NET
 	}
 	TakeInventory("LifeSupport", 1);
 	PlaySound(0, "Banshee/Abilities/LifeSupportOff", 6);
-	ACS_NamedExecute("activateSecondaryCooldown", 0, "BansheeSecondCooldown", cooldownTime);
-}
-
-script "lifeHud" (void) NET
-{
-	
-	
+	ACS_NamedExecute("activateCooldown", 0, 2);
 }

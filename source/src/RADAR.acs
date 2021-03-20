@@ -1,40 +1,9 @@
 #library "RADAR"
-#include "DEFINITIONS.acs"
+#import "DEFINITIONS.acs"
+#include "zcommon.acs"
+#import "FUNCTION.acs"
 
 int radarteam[MAXPLAYERS];
-
-
-function int getaspectratio(void)
-{
-	int width = getcvar("vid_defwidth");
-	int height = getcvar("vid_defheight");
-	int nowidescreen = getcvar("vid_nowidescreen");
-	int tft = getcvar("vid_tft");
-	if(nowidescreen)
-	{
-		if(!tft)
-			return ASPECT_4_3;
-		if(fixedmul(height<<16, fixeddiv(5.0, 4.0)) == width<<16)
-			return ASPECT_5_4;
-		else
-			return ASPECT_4_3;
-	}
-	if(abs((abs(fixedmul(height<<16, fixeddiv(16.0, 9.0)))>>16) - width) < 10)
-	{
-		return ASPECT_16_9;
-	}
-	if(abs((abs(fixedmul(height<<16, fixeddiv(16.0, 10.0)))>>16) - width) < 60)
-	{
-		if((width == 320 && height == 200) || (width == 640 && height == 400))
-			return ASPECT_4_3;
-		return ASPECT_16_10;
-	}
-	if(fixedmul(height<<16, fixeddiv(5.0, 4.0))>>16 == width && tft)
-	{
-		return ASPECT_5_4;
-	}
-	return ASPECT_4_3;
-}
 
 Script "radarSetup" (void) clientside
 //Radar for Scouter. Detection radius range is 1024 units by default, fine tuned to 1/2: 512 units
@@ -141,31 +110,4 @@ Script "radarSetup" (void) clientside
 			delay(175);
 		}
 	}
-}
-
-function int FixedDistance (int tid1, int tid2)
-{
-	int len;
-	int y = getactory(tid1) - getactory(tid2);
-	int x = getactorx(tid1) - getactorx(tid2);
-	int ang = vectorangle(x,y);
-	if(((ang+0.125)%0.5) > 0.25) len = fixeddiv(y, sin(ang));
-	else len = fixeddiv(x, cos(ang));
-	return len;
-}
-
-function int GetTargetAngle (int tid1, int tid2)
-{
-    int x, y;
-    x = GetActorX(tid2) - GetActorX(tid1);
-    y = GetActorY(tid2) - GetActorY(tid1);
-    return VectorAngle(x, y);
-}
-
-function int abs (int x)
-{
-    if (x < 0)
-        return -x;
-
-    return x;
 }

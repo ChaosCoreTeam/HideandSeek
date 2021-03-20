@@ -1,27 +1,81 @@
 #library "Teleporter"
-#include "DEFINITIONS.acs"
+#import "DEFINITIONS.acs"
+#include "zcommon.acs"
 int trackNum;
 int proxMaster;
+
+script "TeleporterFirstAbility" (void)
+{
+	int pTid = PlayerNumber() + 1000;
+	int proxId = pTid + TRANSLOCATIONMODULE_TID_INDEX;
+	
+	if (!IsTIDUsed(proxId))
+	{
+		if (CheckInventory("HasProxy"))
+		{
+			TakeInventory("HasProxy", 1);
+			HudMessage(s:"You have no proximity to teleport to"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 0.5, 0.5);
+			terminate;
+		}
+		HudMessage(s:"There is no proximity to teleport"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 0.5, 0.5);
+		terminate;
+	}
+	
+	if (!CheckInventory("HasProxy"))
+	{
+		HudMessage(s:"You don't have a proxy"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 0.5, 0.5);
+		terminate;
+	}
+	
+	int destinationId = proxId + 1000;
+	Spawn("ProxTeleDestination", GetActorX(proxId), GetActorY(proxId), GetActorZ(ProxId), destinationId);
+	SetActorPosition(pTid, GetActorX(destinationId), GetActorY(destinationId), GetActorZ(destinationId), 0);
+	delay(35);
+	Thing_Remove(destinationId);
+	ACS_NamedExecuteAlways("activateCooldown", 0, 1);
+}
+
+script "TeleporterSecondAbility" (void)
+{
+	//cooldown
+	ACS_NamedExecuteAlways("activateCooldown", 0, 2);
+	
+	//additonal inventory cases
+	GiveInventory("TeleporterShotPower", 1);
+	PlaySound(0, "Teleporter/Abilities/Overcharge", 0);
+	
+	ACS_NamedExecuteAlways("abilityStateHandling", 0, 2);
+	//ACS_NamedExecuteAlways("hudOvercharge", 0);	
+}
+
+script "TeleporterAbilityEnd" (void)
+{
+	//PlaySound(0, "Teleporter/Abilities/LoseOvercharge");
+
+	//additonal inventory cases
+	//PlaySound(0, "Teleporter/Abilities/EndOvercharge", 0);
+	TakeInventory("TeleporterShotPower", 1);
+}
 
 
 /* ************************************************** */
 /* TELEPORTGUN SCRIPTS 							  */
 /* ************************************************** */
 
-Script "identifyPlayer" (int isProx) NET
+Script "identifyPlayer" (int isProx)
 //Returns a trackable number across multiple scripts so we know which player triggered it
 {
 	trackNum=playernumber();
 }
 
-Script "changeProjId" (void) NET
+Script "changeProjId" (void)
 //Changes the projectile to be tied to the player via TID stuff then resets the variable for the next player
 {
 	thing_changetid(1999,trackNum+2000);
 	trackNum=0;
 }
 
-Script "spawnDestination" (void) NET
+Script "spawnDestination" (void)
 //Executed by a projectile impact to spawn a teleporter at it's current location
 {
 	int ProjectileTID;
@@ -58,7 +112,7 @@ Script "spawnDestination" (void) NET
 	Spawn("TeleporterDestination", GetActorX(ProjectileTID), GetActorY(ProjectileTID), SpawnZCoord, NewTeleporterTID, 0);
 }
 
-Script "teleportPlayer" (void) NET
+Script "teleportPlayer" (void)
 //Executed by a teleporter to bring the player there
 {
 	int FinalTeleporterTID;
@@ -104,7 +158,7 @@ script "launchProx" (void)
 	GiveInventory("HasProxy", 1);
 }
 
-script "changeCamera" (void) CLIENTSIDE
+script "changeCamera" (void)
 {
 	int pTid = PlayerNumber() + 1000;
 	int proxId = pTid + TRANSLOCATIONMODULE_TID_INDEX;
@@ -137,72 +191,10 @@ script "changeCamera" (void) CLIENTSIDE
 	PlaySound(PlayerNumber() + 1000, "Teleporter/Weapons/SecurityCamera", 1);
 }
 
-script "proxKilled" (void) NET
+script "proxKilled" (void) CLIENTSIDE
 {
 	int master = GetActorProperty(0, APROP_MasterTID); 
 	setActivator(master + 1000);
 	TakeInventory("HasProxy", 1);
 	HudMessage(s:"Your proximity mine was destroyed"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 0.5, 0.5);
-}
-
-script "TeleporterFirstAbility" (int cooldownTime) NET
-{
-	int pTid = PlayerNumber() + 1000;
-	int proxId = pTid + TRANSLOCATIONMODULE_TID_INDEX;
-	
-	if (!IsTIDUsed(proxId))
-	{
-		if (CheckInventory("HasProxy"))
-		{
-			TakeInventory("HasProxy", 1);
-			HudMessage(s:"You have no proximity to teleport to"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 0.5, 0.5);
-			terminate;
-		}
-		HudMessage(s:"There is no proximity to teleport"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 0.5, 0.5);
-		terminate;
-	}
-	
-	if (!CheckInventory("HasProxy"))
-	{
-		HudMessage(s:"You don't have a proxy"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 0.5, 0.5);
-		terminate;
-	}
-	
-	int destinationId = proxId + 1000;
-	Spawn("ProxTeleDestination", GetActorX(proxId), GetActorY(proxId), GetActorZ(ProxId), destinationId);
-	SetActorPosition(pTid, GetActorX(destinationId), GetActorY(destinationId), GetActorZ(destinationId), 0);
-	delay(35);
-	Thing_Remove(destinationId);
-	ACS_NamedExecuteAlways("activateCooldown", 0, "TeleporterFirstCooldown", cooldownTime);
-}
-
-script "TeleporterSecondAbility" (int cooldownTime) NET
-{
-	GiveInventory("TeleporterSecondActive", 1);
-	GiveInventory("TeleporterAmmoPower", 1);
-	GiveInventory("TeleporterShotPower", 1);
-	GiveInventory("OverCharge", 1);
-	ACS_NamedExecuteAlways("hudOvercharge", 0);
-	PlaySound(PlayerNumber() + PLAYER_BASE_TID, "Teleporter/Abilities/Overcharge", 6);
-}
-
-script "hudOvercharge" (int cooldownTime) NET
-{
-	For (int x = 10; x >= 0; x--)
-	{
-		HudMessage(s:"Overcharge lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 0.5, 0.5);
-		Delay(35);
-	}
-	Delay(10);
-	ACS_NamedExecuteAlways("endOvercharge", 0, cooldownTime);
-}
-
-script "endOvercharge" (int cooldownTime) NET
-{
-	//PlaySound(0, "Teleporter/Abilities/LoseOvercharge");
-	TakeInventory("TeleporterSecondActive", 1);
-	TakeInventory("TeleporterAmmoPower", 1);
-	TakeInventory("TeleporterShotPower", 1);
-	TakeInventory("OverCharge", 1);
-	ACS_NamedExecuteAlways("activateCooldown", 0, "TeleporterSecondCooldown", cooldownTime);
 }

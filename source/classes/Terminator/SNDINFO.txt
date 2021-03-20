@@ -1,3 +1,0 @@
-weapons/devshot dsdevsht
-weapons/devlnch dsdevlnc
-weapons/devexpl dsdevxpl

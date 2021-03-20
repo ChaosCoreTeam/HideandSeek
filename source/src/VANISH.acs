@@ -1,8 +1,61 @@
 #library "VANISH"
-#include "DEFINITIONS.acs"
+#import "DEFINITIONS.acs"
+#include "zcommon.acs"
+
+Script "vanishingSetup" (void) 
+{
+	int pNum = PlayerNumber() + PLAYER_BASE_TID;
+	
+	if(PlayerClass(PlayerNumber()) < SEEKER_CLASS_START) //Hider check
+	{
+		while (isVanished(pNum) == true)
+		{
+			switch (PlayerClass(PlayerNumber()))
+			{
+				case CLASS_BANSHEE:
+					if (CheckActorInventory(pNum, "Vanishing") > 0)
+					{
+						TakeActorInventory(pNum, "Vanishing", 1);
+					}
+					break;
+				case CLASS_BLAZER:
+					if (CheckActorInventory(pNum, "lowVanishingPool") > 0)
+					{
+						TakeActorInventory(pNum, "lowVanishingPool", 1);
+					}
+					break;
+				case CLASS_GUARDIAN:
+					if (CheckActorInventory(pNum, "medVanishingPool") > 0)
+					{
+						TakeActorInventory(pNum, "medVanishingPool", 1);
+					}
+				break;
+				case CLASS_ILLUSIONIST:
+					if (CheckActorInventory(pNum, "lowVanishingPool") > 0)
+					{
+						TakeActorInventory(pNum, "lowVanishingPool", 1);
+					}
+				break;
+				case CLASS_ROCKETEER:
+					if (CheckActorInventory(pNum, "medVanishingPool") > 0)
+					{
+						TakeActorInventory(pNum, "medVanishingPool", 1);
+					}
+				break;
+				case CLASS_TELEPORTER:
+					if (CheckActorInventory(pNum, "lowVanishingPool") > 0)
+					{
+						TakeActorInventory(pNum, "lowVanishingPool", 1);
+					}
+				break;
+			}
+			delay(15);
+		}
+	}
+}
 
 
-script "HNS_Vanish" (void) net
+script "HNS_Vanish" (void) NET
 {
 	if(PlayerClass(PlayerNumber()) >= SEEKER_CLASS_START) terminate;
 	
@@ -22,7 +75,7 @@ script "HNS_Vanish" (void) net
 	ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
 }
 
-script "HNS_Visible" (void) net
+script "HNS_Visible" (void) NET
 {
 	if(PlayerClass(PlayerNumber()) >= SEEKER_CLASS_START) terminate;
 	
@@ -36,7 +89,7 @@ script "HNS_Visible" (void) net
 	ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 10);
 }
 
-script "HNS_NoVanish" (void)
+script "HNS_NoVanish" (void) CLIENTSIDE
 {	
 	HudMessage(s:"You are out of vanishing power!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
 	ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 10);

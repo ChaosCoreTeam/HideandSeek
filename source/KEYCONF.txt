@@ -53,12 +53,12 @@ alias HNS_VanishOff "pukename HNS_Visible; rebind HNS_VanishOn"
 defaultbind V HNS_VanishOn
 
 //Class Abilities
-addmenukey "Activate First Ability" HNS_PrimaryAbility
-alias HNS_PrimaryAbility "pukename HNS_PrimaryAbility"
-defaultbind 1 HNS_PrimaryAbility
+addmenukey "Activate First Ability" HNS_FirstAbility
+alias HNS_FirstAbility "pukename HNS_ActivateAbility 1"
+defaultbind 1 HNS_FirstAbility
 
 addmenukey "Activate Second Ability" HNS_SecondAbility
-alias HNS_SecondAbility "pukename HNS_SecondAbility"
+alias HNS_SecondAbility "pukename HNS_ActivateAbility 2"
 defaultbind 2 HNS_SecondAbility
 
 addmenukey "Class Descriptions" HNS_ClassInfoOn

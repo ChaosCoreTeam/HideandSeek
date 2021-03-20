@@ -1,40 +1,75 @@
 #library "Guardian"
-#include "DEFINITIONS.acs"
+#import "DEFINITIONS.acs"
+#include "zcommon.acs"
 
-script "GuardianSecondAbility" (int cooldownTime) NET
+int buttons;
+int nobuttons;	
+
+script "GuardianFirstAbility" (void)
 {
-	GiveInventory("GuardSphere", 1);
-	SetActorProperty(0, APROP_Invulnerable, 1);
-	Delay(140);
-	TakeInventory("PowerQuarterDamage", 1);
-	SetActorProperty(0, APROP_Invulnerable, 0);
-	ACS_NamedExecuteAlways("activateCooldown", 0, "GuardianSecondCooldown", cooldownTime);
+	Spawn("SmokeCanister", GetActorX(0), GetActorY(0), GetActorZ(0));
+	ACS_NamedExecute("activateCooldown", 0, 1);
 }
 
-script "hudArmor" (int success) NET
+script "GuardianSecondAbility" (void)
 {
-	if (success == 0)
+	//===========================================================================================
+	//cooldown initiation.
+	//===========================================================================================
+	ACS_NamedExecuteAlways("activateCooldown", 0, 2);
+	
+	//===========================================================================================
+	//prerequistes to run the ability if any... (very rare occasion, will probably remove)
+	//===========================================================================================
+	int armorAmt = CheckInventory("BasicArmor");
+	if (armorAmt < 75)
 	{
-		HudMessage(s:"You need armor for this ability"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+		HudMessage(s:"You need 75 armor points to activate this ability"; HUDMSG_PLAIN, 7, CR_GOLD, 0.5, 0.125, 1.0);
 		terminate;
 	}
-	While (CheckInventory("ArmorShield"))
+	
+	//===========================================================================================
+	//class specific sound and inventory beginning routine handling
+	//===========================================================================================
+	
+	//armor inventory stuff
+	int dmgAmt = 300 - armorAmt;
+	PlaySound(0, "Guardian/Abilities/ArmorActivate", 0, 1.0, false, ATTN_NORM, true);
+	GiveInventory("GuardianArmorAbility", 1);
+	GiveInventory("GuardianMegaArmor",1);
+	TakeInventory("BasicArmor", dmgAmt);
+	ACS_NamedExecuteAlways("armorHitSound", 0);
+	ACS_NamedExecuteAlways("abilityStateHandling", 0, 2);
+	
+	//===========================================================================================
+	//class specific sound and inventory end routine handling
+	//===========================================================================================
+}
+
+script "GuardianAbilityEnd" (void)
+{
+	//armor inventory stuff
+	int amtUpdate = CheckInventory("BasicArmor");
+	int dmgUpdate = 300 - amtUpdate;
+	TakeInventory("AbilityPowerGiver", 1);
+	TakeInventory("GuardianMegaArmor", 1);
+	GiveInventory("GuardianArmor", 1);
+	TakeInventory("BasicArmor", dmgUpdate);
+}
+
+script "armorHitSound" (void)
+{
+	while (CheckInventory("AbilityPowerGiver") == 1 && GetActorProperty(PlayerNumber(),APROP_Health) > 0)
 	{
-		For (int x = 5; x > 0; x--)
+		int currentArmor = CheckInventory("BasicArmor");
+		delay(1);
+		int newArmor = CheckInventory("BasicArmor");
+		if (newArmor != currentArmor)
 		{
-			HudMessage(s:"Armor takes full damage for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-			Delay(35);
+			SetActorState(0, "ArmorDamage", true);
 		}
-		ACS_NamedExecute("endArmor", 0);
-		terminate;
 	}
-}
-
-script "endArmor" (void) Net
-{
-	TakeInventory("ArmorShield", 1);
-	PlaySound(0, "Guardian/Abilities/LoseArmor", 6);
-	ACS_NamedExecute("activateSecondaryCooldown", 0, "GuardianSecondCooldown", 45);
+	delay(1);
 }
 
 script "GuardianStunner" (void)
@@ -48,5 +83,108 @@ script "GuardianStunner" (void)
 		FadeTo(255, 255, 255, 0.0, 3.0);
 		Delay(105);
 		SetPlayerProperty(0, 0, PROP_TOTALLYFROZEN);
+	}
+}
+
+Script "chargeableJump" (void) CLIENTSIDE
+{
+	int holdTime;
+	
+	if(PlayerClass(PlayerNumber())==CLASS_GUARDIAN) //Guardian check
+	{
+		while (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(),APROP_Health) > 0)
+		{
+			if (CheckInventory("JumpChargeActive") == 0)
+			{
+				TakeInventory("JumpCharge", 5);
+			}
+			
+			buttons = GetPlayerInput(-1, INPUT_BUTTONS);
+			nobuttons = GetPlayerInput(-1, INPUT_OLDBUTTONS);
+			
+			//jump state was detected
+			if (buttons & BT_JUMP) 
+			{
+				GiveInventory("JumpChargeActive", 1);
+				//activated by initial trigger and holding down
+				if (nobuttons & BT_JUMP)
+				{
+					if (CheckInventory("JumpCharge") != 5)
+					{
+						holdTime++;
+						
+						if (holdTime == 30)
+						{
+							ACS_NamedExecuteAlways("giveJumpCharge", 0);
+							holdTime = 0;
+						}
+					}
+				}
+				else
+				{
+				}
+			}
+			//release detection
+			else
+			{
+				//check if actor is on the ground, then perform the jump
+				if (nobuttons & BT_JUMP)
+				{
+					if ((GetActorZ(0) - GetActorFloorZ(0)) == 0 && (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0))
+					{
+						int jumpHeight = CheckInventory("JumpCharge");
+						ACS_NamedExecuteAlways("jumpChargeHeight", 0, jumpHeight);
+					}
+					holdTime = 0;
+					TakeInventory("JumpChargeActive", 1);
+					TakeInventory("JumpCharge", 5);
+				}
+				else
+				{
+					//do nothing
+				}
+			}
+		delay(1);	
+		}
+	}
+}
+
+Script "giveJumpCharge" (void)
+{
+	PlaySound(PLAYER_BASE_TID + PlayerNumber(), "Guardian/ChargingJump", 7, 1.0, false, true);
+	GiveInventory("JumpCharge", 1);
+}
+
+Script "jumpChargeHeight" (int jHeight)
+{
+	int pT = PLAYER_BASE_TID + PlayerNumber();
+	switch (jHeight)
+	{
+		case 0:
+			ThrustThingZ(pT, 35, 0, 0);
+			break;
+		case 1:
+			ThrustThingZ(pT, 45, 0, 0);
+			break;
+		case 2:
+			ThrustThingZ(pT, 55, 0, 0);
+			break;
+		case 3:
+			ThrustThingZ(pT, 65, 0, 0);
+			break;
+		case 4:
+			ThrustThingZ(pT, 75, 0, 0);
+			break;
+		case 5:
+			ThrustThingZ(pT, 85, 0, 0);
+			break;
+		default:
+			Log(s:"The script is broekn!!!!!!!!!!");
+			break;
+	}
+	
+	if (jHeight != 0)
+	{
+		PlaySound(PLAYER_BASE_TID + PlayerNumber(), "Guardian/JumpRelease", 7);
 	}
 }

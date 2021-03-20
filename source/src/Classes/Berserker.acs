@@ -1,35 +1,26 @@
 #library "Berserker"
-#include "DEFINITIONS.acs"
+#import "DEFINITIONS.acs"
+#include "zcommon.acs"
 
-script "BerserkerFirstAbility" (int cooldownTime) NET
+script "BerserkerFirstAbility" (void)
 {
-	GiveInventory("BloodLust", 1);
-	GiveInventory("BerserkerFirstActive", 1);
+	ACS_NamedExecuteAlways("activateCooldown", 0, 1);
 	PlaySound(0, "Berserker/Abilities/Bloodlust", 6);
-	ACS_NamedExecuteAlways("hudBlood", 0, cooldownTime);
+	GiveInventory("BerserkerBloodlustAbility", 1);
+	
+	ACS_NamedExecuteAlways("abilityStateHandling", 0, 1);
 }
-script "hudBlood" (int cooldownTime) NET
-{
-	For (int x = 5; x >= 0; x--)
-	{
-		HudMessage(s:"Bloodlust lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 0.5, 0.5);
-		Delay(35);
-	}
-	Delay(10);
-	ACS_NamedExecuteAlways("endBlood", 0, cooldownTime);
-}
-
-script "endBlood" (int cooldownTime) NET
+script "BerserkerAbilityEnd" (void)
 {
 	//PlaySound(0, "Berseker/Abilities/LoseBlood");
-	TakeInventory("BloodLustRage", 1);
-	TakeInventory("BloodLustSpeed", 1);
-	TakeInventory("BloodLustJump", 1);
-	TakeInventory("BloodLust", 1);
-	ACS_NamedExecuteAlways("activateCooldown", 0, "BerserkerFirstCooldown", cooldownTime);
+	//TakeInventory("BloodLustRage", 1);
+	//TakeInventory("BloodLustSpeed", 1);
+	//TakeInventory("BloodLustJump", 1);
+	//TakeInventory("BloodLust", 1);
+	TakeInventory("AbilityPowerGiver", 1);
 }
 
-script "BerserkerSecondAbility" (int cooldownTime, int sTaunt) NET
+script "BerserkerSecondAbility" (void)
 {
 	str weapon = GetWeapon();
 	SetPlayerProperty(0, 1, PROP_INSTANTWEAPONSWITCH);

@@ -1,50 +1,6 @@
 const int countt = 2;
 
-// ------------------------------------------------------------------------------------------------
-//
-//	Random Seeker Morph
-//
-// ------------------------------------------------------------------------------------------------
-
-ACTOR PowerDisguise : PowerMorph
-{
-	Powerup.Duration -30
-	PowerMorph.MorphStyle ( MRF_FULLHEALTH )
-	PowerMorph.MorphFlash "SpawnShrinkFlash"
-    PowerMorph.UnMorphFlash "SpawnUnShrinkFlash"
-}
-
-Actor HunterMorph : PowerDisguise
-{
-	PowerMorph.PlayerClass "IllusionistHunter"
-}
-
-Actor BerserkerMorph : PowerDisguise
-{
-	PowerMorph.PlayerClass "IllusionistBerseker"
-}
-
-Actor TerminatorMorph : PowerDisguise
-{
-	PowerMorph.PlayerClass "IllusionistTerminator"
-}
-
-Actor ScouterMorph : PowerDisguise
-{
-	PowerMorph.PlayerClass "IllusionistScouter"
-}
-
-Actor PolymorphistMorph : PowerDisguise
-{
-	PowerMorph.PlayerClass "IllusionistPolymorphist"
-}
-
-Actor TacticianMorph : PowerDisguise
-{
-	PowerMorph.PlayerClass "IllusionistTactician"
-}
-
-Actor IllusionistMorphed : IllusionistClass
+Actor IllusionistDisguise : IllusionistClass
 {
   Speed 1
   Radius 16
@@ -53,7 +9,7 @@ Actor IllusionistMorphed : IllusionistClass
   PainChance 0
 }
 
-Actor IllusionistHunter : IllusionistMorphed
+Actor IllusionistHunter : IllusionistDisguise
 {
   Player.DisplayName "Hunter"
   Player.CrouchSprite "PLYC"
@@ -104,7 +60,7 @@ Actor IllusionistHunter : IllusionistMorphed
   }
 }
 
-Actor IllusionistTerminator : IllusionistMorphed
+Actor IllusionistTerminator : IllusionistDisguise
 {
   Height 64
   PainChance 255
@@ -160,7 +116,7 @@ Actor IllusionistTerminator : IllusionistMorphed
   }
 }
 
-Actor IllusionistBerseker : IllusionistMorphed
+Actor IllusionistBerseker : IllusionistDisguise
 {
 	Mass 300
 	Radius 24
@@ -239,7 +195,7 @@ Actor IllusionistBerseker : IllusionistMorphed
 	}
 }
 
-Actor IllusionistTactician : IllusionistMorphed
+Actor IllusionistTactician : IllusionistDisguise
 {
   Player.DisplayName "Tactician"
   Player.SoundClass "Tactician"
@@ -283,7 +239,7 @@ Actor IllusionistTactician : IllusionistMorphed
   }
 }
 
-Actor IllusionistPolymorphist : IllusionistMorphed
+Actor IllusionistPolymorphist : IllusionistDisguise
 {
   Player.DisplayName "Polymorphist"
   Player.SoundClass "Polymorphist"
@@ -327,7 +283,7 @@ Actor IllusionistPolymorphist : IllusionistMorphed
   }
 }
 
-Actor IllusionistScouter : IllusionistMorphed
+Actor IllusionistScouter : IllusionistDisguise
 {
   Player.DisplayName "Scouter"
   Player.SoundClass "Scouter"

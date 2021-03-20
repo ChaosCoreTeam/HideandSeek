@@ -1,41 +1,28 @@
 #library "Terminator"
-#include "DEFINITIONS.acs"
+#import "DEFINITIONS.acs"
+#include "zcommon.acs"
 
-script "TerminatorFirstAbility" (int cooldownTime) NET
+script "TerminatorFirstAbility" (void)
 {
+	ACS_NamedExecute("activateCooldown", 0, 1);
 	PlaySound(0, "Weapons/KarasawaFire", 6);
 	SpawnProjectile(0, "KsawBolt", GetActorAngle(0) >> 8, 200, 0, 0, 0);
-	ACS_NamedExecute("activateCooldown", 0, "TerminatorFirstCooldown", cooldownTime);
 	delay(35);
 	PlaySound(0, "Weapons/KarasawaCharge", 6);
 }
 
-script "TerminatorSecondAbility" (int cooldownTime) NET
+script "TerminatorSecondAbility" (void)
 {
-	GiveInventory("TerminatorSecondActive", 1);
+	ACS_NamedExecute("activateCooldown", 0, 2);
 	GiveInventory("TerminatorDevastators", 1);
 	SetWeapon("TerminatorDevastators");
 	PlaySound(0, "Terminator/Taunt", 6);
 	SetActorProperty(0, APROP_Speed, 1.5);
-	ACS_NamedExecute("DevastatorTime",0, cooldownTime);
+	ACS_NamedExecuteAlways("abilityStateHandling", 0, 2);
 }
 
-script "DevastatorTime" (int cooldownTime) NET
-{
-	For (int x = 10; x > 0; x--)
-	{
-		HudMessage(d: x, s:" until Devastators expires."; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-		Delay(35);
-	}
-	Delay(10);
-	TakeInventory("TerminatorSecondActive", 1);
-	HudMessage(s:"Devastators expired!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-	ACS_NamedExecute("endDevastator", 0, cooldownTime);
-}
-
-script "endDevastator" (int cooldownTime) NET
+script "TerminatorAbilityEnd" (void)
 {
 	SetActorProperty(0, APROP_Speed, 1.0);
 	TakeInventory("TerminatorDevastators", 1);
-	ACS_NamedExecute("activateSecondaryCooldown", 0, "TerminatorSecondCooldown", cooldownTime);
 }

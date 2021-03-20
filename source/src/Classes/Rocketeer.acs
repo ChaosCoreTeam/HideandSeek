@@ -1,7 +1,8 @@
 #library "Rocketeer"
-#include "DEFINITIONS.acs"
+#import "DEFINITIONS.acs"
+#include "zcommon.acs"
 
-script "RocketeerFirstAbility" (int cooldownName) NET
+script "RocketeerFirstAbility" (void)
 { 
 	SpawnProjectile(0, "EscapeRocket", GetActorAngle(0) >> 8, 200, -10, 0, 0);
 	SpawnProjectile(0, "EscapeRocket", GetActorAngle(32) >> 8, 200, -10, 0, 0);
@@ -10,9 +11,17 @@ script "RocketeerFirstAbility" (int cooldownName) NET
 	SpawnProjectile(0, "EscapeRocket", GetActorAngle(-32) >> 8, 200, -10, 0, 0);
 	SpawnProjectile(0, "EscapeRocket", GetActorAngle(-64) >> 8, 200, -10, 0, 0);
 	SpawnProjectile(0, "EscapeRocket", GetActorAngle(-96) >> 8, 200, -10, 0, 0);
-	ACS_NamedExecute("activateCooldown", 0, cooldownName);
+	ACS_NamedExecuteAlways("activateCooldown", 0, 1);
 }
 
-script "RocketeerSecondAbility" (int powerName) NET
+script "RocketeerSecondAbility" (void)
 { 
+	ACS_NamedExecuteAlways("activateCooldown", 0, 2);
+	
+	ACS_NamedExecuteAlways("abilityStateHandling", 0, 2);
+}
+
+script "RocketeerAbilityEnd" (void)
+{
+	//armor inventory stuff
 }
