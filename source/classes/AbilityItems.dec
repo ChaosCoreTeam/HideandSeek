@@ -1,40 +1,107 @@
 //Actives only apply to the Bnashee, Guardian, Illusionist, Hunter, Berserker, Terminator, Polymorphist and the Tactician
 //Terminator only has one active
 
-Actor BansheeFirstCooldown : Ammo { Inventory.Amount 15 Inventory.MaxAmount 15 }
-Actor BansheeSecondCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
-Actor BansheeFirstActive : Inventory { }
-Actor BansheeSecondActive : Inventory { }
+//===========================================================================================
+// Powerups
+//===========================================================================================
 
-Actor BlazerFirstCooldown : Ammo { Inventory.Amount 10 Inventory.MaxAmount 10 }
-Actor DashCooldown : Ammo { Inventory.Amount 10 Inventory.MaxAmount 10 }
-Actor BlazerSecondCooldown : Ammo { Inventory.Amount 20 Inventory.MaxAmount 20 }
+ACTOR AbilityPowerup : Powerup { Powerup.Duration 0x7FFFFFFD  }
+ACTOR SecondAbilityPowerup : AbilityPowerup { }
+ACTOR MorphPowerup : AbilityPowerup { }
 
-Actor GuardianFirstCooldown : Ammo { Inventory.Amount 25  Inventory.MaxAmount 25  }
-Actor GuardianSecondCooldown : Ammo { Inventory.Amount 45  Inventory.MaxAmount 45  }
-Actor GuardianFirstActive : Inventory { }
-Actor GuardianSecondActive : Inventory { }
+ACTOR PowerDisguise : PowerMorph { PowerMorph.MorphStyle MRF_FULLHEALTH Powerup.Duration 0x7FFFFFFD  }
+ACTOR PowerShrink : PowerDisguise { PowerMorph.MorphFlash "SpawnShrinkFlash"  PowerMorph.UnMorphFlash "SpawnUnShrinkFlash" }
+ACTOR HunterDisguise : PowerDisguise { PowerMorph.PlayerClass "IllusionistHunter" }
+ACTOR ScouterDisguise : PowerDisguise { PowerMorph.PlayerClass "IllusionistScouter" }
+ACTOR BerserkerDisguise : PowerDisguise { PowerMorph.PlayerClass "IllusionistBerserker" }
+ACTOR TerminatorDisguise : PowerDisguise { PowerMorph.PlayerClass "IllusionistTerminator" }
+ACTOR PolymorphistDisguise : PowerDisguise { PowerMorph.PlayerClass "IllusionistPolymorphist" }
+ACTOR TacticianDisguise : PowerDisguise { PowerMorph.PlayerClass "IllusionistTactician" }
+ACTOR ShrinkMorph : PowerShrink { PowerMorph.PlayerClass "ShrunkIllusionist" }
+Actor SoulMorph : PowerDisguise { PowerMorph.PlayerClass "PolySoul" }
+
+//===========================================================================================
+// PowerupGivers
+//===========================================================================================
+
+ACTOR AbilityPowerGiver : PowerupGiver
+{
+	+INVENTORY.AUTOACTIVATE
+	+INVENTORY.ALWAYSPICKUP
+	INVENTORY.MAXAMOUNT 0
+	Powerup.Type "AbilityPowerup"
+	Powerup.Duration 0x7FFFFFFD
+}
+
+ACTOR SecondAbilityPowerGiver : AbilityPowerGiver
+{
+	Powerup.Type "SecondAbilityPowerup"
+}
+
+ACTOR MorphAbilityGiver : AbilityPowerGiver
+{
+	Powerup.Type "MorphPowerup"
+}
+
+//generic ability givers
+ACTOR BansheeHealingAbility : AbilityPowerGiver { Powerup.Colormap 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 }
+ACTOR GuardianArmorAbility : AbilityPowerGiver { Powerup.Color GreenMap }
+ACTOR IllusionistDisguiseAbility : AbilityPowerGiver { Powerup.Type "PowerDisguise" }
+ACTOR BerserkerBloodlustAbility : AbilityPowerGiver { Powerup.Color Redmap Speed 1.35 Powerup.Type PowerDoubleFiringSpeed }
+Actor TeleporterOverchargeAbility : AbilityPowerGiver { Powerup.Color 0, 0, 192, 0.3 Powerup.Type PowerInfiniteAmmo }
+Actor TeleporterShotPower : SecondAbilityPowerGiver { Powerup.Type PowerDoubleFiringSpeed }
+Actor PolymorphistSoulFlight : MorphAbilityGiver { Powerup.Type PowerFlight }
+
+
+//===========================================================================================
+// Cooldowns
+//===========================================================================================
+
+Actor GuardianAbilityDuration : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
+Actor IllusionistFirstDuration : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
+Actor IllusionistSecondDuration : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
+Actor RocketeerAbilityDuration : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
+Actor TeleporterAbilityDuration : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
+Actor HunterFirstDuration : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
+Actor HunterSecondDuration : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
+Actor BerserkerAbilityDuration : Ammo { Inventory.Amount 7 Inventory.MaxAmount 7 }
+Actor PolymorphistFirstDuration : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
+Actor PolymorphistSecondDuration : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
+Actor TerminatorAbilityDuration : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
+
+ACTOR BansheeFirstCooldown : Ammo { Inventory.Amount 15 Inventory.MaxAmount 15 }
+ACTOR BansheeSecondCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
+
+ACTOR BlazerFirstCooldown : Ammo { Inventory.Amount 10 Inventory.MaxAmount 10 }
+ACTOR DashCooldown : Ammo { Inventory.Amount 10 Inventory.MaxAmount 10 }
+ACTOR BlazerSecondCooldown : Ammo { Inventory.Amount 20 Inventory.MaxAmount 20 }
+
+ACTOR GuardianFirstCooldown : Ammo { Inventory.Amount 25  Inventory.MaxAmount 25  }
+ACTOR GuardianSecondCooldown : Ammo { Inventory.Amount 30  Inventory.MaxAmount 30 }
+ACTOR GuardianAbilityActive : Inventory { }
 
 Actor IllusionistFirstCooldown : Ammo { Inventory.Amount 25 Inventory.MaxAmount 25 }
 Actor IllusionistSecondCooldown : Ammo { Inventory.Amount 45 Inventory.MaxAmount 45 }
 Actor IllusionistFirstActive : Inventory { }
 Actor IllusionistSecondActive : Inventory { }
+
 Actor decoySpawned : Inventory { }
 Actor decoyVanished : Inventory { }
 
 Actor RocketeerFirstCooldown : Ammo { Inventory.Amount 15  Inventory.MaxAmount 15 }
 Actor RocketeerSecondCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
+ACTOR RocketeerAbilityActive : Inventory { }
 
 Actor TeleporterFirstCooldown : Ammo { Inventory.Amount 10 Inventory.MaxAmount 10 }
 Actor TeleporterSecondCooldown : Ammo { Inventory.Amount 45 Inventory.MaxAmount 45 }
-Actor TeleporterFirstActive : Inventory { } 
-Actor TeleporterSecondActive : Inventory { }
+ACTOR TeleporterAbilityActive : Inventory { }
 Actor HasProxy : Inventory { }
 Actor isLooking : Inventory { }
+Actor OverCharge : Inventory { }
 
 Actor HunterFirstCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
 Actor HunterSecondCooldown : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
-Actor HunterFirstActive : Inventory { } 
+Actor HunterFirstActive : Inventory { }
 Actor HunterSecondActive : Inventory { }
 
 Actor ScouterFirstCooldown : Ammo { Inventory.Amount 10 Inventory.MaxAmount 10 }
@@ -42,12 +109,11 @@ Actor ScouterSecondCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 
 
 Actor BerserkerFirstCooldown : Ammo { Inventory.Amount 45 Inventory.MaxAmount 45 }
 Actor BerserkerSecondCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
-Actor BerserkerFirstActive : Inventory { } 
-Actor BerserkerSecondActive : Inventory { }
+ACTOR BerserkerAbilityActive : Inventory { }
 
 Actor TerminatorFirstCooldown : Ammo { Inventory.Amount 10 Inventory.MaxAmount 10 }
 Actor TerminatorSecondCooldown : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
-Actor TerminatorSecondActive : Inventory { }
+ACTOR TerminatorAbilityActive : Inventory { }
 
 Actor PolymorphistFirstCooldown : Ammo { Inventory.Amount 15 Inventory.MaxAmount 15 }
 Actor PolymorphistSecondCooldown : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
@@ -56,5 +122,3 @@ Actor PolymorphistSecondActive : Inventory { }
 
 Actor TacticianFirstCooldown : Ammo { Inventory.Amount 3 Inventory.MaxAmount 3 }
 Actor TacticianSecondCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
-Actor TacticianFirstActive : Inventory { }
-Actor TacticianSecondActive : Inventory { }

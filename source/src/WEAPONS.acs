@@ -1,21 +1,17 @@
 #library "WEAPONS"
-#include "DEFINITIONS.acs"
+#import "DEFINITIONS.acs"
+#import "FUNCTION.acs"
+#include "zcommon.acs"
 
 int pteam[MAXPLAYERS];
 int healIden[MAXPLAYERS][2];
 int aIndex = 0;
 int trackNum;
 
-function int FixedDistance (int tid1, int tid2)
-{
-	int len;
-	int y = getactory(tid1) - getactory(tid2);
-	int x = getactorx(tid1) - getactorx(tid2);
-	int ang = vectorangle(x,y);
-	if(((ang+0.125)%0.5) > 0.25) len = fixeddiv(y, sin(ang));
-	else len = fixeddiv(x, cos(ang));
-	return len;
-}
+
+/* ************************************************** */
+/* START BANSHEE SCRIPTS 
+/* ************************************************** */
 
 script "StoreHealable" Enter
 {

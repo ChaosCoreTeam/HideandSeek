@@ -19,7 +19,6 @@
 #include "classes/Polymorphist/Abilities.dec"
 #include "classes/Teleporter/Teleporter.dec"
 #include "classes/Teleporter/Weapons.dec"
-#include "classes/Teleporter/Abilities.dec"
 #include "classes/Hunter/Weapons.dec"
 #include "classes/Hunter/Hunter.dec"
 #include "classes/Scouter/Scouter.dec"

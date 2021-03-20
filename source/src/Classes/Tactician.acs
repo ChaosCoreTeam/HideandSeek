@@ -1,7 +1,8 @@
 #library "Tactician"
-#include "DEFINITIONS.acs"
+#import "DEFINITIONS.acs"
+#include "zcommon.acs"
 
-script "TacticianFirstAbility" (int cooldownTime) NET
+script "TacticianFirstAbility" (void)
 { 
 		int MineId = PlayerNumber() + 900;
 		int angle = GetActorAngle(0);
@@ -15,15 +16,15 @@ script "TacticianFirstAbility" (int cooldownTime) NET
 		}
 		Spawn("Mine", x, y, z, MineId, 0);
 		PlaySound(0, "MINE001", 6);
-		ACS_NamedExecute("activateCooldown", 0, "TacticianFirstCooldown", cooldownTime);
+		ACS_NamedExecute("activateCooldown", 0, 1);
 }
 
-script "hudTrip" (void) NET
+script "hudTrip" (void) CLIENTSIDE
 {
 	HudMessage(s:"You can only have 5 trip mines at a time"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
 }
 
-script "TacticianSecondAbility" (int cooldownTime) NET
+script "TacticianSecondAbility" (void)
 {
 	int sentryId = PlayerNumber() + 910;
 	int angle = GetActorAngle(0);
@@ -33,12 +34,12 @@ script "TacticianSecondAbility" (int cooldownTime) NET
 	
 	//GiveInventory("TacticianSecondaryActive", 1);
 	Spawn("SentryGun", x, y, z, sentryId, 0);
-	//ACS_NamedExecute("sentryLife",0, sentryId, cooldownTime);
+	//ACS_NamedExecute("sentryLife",0, sentryId);
 	//SetActorState(sentryId, "Death", true);
-	ACS_NamedExecute("activateSecondaryCooldown", 0, "TacticianSecondCooldown", cooldownTime);
+	ACS_NamedExecute("activateCooldown", 0, 2);
 }
 
-script "sentryLife" (int sentryId, int cooldownTime) NET
+script "sentryLife" (int sentryId) CLIENTSIDE
 {
 	For (int x = 30; x >= 0; x--)
 	{

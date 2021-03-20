@@ -2,8 +2,9 @@
 // General Sounds 
 // ==================================================================================================================
 
-CooldownActive COOLDOWN
-AbilityActivate DSFORCE
+//Ability sounds
+Abilities/Failure ABILFAIL
+Abilities/EndWarning ENDING
 
 // ==================================================================================================================
 // Hider Sounds 
@@ -94,6 +95,11 @@ GuardLowPain1 GUARPAIN
 GuardMedPain1 GUARPA75
 GuardMedPain2 GUARPA50
 GuardHighPain2	GUARPA25
+
+Guardian/ChargingJump JUMPCHAR
+Guardian/JumpRelease JUMPRELE
+Guardian/Abilities/ArmorHit ARMORDMG
+Guardian/Abilities/ArmorActivate ARMSHLD
 
 Smokebomb/Hiss	SMOKEHIS
 Smokebomb/Bang	SMOKEBAG
@@ -309,7 +315,7 @@ PlasmaFire		DSPLFIRE
 TeleporterFire	DSTPFIRE
 HookShot	DSHOKSHT
 HookHit		DSHOKHIT
-Hunter/Abilities/		DSGETOVR
+Hunter/Abilities/GETOVER		DSGETOVR
 
 $random HuntDeath { HuntDeath1 HuntDeath2 }
 HuntDeath1 HUNTDETH

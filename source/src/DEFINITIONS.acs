@@ -1,49 +1,49 @@
 #library "DEFINITIONS.acs"
 #include "zcommon.acs"
 
-#define MAXPLAYERS 64
+#libdefine MAXPLAYERS 64
 
-#define ALL_OF_IT 0x7FFFFFFF
-#define GAMETICKS_PER_SEC 35
+#libdefine ALL_OF_IT 0x7FFFFFFF
+#libdefine GAMETICKS_PER_SEC 35
 
-#define NUMBER_OF_CLASSES 12
-#define CLASS_BANSHEE 0
-#define CLASS_BLAZER 1
-#define CLASS_GUARDIAN 2
-#define CLASS_ILLUSIONIST 3
-#define CLASS_ROCKETEER 4
-#define CLASS_TELEPORTER 5
-#define CLASS_HUNTER 6
-#define CLASS_SCOUTER 7
-#define CLASS_BERSERKER 8
-#define CLASS_TERMINATOR 9
-#define CLASS_POLYMORPHIST 10
-#define CLASS_TACTICIAN 11
+#libdefine NUMBER_OF_CLASSES 12
+#libdefine CLASS_BANSHEE 0
+#libdefine CLASS_BLAZER 1
+#libdefine CLASS_GUARDIAN 2
+#libdefine CLASS_ILLUSIONIST 3
+#libdefine CLASS_ROCKETEER 4
+#libdefine CLASS_TELEPORTER 5
+#libdefine CLASS_HUNTER 6
+#libdefine CLASS_SCOUTER 7
+#libdefine CLASS_BERSERKER 8
+#libdefine CLASS_TERMINATOR 9
+#libdefine CLASS_POLYMORPHIST 10
+#libdefine CLASS_TACTICIAN 11
 
-#define FIRST_ABILITY_INDEX 0
-#define SECOND_ABILITY_INDEX 12
+#libdefine FIRST_ABILITY_INDEX 0
+#libdefine SECOND_ABILITY_INDEX 12
 
-#define PLAYER_BASE_TID 1000
-#define SEEKER_CLASS_START 6
-#define SEEKER_CLASS_END 12
+#libdefine PLAYER_BASE_TID 1000
+#libdefine SEEKER_CLASS_START 6
+#libdefine SEEKER_CLASS_END 12
 
-#define DECOY_TID_INDEX 3400
-#define TRANSLOCATIONMODULE_TID_INDEX 3600
+#libdefine DECOY_TID_INDEX 3400
+#libdefine TRANSLOCATIONMODULE_TID_INDEX 3600
 
-#define teamPlayer_id 0
-#define teamPlayer_distance 1
+#libdefine teamPlayer_id 0
+#libdefine teamPlayer_distance 1
 
-#define NUM_POWERUPS 24
-#define POWERUP_COOLDOWN 0
-#define POWERUP_NAME 1
-#define POWERUP_HUD_X_OFFSET 300.1
-#define POWERUP_HUD_Y_OFFSET 200.1
-#define POWERUP_HUD_TEXT_VISIBLE_SEC 1.0
+#libdefine NUM_POWERUPS 24
+#libdefine POWERUP_COOLDOWN 0
+#libdefine POWERUP_NAME 1
+#libdefine POWERUP_HUD_X_OFFSET 300.1
+#libdefine POWERUP_HUD_Y_OFFSET 200.1
+#libdefine POWERUP_HUD_TEXT_VISIBLE_SEC 1.0
 
-#define ASPECT_4_3 1.3
-#define ASPECT_5_4 1.25
-#define ASPECT_16_9 1.7
-#define ASPECT_16_10 1.6
+#libdefine ASPECT_4_3 1.3
+#libdefine ASPECT_5_4 1.25
+#libdefine ASPECT_16_9 1.7
+#libdefine ASPECT_16_10 1.6
 
 str classNames[12] = 
 {

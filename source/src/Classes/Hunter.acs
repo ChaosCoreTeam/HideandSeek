@@ -1,50 +1,41 @@
 #library "Hunter"
-#include "DEFINITIONS.acs"
+#import "DEFINITIONS.acs"
+#include "zcommon.acs"
 
-script "HunterFirstAbility" (int cooldownName) NET
+script "HunterFirstAbility" (void)
 {
-	GiveInventory("HunterFirstActive", 1);
-	While (CheckInventory("HunterFirstActive"))
-	{
-		GiveInventory("DualHunter", 1);
-		PlaySound(0, "Hunter/Abilities/DualWeapons");
-		ACS_NamedExecute("hudDual", 0);
-	}
-	TakeInventory("DualHunter", 1);
-	PlaySound(0, "Hunter/Abilities/LoseDual");
-	ACS_NamedExecute("activateCooldown", 0, "HunterFirstCooldown", cooldownName);
+	//===========================================================================================
+	//abilityDuration if any and cooldown initiation.
+	//===========================================================================================
+	ACS_NamedExecuteAlways("activateCooldown", 0, 1);
+	
+	GiveInventory("DualWield", 1);
+	PlaySound(0, "Hunter/Abilities/DualWield", 0);
+
+	ACS_NamedExecuteAlways("abilityStateHandling", 0, 1);
 }
 
-script "hudDual" (void) NET
+script "HunterFirstEnd" (void)
 {
-	For (int x = 10; x > 0; x--)
-	{
-		HudMessage(s:"Dual Weapons lasts for", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-		Delay(35);
-	}
-	TakeInventory("HunterFirstActive", 1);
+	TakeInventory("DualWield", 1);
+	PlaySound(0, "Hunter/Abilities/LowerWeapons", 0);
 }
 
-script "HunterSecondAbility" (int cooldownName) NET
+script "HunterSecondAbility" (void)
 {
-	GiveInventory("HunterSecondActive", 1);
-	While (CheckInventory("HunterSecondActive"))
-	{
-		GiveInventory("Freezegun", 1);
-		PlaySound(0, "Hunter/Abilities/Freezegun", 6);
-		ACS_NamedExecute("hudFreeze", 0);
-	}
+	//===========================================================================================
+	//abilityDuration if any and cooldown initiation.
+	//===========================================================================================
+	ACS_NamedExecuteAlways("activateCooldown", 0, 2);
+	
+	GiveInventory("FreezeGun", 1);
+	PlaySound(0, "Hunter/Abilities/FreezeGun", 0);
+
+	ACS_NamedExecuteAlways("abilityStateHandling", 0, 2);
+}
+
+script "HunterSecondEnd" (void)
+{
 	TakeInventory("FreezeGun", 1);
-	PlaySound(0, "Hunter/Abilities/LoseFreeze", 6);
-	ACS_NamedExecute("activateSecondaryCooldown", 0, cooldownName);
-}
-
-script "hudFreeze" (void) NET
-{
-	For (int x = 5; x > 0; x--)
-	{
-		HudMessage(s:"Freezegun lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-		Delay(35);
-	}
-	TakeInventory("HunterSecondActive", 1);
+	PlaySound(0, "Hunter/Abilities/LowerWeapons", 0);
 }

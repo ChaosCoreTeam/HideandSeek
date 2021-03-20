@@ -1,5 +1,6 @@
 #library "STATES"
-#include "DEFINITIONS.acs"
+#import "DEFINITIONS.acs"
+#include "zcommon.acs"
 
 Script "regenHealth" (int selector)
 {

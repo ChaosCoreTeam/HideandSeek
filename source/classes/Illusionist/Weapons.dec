@@ -1,4 +1,4 @@
-Actor IllusionistDecoy: Weapon
+Actor IllusionistDecoyWep: Weapon
 {
 	Scale 0.5
 	Weapon.AmmoUse1 0
@@ -8,7 +8,7 @@ Actor IllusionistDecoy: Weapon
 	+WEAPON.NOALERT
 }
 
-Actor IllusionistBansheeDecoy : IllusionistDecoy
+Actor IllusionistBansheeDecoy : IllusionistDecoyWep
 {
 	Tag "Banshee Decoy"
 	States
@@ -68,7 +68,7 @@ Actor IllusionistBansheeDecoy : IllusionistDecoy
 	}
 }
 
-Actor IllusionistBlazerDecoy : IllusionistDecoy
+Actor IllusionistBlazerDecoy : IllusionistDecoyWep
 {
 	Tag "Blazer Decoy"
 	States
@@ -128,7 +128,7 @@ Actor IllusionistBlazerDecoy : IllusionistDecoy
 	}
 }
 
-Actor IllusionistGuardianDecoy : IllusionistDecoy
+Actor IllusionistGuardianDecoy : IllusionistDecoyWep
 {
 	Tag "Guardian Decoy"
 	States
@@ -188,7 +188,7 @@ Actor IllusionistGuardianDecoy : IllusionistDecoy
 	}
 }
 
-Actor IllusionistIllusionistDecoy : IllusionistDecoy
+Actor IllusionistIllusionistDecoy : IllusionistDecoyWep
 {
 	Tag "Illusionist Decoy"
 	States
@@ -248,7 +248,7 @@ Actor IllusionistIllusionistDecoy : IllusionistDecoy
 	}
 }
 
-Actor IllusionistRocketeerDecoy : IllusionistDecoy
+Actor IllusionistRocketeerDecoy : IllusionistDecoyWep
 {
 	Tag "Rocketeer Decoy"
 	States
@@ -307,7 +307,7 @@ Actor IllusionistRocketeerDecoy : IllusionistDecoy
 		Goto Ready
 	}
 }
-Actor IllusionistTeleporterDecoy : IllusionistDecoy
+Actor IllusionistTeleporterDecoy : IllusionistDecoyWep
 {
 	Tag "Teleporter Decoy"
 	States

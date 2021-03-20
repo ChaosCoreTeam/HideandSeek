@@ -1,56 +1,52 @@
 #library "Polymorphist"
-#include "DEFINITIONS.acs"
+#import "DEFINITIONS.acs"
+#include "zcommon.acs"
 
-int armor;
-int health;
-
-script "PolymorphistFirstAbility" (int cooldownTime) NET
+script "PolymorphistFirstAbility" (void)
 { 
-	//if (CheckInventory("PolymorphistFirstActive"))
-	//{
-		//TakeInventory("PolymorphistFirstActive", 1);
-		//ACS_NamedExecute("endSoulMorph", 0, cooldownTime);
-		//print(d:armor, s:" ...and... ", d:health);
-		//terminate;
-	//}
-	//armor = CheckInventory("BasicArmor");
-	//print(d:armor, s:" ...and... ", d:GetActorProperty(PlayerNumber(), "APROP_Health"));
-	GiveInventory("PowerSoulMorph", 1);
-	GiveInventory("PolymorphistFirstActive", 1);
-	PlaySound(0, "Polymorphist/Abilities/Morph", 6);
-	ACS_NamedExecute("hudSoulMorph", 0, cooldownTime);
-}
-
-script "hudSoulMorph" (int cooldownTime) NET
-{
-	For (int x = 15; x > 0; x--)
-	{	
-		if (!CheckInventory("PolymorphistFirstActive"))
+	ACS_NamedExecute("activateCooldown", 0, 1);
+	
+		//makes it so you can toggle it on and off	
+		if (CheckInventory("PolymorphistFirstActive") == true)
+		{
+			TakeInventory("PolymorphistFirstActive", 1);
 			terminate;
-		HudMessage(s:"Lost Soul Transformation lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-		Delay(35);
-	}
-	Delay(10);
-	TakeInventory("PolymorphistFirstActive", 1);
-	ACS_NamedExecute("endSoulMorph", 0, cooldownTime);
+		}
+	
+	GiveInventory("SoulMorph", 1);
+	PlaySound(0, "Polymorphist/Abilities/Morph", 0);
+
+	ACS_NamedExecuteAlways("abilityStateHandling", 0, 1);
 }
 
-script "endSoulMorph" (int cooldownTime) NET
+script "PolymorphistFirstEnd" (void)
 {
-	TakeInventory("PowerSoulMorph", 1);
-	PlaySound(0, "Polymorphist/Abilities/Morph", 6);
+	TakeInventory("SoulMorph", 1);
+	PlaySound(0, "Polymorphist/Abilities/Morph", 0);
 	//GiveInventory("ArmorBonus", armor);
 	//GiveInventory("HealthBonus", health);
-	ACS_NamedExecute("unmorphHud", 0);
-	ACS_NamedExecute("activateCooldown", 0, "PolymorphistFirstCooldown", cooldownTime);
 }
 
-script "PolymorphistSecondAbility" (int cooldownTime) NET
+script "PolymorphistSecondAbility" (void) CLIENTSIDE
 { 
+	ACS_NamedExecute("activateCooldown", 0, 2);
+	
+		//makes it so you can toggle it on and off	
+		if (CheckInventory("PolymorphistSecondActive") == true)
+		{
+			TakeInventory("PolymorphistSecondActive", 1);
+			terminate;
+		}
+	
+	PlaySound(0, "Polymorphist/Abilities/Morph", 0);
 	HudMessage(s:"Not implemented yet"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+	
+	ACS_NamedExecuteAlways("abilityStateHandling", 0, 1);
 }
 
-script "unmorphHud" (void) CLIENTSIDE
+script "PolymorphistSecondEnd" (void)
 {
-	HudMessage(s:"Morphed back to normal"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
+	PlaySound(0, "Polymorphist/Abilities/Morph", 0);
+	//GiveInventory("ArmorBonus", armor);
+	//GiveInventory("HealthBonus", health);
 }

@@ -1,6 +1,14 @@
 ACTOR GuardianArmor : BlueArmor
 {
 	Armor.SaveAmount 300
+	Inventory.Icon "GARMA0"
+}
+
+Actor GuardianMegaArmor : GuardianArmor
+{
+	DamageFactor 0.5
+	Armor.SavePercent 200
+	Inventory.Icon "GSARA0"
 }
 
 ACTOR GuardianClass : PlayerPawn
@@ -22,7 +30,9 @@ ACTOR GuardianClass : PlayerPawn
 	player.startitem "GuardianFirstCooldown", 999
 	player.startitem "GuardianSecondCooldown", 999
 	player.startitem "Vanishing", 125
+	Player.JumpZ 0
 	Species "Hider"
+	var int user_chargecount;
 	damagefactor "rocket", 0
 	limitedtoteam 0
 	+NOSKIN
@@ -41,7 +51,7 @@ ACTOR GuardianClass : PlayerPawn
 		AGRD ABCD 6 
 	Goto Spawn
 	Missile:
-		AGRD E 12 
+		AGRD E 12
 	Goto Spawn
 	Melee:
 		AGRD O 6 BRIGHT
@@ -58,9 +68,9 @@ ACTOR GuardianClass : PlayerPawn
 		AGRD N -1
 	Stop
 	XDeath:
-		PLAY O 0 A_Stop
+		AGRD O 0 A_Stop
 		AGRD O 5 A_SpawnItemEx ("HumanGibs",0,0,0,0,0,0,0,128)
-		BRSP O 0 A_SkullPop("BlueHeadGib")
+		AGRD O 0 A_SkullPop("BlueHeadGib")
 		AGRD P 5 A_XScream
 		AGRD Q 5 A_NoBlocking
 		AGRD RSTUV 5
@@ -75,6 +85,35 @@ ACTOR GuardianClass : PlayerPawn
 	Visible:
 		AGRD A 1 A_SetTranslucent(1, 0)
 	Goto Spawn
+	ArmorDamage:
+		AGRD A 1 A_PlaySound("Guardian/Abilities/ArmorHit", 4096, 1.0, false, ATTN_NORM)
+	Goto Spawn
 	}
 }
 
+ACTOR JumpChargeActive : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+}
+
+ACTOR JumpChargeFull : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+}
+
+ACTOR JumpCharge : Ammo
+{
+  Game Doom
+  Inventory.PickupMessage "CHARGZ"
+  Inventory.Amount 1
+  Inventory.MaxAmount 5
+  Inventory.Icon "JCHRA0"
+  States
+  {
+  Spawn:
+    JCHR A -1
+    Stop
+  }
+}

@@ -1,4 +1,0 @@
-object SentryGun
-{
-    frame SENTB { light ZOMBIEATK }
-}

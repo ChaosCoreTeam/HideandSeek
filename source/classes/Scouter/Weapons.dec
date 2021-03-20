@@ -176,7 +176,7 @@ actor HookShot : LoreShot
 	seesound "HookShot"
 	deathsound "HookHit"
 	damage 5
-	speed 300
+	speed 400
 	XScale 1.20
 	YScale 1.20
 	obituary "%o was tai'd up and hanged."

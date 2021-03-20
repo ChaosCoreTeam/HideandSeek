@@ -1,6 +1,88 @@
 #library "Illusionist"
-#include "DEFINITIONS.acs"
+#import "DEFINITIONS.acs"
+#include "zcommon.acs"
 #import "GLOBAL.acs"
+
+//===========================================================================================
+// Disguise Ability
+//===========================================================================================
+
+script "IllusionistFirstAbility" (void)
+{
+	//makes it so you can toggle it on and off	
+	if (CheckInventory("IllusionistFirstActive") == true)
+	{
+		TakeInventory("IllusionistFirstActive", 1);
+		terminate;
+	}
+	
+	//custom inventory then stateHandler
+	int seekerClass = Random(6,11);
+	GiveInventory(StrParam(s:classNames[seekerClass], s:"Disguise"), 1);
+	//GiveInventory("isMorphed", 1);
+	PlaySound(0, "Illusionist/Abilities/Disguise", 0);
+	ACS_NamedExecuteAlways("abilityStateHandling", 0, 1);
+}
+
+script "IllusionistFirstAbilityEnd" (void)
+{
+	//reset procedures to fix vanishing, armor&health stats
+	TakeInventory("IllusionistFirstActive", 1);
+	PlaySound(0, "Illusionist/Abilities/Disguise", 0);
+	
+	//activate cooldown and reset character
+	str disguise = disguiseName();
+	TakeInventory(disguise, 1);
+	ACS_NamedExecuteAlways("activateCooldown", 0, 1);
+	ACS_NamedExecuteAlways("vanishingSetup",0);
+}
+
+function str disguiseName(void) 
+{
+	for (int x = SEEKER_CLASS_START; x <= SEEKER_CLASS_END; x++)
+	{
+		if (CheckInventory(StrParam(s:classNames[x], s: "Disguise")) == true)
+		{
+			str disguiseClass = StrParam(s:classNames[x], s: "Disguise");
+			return disguiseClass;
+		}
+	}
+	return "";
+}
+
+//===========================================================================================
+// Shrink Ability
+//===========================================================================================
+
+script "IllusionistSecondAbility" (void)
+{
+	//makes it so you can toggle it on and off
+	if (CheckInventory("IllusionistSecondActive") == true)
+	{	
+		TakeInventory("IllusionistSecondActive", 1);
+		terminate;
+	}
+		//custom inventory then stateHandler
+		GiveInventory("ShrinkMorph", 1);
+		PlaySound(0, "Illusionist/Abilities/Shrink", 6);
+		ACS_NamedExecuteAlways("hudShrink", 0);
+		ACS_NamedExecuteAlways("abilityStateHandling", 0, 1);
+}
+
+script "IllusionistSecondAbilityEnd" (void)
+{
+	//reset procedures to fix vanishing, armor&health stats
+	TakeInventory("ShrinkMorph", 1);
+	PlaySound(0, "Illusionist/Abilities/Unshrink", 6);
+	
+	//cooldown and reset character
+	ACS_NamedExecuteAlways("activateCooldown", 0, 2);
+	ACS_NamedExecuteAlways("vanishingSetup", 0);
+}
+
+//===========================================================================================
+// Decoy Weapon Handling
+//===========================================================================================
 
 script "handleDecoyId" (int selector)
 {
@@ -19,7 +101,7 @@ script "handleDecoyId" (int selector)
 	}
 }
 
-script "takeDecoyEnergy" (int decoyId) NET
+script "takeDecoyEnergy" (int decoyId)
 {
 		While (CheckInventory("decoySpawned"))
 		{
@@ -58,7 +140,7 @@ script "vanishDecoy" (int selector)
 	}	
 }
 
-script "decoyEnergyVanish" (int decoyId) NET
+script "decoyEnergyVanish" (int decoyId)
 {
 	While (CheckInventory("decoySpawned") && CheckInventory("decoyVanished"))
 	{
@@ -71,95 +153,4 @@ script "decoyEnergyVanish" (int decoyId) NET
 			terminate;
 		}
 	}
-}
-
-script "IllusionistFirstAbility" (int cooldownTime) NET
-{
-	if (CheckInventory("IllusionistFirstActive"))
-	{
-		ACS_NamedExecuteAlways("endDisguise", 0, cooldownTime);
-		terminate;
-	}
-	
-	int seekerClass = Random(6,11);
-	GiveInventory("IllusionistFirstActive", 1);
-	GiveInventory(StrParam(s:classNames[seekerClass], s:"Morph"), 1);
-	PlaySound(0, "Illusionist/Abilities/Disguise");
-	ACS_NamedExecuteAlways("hudDisguise", 0, StrParam(s:classNames[seekerClass]), cooldownTime);
-}
-
-script "hudDisguise" (int seekerClass, int cooldownTime) NET CLIENTSIDE
-{
-	
-	HudMessage(s:"You've morphed into a ", s:seekerClass; HUDMSG_FADEOUT, 8, -1, 1.5, 0.45, 3.5, 3.0);
-	
-	For (int x = 60; x > 0; x--)
-	{
-		HudMessage(s:"Disguise lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-		Delay(35);
-		if (!CheckInventory("IllusionistFirstActive"))
-			terminate;
-	}
-	Delay(10);
-	ACS_NamedExecuteAlways("endDisguise", 0, cooldownTime);
-}
-
-script "endDisguise" (int cooldownTime) NET
-{
-	str morphClass = morphName();
-	TakeInventory(morphClass, 1);
-	TakeInventory("IllusionistFirstActive", 1);
-	ACS_NamedExecuteAlways("unmorphHud", 0);
-	PlaySound(0, "Illusionist/Abilities/Morph");
-	ACS_NamedExecuteAlways("activateCooldown", 0, "IllusionistFirstCooldown", cooldownTime);
-	ACS_NamedExecuteAlways("vanishingSetup",0);
-}
-
-function str morphName(void) 
-{
-	for (int x = SEEKER_CLASS_START; x <= SEEKER_CLASS_END; x++)
-		if (CheckInventory(StrParam(s:classNames[x], s:"Morph")))
-			str morphClass = StrParam(s:classNames[x], s: "Morph");
-	
-	return morphClass;
-}
-
-script "IllusionistSecondAbility" (int cooldownTime) NET
-{
-	if (CheckInventory("IllusionistSecondActive"))
-	{	
-		ACS_NamedExecuteAlways("endShrink", 0, cooldownTime);
-	}
-		GiveInventory("IllusionistSecondActive", 1);
-		GiveInventory("ShrinkMorph", 1);
-		PlaySound(0, "Illusionist/Abilities/Shrink", 6);
-		ACS_NamedExecuteAlways("hudShrink", 0, cooldownTime);
-}
-
-script "hudShrink" (int cooldownTime) NET CLIENTSIDE
-{
-	For (int x = 3; x > 0; x--)
-	{
-		HudMessage(s:"shrunken state lasts for ", d:x, s:" more seconds"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
-		Delay(35);
-		if (!CheckInventory("IllusionistSecondActive"))
-			terminate;
-	}
-	Delay(10);
-	ACS_NamedExecuteAlways("endShrink", 0, cooldownTime);
-}
-
-script "endShrink" (int cooldownTime) NET
-{
-	TakeInventory("ShrinkMorph", 1);
-	TakeInventory("IllusionistSecondActive", 1);
-	ACS_NamedExecuteAlways("unmorphHud", 0);
-	PlaySound(0, "Illusionist/Abilities/Unshrink", 6);
-	ACS_NamedExecuteAlways("activateSecondaryCooldown", 0, "IllusionistSecondCooldown", cooldownTime);
-	ACS_NamedExecuteAlways("vanishingSetup", 0);
-}
-
-script "unmorphHud" (void) CLIENTSIDE
-{
-	HudMessage(s:"Morphed back to normal"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 3.0);
 }
