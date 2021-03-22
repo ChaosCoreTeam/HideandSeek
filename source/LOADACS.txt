@@ -6,6 +6,7 @@ WEAPONS
 VANISH
 TAUNT
 ABILITIES
+Passives
 Banshee
 Berserker
 Blazer

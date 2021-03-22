@@ -497,8 +497,8 @@ StatusBar FullScreen, FullScreenOffsets, ForceScaled
 		//Ammo Display Readout
 		DrawNumber 1, HNS_HUD_FONT, Black, Ammo1, DrawShadow, -61, -10, 0;
 		DrawImage "hnsslash", -53, -10;
-		DrawNumber 1, HNS_HUD_FONT, Green, 5, DrawShadow, -34, -10, 0;
-		DrawNumber 1, HNS_HUD_FONT, Gold, Ammo1, WhenNotZero, -61, -10, 0, Red, 1, Green, 4;
+		DrawNumber 1, HNS_HUD_FONT, Green, 3, DrawShadow, -34, -10, 0;
+		DrawNumber 1, HNS_HUD_FONT, Gold, Ammo1, WhenNotZero, -61, -10, 0, Red, 1, Green, 2;
 		//Alt Ammo Display Readout
 		//DrawBar "hudbar12", "hudbar02", Ammo2, Horizontal, -73, -27;
 	}

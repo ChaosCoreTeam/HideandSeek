@@ -1,4 +1,23 @@
 {
+name = "\cc[HnS]\cuBanshee"
+script = DFULTBOT
+chatlump = "chatfiles/blazer.txt"
+gender = female
+color = "00 00 00"
+railcolor = "black"
+skin = "base"
+class = "Banshee"
+revealed = true
+chatfrequency = 25
+accuracy = 4
+intelect = 4
+evade = 4
+anticipation = 4
+reactiontime = 4
+perception = 4
+} 
+
+{
 name = "\cc[HnS]\cuBlazer"
 script = DFULTBOT
 chatlump = "chatfiles/blazer.txt"

@@ -11,7 +11,7 @@ ACTOR TeleporterClass : PlayerPawn
   Player.SoundClass "Teleporter"
   Player.CrouchSprite "PLYC"
   player.startitem "TeleporterGun", 1
-  player.startitem "TeleporterAmmo", 5
+  player.startitem "TeleporterAmmo", 3
   player.startitem "ProxLauncher", 1
   player.startitem "ProxAmmo", 5
   player.startitem "MegaSphere", 1

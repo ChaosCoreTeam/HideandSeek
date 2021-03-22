@@ -17,7 +17,7 @@ script "BerserkerAbilityEnd" (void)
 	//TakeInventory("BloodLustSpeed", 1);
 	//TakeInventory("BloodLustJump", 1);
 	//TakeInventory("BloodLust", 1);
-	TakeInventory("AbilityPowerGiver", 1);
+	//TakeInventory("AbilityPowerGiver", 1);
 }
 
 script "BerserkerSecondAbility" (void)

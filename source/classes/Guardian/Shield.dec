@@ -13,28 +13,26 @@ Actor Shield : Weapon
 			GSHE A 1 A_Raise
 		    Loop
 		  Fire:
-			TNT1 A 0 A_GiveInventory("ShieldUp")
 			GSHE ABCD 4 A_GunFlash
 	        Goto Hold
 	      Hold:
-			GSHE A 0 A_TakeInventory("GuardianPower", 1)
-			GSHE A 0 A_SetMass(99999)
-			GSHE D 1 A_GiveInventory("GuardianCharge", 1)
-			//GSHE A 0 A_JumpIfInventory("ShieldJumpGiver", 9, "JumpChargeGiver")
-			//GSHE D 0 A_JumpIfInventory("ShieldJumpInv", 1, "JumpCounter")
+			TNT1 A 0 A_GiveInventory("ShieldUp")
+			GSHE D 1 A_TakeInventory("GuardianPower", 1)
 			GSHE A 0 A_Refire
 			GSHE A 0 A_TakeInventory("ShieldUp")
-	        GSHE A 0 A_Light0
-		    GSHE A 0 A_JumpIfInventory("GuardianCharge", 75, 5)
-		    GSHE A 0 A_FireCustomMissile("GuardianKnockbackMissile")
-			GSHE A 0 A_GiveToTarget("ShieldUp")
-		    GSHE A 0 A_TakeInventory("GuardianCharge", 75)
-			GSHE A 0 A_SetMass(100)
 		    Goto Ready
 	        GSHE A 0 A_FireCustomMissile("GuardianKnockbackMissileCharged")
 		    GSHE A 0 A_TakeInventory("GuardianCharge", 75)
 			GSHE A 0 A_SetMass(100)
 	        Goto Ready
+		AltFire:
+			GSHE ABCD 4 A_GunFlash
+			Goto AltHold
+		AltHold:
+			TNT1 A 0 A_GiveInventory("ShieldUp")
+			GSHE A 0 A_TakeInventory("GuardianPower", 35)
+			GSHE D 1 A_FireCustomMissile("GuardianKnockbackMissile")
+			Goto Ready
 		}
 }
 ACTOR ShieldUp : PowerProtection

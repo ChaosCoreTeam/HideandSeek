@@ -4,6 +4,115 @@
 #import "FUNCTION.acs"
 
 int radarteam[MAXPLAYERS];
+int buttons;
+int nobuttons;	
+
+//===========================================================================================
+//
+//		Jetpack Scripts
+//
+//===========================================================================================
+
+//note to self the jetpack needs handling work since it does questionable things
+//i know how to fix but i am putting it on hold for right now
+
+Script "jetpackSetup" (void) CLIENTSIDE
+//Jumpin Jetpacks Lots of notes cause this shit confuses The Xen.
+{
+	int jetOn;
+	if(PlayerClass(PlayerNumber())==7) //Scouter check
+	{
+		while (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(),APROP_Health) > 0)
+		{
+			buttons = GetPlayerInput(-1, INPUT_BUTTONS);
+			nobuttons = GetPlayerInput(-1, INPUT_OLDBUTTONS);
+			if (buttons & BT_JUMP)
+			{
+				if (nobuttons & BT_JUMP)
+				{
+					if (nobuttons & BT_ATTACK && jetOn == 1)
+					{
+						ACS_NamedExecuteAlways("jetpackStateHandling", 0, 3);
+						//This is what happens when you hold down the fire button. Basically for fuel bullshit.
+					}
+					if (buttons & BT_ATTACK && jetOn == 1)
+					{
+						ACS_NamedExecuteAlways("jetpackStateHandling", 0, 2);
+						//If our great jetpack champion fires and changes his state, he is promptly reverted back so the jetpack flames and smoke don't vanish!
+					}
+				}
+				else
+				{
+					if ((GetActorZ(0) - GetActorFloorZ(0)) > 24.0 && (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0))
+					{
+						jetOn = 1;
+						ACS_NamedExecuteAlways("jetpackStateHandling", 0, 1);
+						//If the player presses Jump while at a reasonable height and isn't DEAD, their jetpack kicks in!
+					}
+				}
+			}
+			else
+			{
+				if (nobuttons & BT_JUMP && jetOn == 1)
+				{
+					jetOn = 0;
+						ACS_NamedExecuteAlways("jetpackStateHandling", 0, 4);
+					//Release the Jump button and down to Earth you go!
+				}
+				else
+				{
+					//And do absolutely nothing while you're not pressing Jump at all!
+				}
+			}
+		delay(1);
+		}
+	}
+}
+
+script "jetpackStateHandling" (int state)
+{
+	if(state == 1) // Jetpack GO!
+	{
+		SetActorState(PLAYER_BASE_TID + PlayerNumber(), "Jetpack", true);
+	}
+	if(state == 2)
+	{
+		//Jetpack state switch after firing
+		SetActorState(PLAYER_BASE_TID + PlayerNumber(), "JetpackHasFired", true);
+	}
+	
+	if (state == 3)
+	{
+		Delay(1);
+		TakeInventory("JetFuel",1);
+	}
+	if (state == 4) //Jetpack disengaging
+	{
+		SetActorState(PLAYER_BASE_TID + PlayerNumber(), "NoJetpack", true);
+	}
+}
+
+
+Script "jetSpeedOn" (void)
+//Set a reduced speed for the jetpacking player while enabling use of his jetpack.
+{
+	SetActorProperty(0, APROP_Speed, 0.75);
+}
+
+Script "jetSpeedOff" (void)
+//After he's done jetpacking, give him back his original speed.
+{
+	SetActorProperty(0, APROP_Speed, 1.00);
+}
+
+//===========================================================================================
+//
+//		Radar Script
+//
+//===========================================================================================
+
+// radar delay changed from 5 seconds to 3 seconds
+// increased the detection radius by 25% of what it use to be
 
 Script "radarSetup" (void) clientside
 //Radar for Scouter. Detection radius range is 1024 units by default, fine tuned to 1/2: 512 units
@@ -11,17 +120,17 @@ Script "radarSetup" (void) clientside
 	if(consoleplayernumber() != playernumber()) terminate;
 	radarteam[playernumber()]=playerteam();
 	delay(1);
-	if(PlayerClass(PlayerNumber())==5) //Alive Scouter
+	if(PlayerClass(PlayerNumber())==CLASS_SCOUTER) //Alive Scouter
 	{
 		int P,PT,PN,PX,PY,PD,PA;
-		SetHudSize(640,480,1);
-		while (GetActorProperty(1000 + PlayerNumber(),APROP_Health) > 0 && GetCVar("hns_togglevanish")==1)
+		SetHudSize(640,400,1);
+		while (GetActorProperty(1000 + PlayerNumber(),APROP_Health) > 0 && GetCVar("hns_showradar")==1)
 		{
 			P=1000; PT=0; PN=PlayerNumber();
 			while (P<1000+MAXPLAYERS)
 			{
 				PD=(fixeddistance(0,P) >> 20);
-				if ((PD <= 64 * 1/2) && (GetActorProperty(P,APROP_Health) > 0))
+				if ((PD <= 96 * 1/2) && (GetActorProperty(P,APROP_Health) > 0))
 				{
 					PA=(((16384 + GetActorAngle(0) - ((114688 + 16384 + GetTargetAngle(0,P)) % 65536) + 65536) % 65536));
 					PX=((cos(PA) * PD) * 2/1 >> 16);
@@ -34,15 +143,15 @@ Script "radarSetup" (void) clientside
 						if(radarteam[PT]==1 && PN != PT)
 						{
 							SetFont("RADAB0");
-							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (569.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (569.0 - (PX * 0.70)), (71.0 - (PY * 0.70)), 1.0, 1.0);
 						}else if(radarteam[PT]==0 && PN != PT){
-							if(GetActorVelX(P) != 0 || GetActorVelY(P) != 0 || PlayerClass(PT) == 1){
+							if(PlayerClass(PT) < 6){
 								SetFont("RADAC0");
-								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (569.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (569.0 - (PX * 0.70)), (71.0 - (PY * 0.70)), 1.0, 1.0);
 							}
 						}else if(radarteam[PT]!=0){
 							SetFont("RADBA0");
-							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (569.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (569.0 - (PX * 0.70)), (71.0 - (PY * 0.70)), 1.0, 1.0);
 						}
 					}
 					//Aspect Ratio Correction Block for 5:4
@@ -53,15 +162,15 @@ Script "radarSetup" (void) clientside
 						if(radarteam[PT]==1 && PN != PT)
 						{
 							SetFont("RADAB0");
-							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (570.0 - (PX * 1.0)), (58.0 - (PY * 1.0)), 1.0, 1.0);
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (570.0 - (PX * 0.70)), (58.0 - (PY * 0.70)), 1.0, 1.0);
 						}else if(radarteam[PT]==0 && PN != PT){
-							if(GetActorVelX(P) != 0 || GetActorVelY(P) != 0 || PlayerClass(PT) == 1){
+							if(PlayerClass(PT) < 6){
 								SetFont("RADAC0");
-								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (570.0 - (PX * 1.0)), (58.0 - (PY * 1.0)), 1.0, 1.0);
+								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (570.0 - (PX * 0.70)), (58.0 - (PY * 0.70)), 1.0, 1.0);
 							}
 						}else if(radarteam[PT]!=0){
 							SetFont("RADBA0");
-							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (570.0 - (PX * 1.0)), (58.0 - (PY * 1.0)), 1.0, 1.0);
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (570.0 - (PX * 0.70)), (58.0 - (PY * 0.70)), 1.0, 1.0);
 						}
 					}
 					//Aspect Ratio Correction Block for 16:9
@@ -72,15 +181,15 @@ Script "radarSetup" (void) clientside
 						if(radarteam[PT]==1 && PN != PT)
 						{
 							SetFont("RADAB0");
-							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (676.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (676.0 - (PX * 0.70)), (71.0 - (PY * 0.70)), 1.0, 1.0);
 						}else if(radarteam[PT]==0 && PN != PT){
-							if(GetActorVelX(P) != 0 || GetActorVelY(P) != 0 || PlayerClass(PT) == 1){
+							if(PlayerClass(PT) < 6){
 								SetFont("RADAC0");
-								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (676.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (676.0 - (PX * 0.70)), (71.0 - (PY * 0.70)), 1.0, 1.0);
 							}
 						}else if(radarteam[PT]!=0){
 							SetFont("RADBA0");
-							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (676.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (676.0 - (PX * 0.70)), (71.0 - (PY * 0.70)), 1.0, 1.0);
 						}
 					}
 					//Aspect Ratio Correction Block for 16:10
@@ -91,15 +200,15 @@ Script "radarSetup" (void) clientside
 						if(radarteam[PT]==1 && PN != PT)
 						{
 							SetFont("RADAB0");
-							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (633.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (633.0 - (PX * 0.70)), (71.0 - (PY * 0.70)), 1.0, 1.0);
 						}else if(radarteam[PT]==0 && PN != PT){
-							if(GetActorVelX(P) != 0 || GetActorVelY(P) != 0 || PlayerClass(PT) == 1){
+							if(PlayerClass(PT) < 6){
 								SetFont("RADAC0");
-								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (633.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+								HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (633.0 - (PX * 0.70)), (71.0 - (PY * 0.70)), 1.0, 1.0);
 							}
 						}else if(radarteam[PT]!=0){
 							SetFont("RADBA0");
-							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (633.0 - (PX * 1.0)), (71.0 - (PY * 1.0)), 1.0, 1.0);
+							HudMessage(s:"A"; HUDMSG_FADEOUT, (1000 + P), CR_UNTRANSLATED, (633.0 - (PX * 0.70)), (71.0 - (PY * 0.70)), 1.0, 1.0);
 						}
 					}
 				}
@@ -107,7 +216,10 @@ Script "radarSetup" (void) clientside
 				PT++;
 			}
 			if(GetCVar("hns_showradar")==1)LocalAmbientSound("Radar",128);
-			delay(175);
+			delay(105);
 		}
 	}
 }
+
+// stored if statement to see if we should exclude checking for specific players standing still for the future
+//if(GetActorVelX(P) != 0 || GetActorVelY(P) != 0 || PlayerClass(PT) < 6)0

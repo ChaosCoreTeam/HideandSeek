@@ -32,6 +32,7 @@
 #include "classes/Hiders.dec"
 #include "classes/Seekers.dec"
 #include "classes/AbilityItems.dec"
+#include "classes/Passives.dec"
 
 projectile Glass //Glass Shard
 {

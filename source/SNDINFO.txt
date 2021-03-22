@@ -6,6 +6,9 @@
 Abilities/Failure ABILFAIL
 Abilities/EndWarning ENDING
 
+Passives/ChargingJump JUMPCHAR
+Passives/JumpRelease JUMPRELE
+
 // ==================================================================================================================
 // Hider Sounds 
 // ==================================================================================================================
@@ -61,6 +64,12 @@ $playersound	Banshee male	*surface	BANSGASP
 Blazer/Abilities/Dash DSDASH
 Blazer/Abilities/Recall DSFORCE
 
+Climb1 BLAZCLM1
+Climb2 BLAZCLM2
+Climb3 BLAZCLM3
+Climb4 BLAZCLM4
+$random Blazer/Passives/Climb { Climb1 Climb2 Climb3 Climb4 }
+
 BlazeDeath1 BLAZDETH
 BlazeDeath2 BLAZDTH2
 BlazeDeath3 BLAZDTH3
@@ -96,10 +105,10 @@ GuardMedPain1 GUARPA75
 GuardMedPain2 GUARPA50
 GuardHighPain2	GUARPA25
 
-Guardian/ChargingJump JUMPCHAR
-Guardian/JumpRelease JUMPRELE
 Guardian/Abilities/ArmorHit ARMORDMG
 Guardian/Abilities/ArmorActivate ARMSHLD
+
+Guardian/Weapons/ShieldCharge SHLDCHAR
 
 Smokebomb/Hiss	SMOKEHIS
 Smokebomb/Bang	SMOKEBAG
@@ -191,6 +200,7 @@ $playersound	mini	male	*usefail	dsmoof
 //=======================================================================
 //Rocketeer Class Sounds
 //=======================================================================
+Rocketeer/Abilities/IceActivated ICERKACT
 
 $random RockDeath { RockDeath1 RockDeath2 RockDeath3 }
 RockDeath1 ROCKDETH
@@ -232,6 +242,7 @@ Teleporter/Weapons/TeleporterHit	DSPORTH
 Teleporter/Weapons/TeleporterNo	    DSTPNOAM
 Teleporter/Abilities/Mine		MINE001
 Teleporter/Abilities/Mine2      MINE002
+Teleporter/Abilities/OverCharge OVERCHAR
 Teleporter/Weapons/SecurityCamera SECCAM
 Teleporter/Weapons/ModuleLand PROXBOUN
 Teleporter/Weapons/ModuleDetonate PROXBEEP
@@ -270,6 +281,7 @@ Berserker/PunchThunder PUNTHUND
 Berserker/Abilities/BloodLust BLOODLUS
 Berserker/Abilities/HammerThrow HAMFIR
 Berserker/Abilities/HammerIdle HAMFLY
+Berserker/Passives/CrouchDive BERSDIVE
 
 dsjugstp	dsjugstp
 PUNCHHIT	PUNCHHIT
@@ -426,7 +438,7 @@ KnifeMiss		DSKNIFE2
 //Uh, Jetpack!!
 JetpackGo		DSJPKYES
 JetpackDie		DSJPKNO
-JetpackExplode	DSLABOMB
+JetpackExplode	SCOUJEXP
 
 //Teehee
 Radar			DSRADAR
@@ -526,6 +538,11 @@ $playersound	Tactician 	male	*surface		WATR_OUT
 TerminatorLowPain1	TERMPAIN
 TerminatorLowPain2	TERMPA75
 Terminator/Taunt    TERMTAUN
+
+Airdodge1 TAIRDOD1
+Airdodge2 TAIRDOD2
+Airdodge3 TAIRDOD3
+$random Terminator/Passives/Airdodge { Airdodge1 Airdodge2 Airdodge3 } 
 
 $random TerminatorLowPain { TerminatorLowPain1 TerminatorLowPain2 } 
 

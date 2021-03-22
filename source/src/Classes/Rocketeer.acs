@@ -18,10 +18,42 @@ script "RocketeerSecondAbility" (void)
 { 
 	ACS_NamedExecuteAlways("activateCooldown", 0, 2);
 	
+	GiveInventory("RocketeerIceAbility", 1);
+	
 	ACS_NamedExecuteAlways("abilityStateHandling", 0, 2);
 }
 
 script "RocketeerAbilityEnd" (void)
 {
-	//armor inventory stuff
+	
+}
+
+script "actorSlowed" (void)
+{
+	if(PlayerClass(PlayerNumber()) >= SEEKER_CLASS_START)
+	{
+		int chance = random(0,100);
+	
+		if (chance >= 66)
+		{
+			SetFont("BIGFONT");
+			SetActorProperty(0, APROP_Speed, 0.25);
+			HudMessage(s:"Chilled"; HUDMSG_PLAIN, 0, CR_RED, 0.5, 0.5, 3.0, 1.0);
+			FadeTo(210, 230, 255, 0.60, 0.5);
+			Delay(17);
+			FadeTo(210, 2230, 255, 0.50, 0.5);
+			Delay(17);
+			FadeTo(210, 2230, 255, 0.40, 0.5);
+			Delay(17);
+			FadeTo(210, 230, 255, 0.30, 0.5);
+			Delay(17);
+			FadeTo(210, 2230, 255, 0.20, 0.5);
+			Delay(17);
+			FadeTo(210, 2230, 255, 0.10, 0.5);
+			Delay(17);
+			FadeTo(210, 2230, 255, 0.0, 0.5);
+			SetActorProperty(0, APROP_Speed, 1.00);
+		}
+	}
+	TakeInventory("slowGiver", 1);
 }

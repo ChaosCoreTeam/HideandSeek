@@ -21,7 +21,6 @@ ACTOR BlazerClass : PlayerPawn
 	Player.CrouchSprite "BSRC"
 	Player.ForwardMove 1.00, 1.00
 	Player.SideMove 0.90, 0.90
-	Player.JumpZ 12
 	Species "Hider"
 	limitedtoteam 0
 	damagefactor "rocket", 0

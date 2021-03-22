@@ -2,9 +2,6 @@
 #import "DEFINITIONS.acs"
 #include "zcommon.acs"
 
-int buttons;
-int nobuttons;	
-
 script "GuardianFirstAbility" (void)
 {
 	Spawn("SmokeCanister", GetActorX(0), GetActorY(0), GetActorZ(0));
@@ -83,108 +80,5 @@ script "GuardianStunner" (void)
 		FadeTo(255, 255, 255, 0.0, 3.0);
 		Delay(105);
 		SetPlayerProperty(0, 0, PROP_TOTALLYFROZEN);
-	}
-}
-
-Script "chargeableJump" (void) CLIENTSIDE
-{
-	int holdTime;
-	
-	if(PlayerClass(PlayerNumber())==CLASS_GUARDIAN) //Guardian check
-	{
-		while (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(),APROP_Health) > 0)
-		{
-			if (CheckInventory("JumpChargeActive") == 0)
-			{
-				TakeInventory("JumpCharge", 5);
-			}
-			
-			buttons = GetPlayerInput(-1, INPUT_BUTTONS);
-			nobuttons = GetPlayerInput(-1, INPUT_OLDBUTTONS);
-			
-			//jump state was detected
-			if (buttons & BT_JUMP) 
-			{
-				GiveInventory("JumpChargeActive", 1);
-				//activated by initial trigger and holding down
-				if (nobuttons & BT_JUMP)
-				{
-					if (CheckInventory("JumpCharge") != 5)
-					{
-						holdTime++;
-						
-						if (holdTime == 30)
-						{
-							ACS_NamedExecuteAlways("giveJumpCharge", 0);
-							holdTime = 0;
-						}
-					}
-				}
-				else
-				{
-				}
-			}
-			//release detection
-			else
-			{
-				//check if actor is on the ground, then perform the jump
-				if (nobuttons & BT_JUMP)
-				{
-					if ((GetActorZ(0) - GetActorFloorZ(0)) == 0 && (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0))
-					{
-						int jumpHeight = CheckInventory("JumpCharge");
-						ACS_NamedExecuteAlways("jumpChargeHeight", 0, jumpHeight);
-					}
-					holdTime = 0;
-					TakeInventory("JumpChargeActive", 1);
-					TakeInventory("JumpCharge", 5);
-				}
-				else
-				{
-					//do nothing
-				}
-			}
-		delay(1);	
-		}
-	}
-}
-
-Script "giveJumpCharge" (void)
-{
-	PlaySound(PLAYER_BASE_TID + PlayerNumber(), "Guardian/ChargingJump", 7, 1.0, false, true);
-	GiveInventory("JumpCharge", 1);
-}
-
-Script "jumpChargeHeight" (int jHeight)
-{
-	int pT = PLAYER_BASE_TID + PlayerNumber();
-	switch (jHeight)
-	{
-		case 0:
-			ThrustThingZ(pT, 35, 0, 0);
-			break;
-		case 1:
-			ThrustThingZ(pT, 45, 0, 0);
-			break;
-		case 2:
-			ThrustThingZ(pT, 55, 0, 0);
-			break;
-		case 3:
-			ThrustThingZ(pT, 65, 0, 0);
-			break;
-		case 4:
-			ThrustThingZ(pT, 75, 0, 0);
-			break;
-		case 5:
-			ThrustThingZ(pT, 85, 0, 0);
-			break;
-		default:
-			Log(s:"The script is broekn!!!!!!!!!!");
-			break;
-	}
-	
-	if (jHeight != 0)
-	{
-		PlaySound(PLAYER_BASE_TID + PlayerNumber(), "Guardian/JumpRelease", 7);
 	}
 }
