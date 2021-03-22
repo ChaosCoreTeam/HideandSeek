@@ -3,6 +3,9 @@
 #include "zcommon.acs"
 #import "GLOBAL.acs"
 
+int buttons;
+int nobuttons;
+
 //===========================================================================================
 // Disguise Ability
 //===========================================================================================
@@ -84,23 +87,100 @@ script "IllusionistSecondAbilityEnd" (void)
 // Decoy Weapon Handling
 //===========================================================================================
 
-script "handleDecoyId" (int selector)
+script "decoyFireHandling" (void)
+{
+	int holdTime;
+	
+	if(PlayerClass(PlayerNumber())==CLASS_ILLUSIONIST) //Guardian check
+	{
+		while (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(),APROP_Health) > 0)
+		{
+			buttons = GetPlayerInput(-1, INPUT_BUTTONS);
+			nobuttons = GetPlayerInput(-1, INPUT_OLDBUTTONS);
+			
+			if (checkinventory("wepFire"))
+			{
+				holdTime = 0;
+			}
+			
+			if (buttons & BT_ATTACK)
+			{
+				if (nobuttons & BT_ATTACK)
+				{
+					holdTime++;
+					log(d:holdTime);
+				}
+				else
+				{
+				}
+			}
+			//release detection
+			else
+			{
+				if (nobuttons & BT_ATTACK)
+				{
+					if (checkinventory("wepFire") == false)
+					{
+						GiveInventory("wepFire", 1);
+						if (holdTime < 7)
+						{
+							if(CheckInventory("decoySpawned"))
+							{
+								ACS_NamedExecuteAlways("handleDecoy", 0, 1);
+							}
+							if(!CheckInventory("decoySpawned"))
+							{
+								GiveInventory("spawnDecoy", 1);
+							}
+						}
+						if (holdTime >= 7)
+						{
+							if (!CheckInventory("decoyVanished"))
+							{
+								ACS_NamedExecuteAlways("vanishDecoy", 0, 0);
+							}
+							if (CheckInventory("decoyVanished"))
+							{
+								ACS_NamedExecuteAlways("vanishDecoy", 0, 1);
+							}
+						}
+					}
+				}
+				else
+				{
+					//notta
+				}
+			}
+			
+		delay(1);
+		}
+	}
+}
+
+script "handleDecoy" (int selector)
 {
 	int activator = PlayerNumber()+1000;
 	int decoyId = PlayerNumber() + DECOY_TID_INDEX;
 
+	PlaySound(0, "Illusionist/Weapons/SpawnDecoy", 0, 1.0, false, 0.0);
+	
 	if (selector == 0)
 	{
+		GiveInventory("decoySpawned", 1);
 		Thing_ChangeTid(4999, decoyId);
 		ACS_NamedExecuteAlways("takeDecoyEnergy", 0, decoyId);	
 	}	
 
 	if (selector == 1)
 	{
+		TakeInventory("decoyVanished", 1);
+		TakeInventory("decoySpawned", 1);
 		SetActorState(decoyId, "Death", true);
 	}
+	
 }
 
+// decoy energy handling
 script "takeDecoyEnergy" (int decoyId)
 {
 		While (CheckInventory("decoySpawned"))
@@ -116,6 +196,7 @@ script "takeDecoyEnergy" (int decoyId)
 		}
 }
 
+// vanish decoy handling
 script "vanishDecoy" (int selector)
 {
 	int activator = PlayerNumber()+1000;
@@ -130,16 +211,21 @@ script "vanishDecoy" (int selector)
 	
 	if (selector == 0)
 	{
+		GiveInventory("decoyVanished", 1);
+		PlaySound (0, "VanishOn", 0, 1.0, false, 0.0);
 		SetActorState(decoyId, "Vanish", true);
 		ACS_NamedExecute("decoyEnergyVanish", 0);
 	}
 	
 	if (selector == 1)
 	{
+		TakeInventory("decoyVanished", 1);
+		PlaySound (0, "VanishOff", 0, 1.0, false, 0.0);
 		SetActorState(decoyId, "VanishOff", true);
 	}	
 }
 
+// vanishing decoy energy handling
 script "decoyEnergyVanish" (int decoyId)
 {
 	While (CheckInventory("decoySpawned") && CheckInventory("decoyVanished"))
@@ -153,4 +239,66 @@ script "decoyEnergyVanish" (int decoyId)
 			terminate;
 		}
 	}
+}
+
+script "decoyAltHandling" (void)
+{
+	if(PlayerClass(PlayerNumber())==CLASS_ILLUSIONIST) //Guardian check
+	{
+		while (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(),APROP_Health) > 0)
+		{
+			buttons = GetPlayerInput(-1, INPUT_BUTTONS);
+			nobuttons = GetPlayerInput(-1, INPUT_OLDBUTTONS);
+			
+			//trigger alt fire
+			if (buttons & BT_ALTATTACK)
+			{
+				ACS_NamedExecuteAlways("nextDecoy", 0);
+				Delay(10);
+			}
+			else
+			{
+				//nothing
+			}
+		delay(1);	
+		}
+	}
+}
+
+script "nextDecoy" (void)
+{
+	int oldSel = decoyWeaponCheck();
+	if (oldSel != 0)
+	{
+		str oldSelString = StrParam(s:classNames[oldSel],s:"Sel");
+		log(s:"Took ",s:oldSelString);
+		TakeInventory(oldSelString, 1);
+	}
+	int newSel = oldSel + 1;
+	if (newSel == SEEKER_CLASS_START)
+	{
+		newSel = 0;
+	}
+	if (newSel != 0)
+	{
+		str newSelString = StrParam(s:classNames[newSel],s:"Sel");
+		log(s:"Gave ",s:newSelString);
+		GiveInventory(newSelString, 1);
+	}
+}
+
+function int decoyWeaponCheck (void)
+{
+	for (int x = 0; x < SEEKER_CLASS_START; x++)
+	{
+		if (x > 0)
+		{
+			str wString = StrParam(s:classNames[x],s:"Sel");
+			if (CheckInventory(wString))
+			{
+				return x;
+			}
+		}
+	}
+	return 0;
 }

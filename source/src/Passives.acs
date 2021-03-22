@@ -1,0 +1,487 @@
+#library "Passives"
+#import "DEFINITIONS.acs"
+#include "zcommon.acs"
+
+#define JUMP_COOLDOWN_TICS 8
+#define AIRDODGE_COOLDOWN_TICS 15
+#define TIC_DETECTION_DELAY 5
+#define PLAYER_VIEW_HEIGHT_OFFSET 24.0
+#define THRUST_FORCE 48
+#define THRUST_CROUCH_FORCE 20
+#define THRUST_DODGE_FORCE 10
+#define THRUST_UPWARDS_CONSTANT 0
+#define THRUST_ADD_CONSTANT 1
+
+int buttons;
+int nobuttons;	
+
+int playerJumpDownPrevTick[MAXPLAYERS];
+int playerJumpDownCurrTick[MAXPLAYERS];
+int playerJumpCooldown[MAXPLAYERS];
+
+int playerCrouchDownPrevTick[MAXPLAYERS];
+int playerCrouchDownCurrTick[MAXPLAYERS];
+int playerCrouchCooldown[MAXPLAYERS];
+
+int playerLookLeftDownPrevTick[MAXPLAYERS];
+int playerLookLeftDownCurrTick[MAXPLAYERS];
+
+int playerLookRightDownPrevTick[MAXPLAYERS];
+int playerLookRightDownCurrTick[MAXPLAYERS];
+
+int playerMoveLeftDownPrevTick[MAXPLAYERS];
+int playerMoveLeftDownCurrTick[MAXPLAYERS];
+
+int playerMoveRightDownPrevTick[MAXPLAYERS];
+int playerMoveRightDownCurrTick[MAXPLAYERS];
+
+int playerAirDodgePrevTick[MAXPLAYERS];
+int playerAirDodgeCurrTick[MAXPLAYERS];
+int playerAirDodgeCooldown[MAXPLAYERS];
+
+//===========================================================================================
+//
+//		Chargeable Jump
+//		Given to the Hunter, will probably give to others
+//
+//===========================================================================================
+
+Script "doubleJump" (void) CLIENTSIDE
+{
+	bool jumpInt;
+	bool secondGave;
+	bool secondAct;
+	if(PlayerClass(PlayerNumber())==CLASS_HUNTER) //Guardian check
+	{
+		while (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(),APROP_Health) > 0)
+		{
+			buttons = GetPlayerInput(-1, INPUT_BUTTONS);
+			nobuttons = GetPlayerInput(-1, INPUT_OLDBUTTONS);
+			//jump state was detected
+			if (buttons & BT_JUMP) 
+			{
+				//checks if we already gave you a secondjump and checks to see if it's been activated already
+				if (secondGave == true && secondAct == false)
+				{
+					//air check
+					if ((GetActorZ(0) - GetActorFloorZ(0) > 8.0 && GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0))
+					{
+						PlaySound(PLAYER_BASE_TID + PlayerNumber(), "Passives/JumpRelease", 7);
+						ThrustThingZ(0, 45, 0, 0);
+						TakeInventory("secondJump", 1);
+						secondAct = true;
+					}
+				}
+				//did we give you the second jump? now you have it
+				if (secondGave == false)
+				{
+					delay(5);
+					GiveInventory("secondJump", 1);
+					log(s:"you can jump again");
+					secondGave = true;
+				}
+			}
+			//release detection
+			else
+			{
+				if ((GetActorZ(0) - GetActorFloorZ(0)) == 0.0)
+				{
+					//floor detection and resets jump variables if they are true
+					if (secondAct == true || secondGave == true)
+					{
+						TakeInventory("secondJump", 1);
+						secondAct = false;
+						secondGave = false;
+					}
+				}
+			}
+		delay(1);	
+		}
+	}
+}
+
+//===========================================================================================
+//
+//		Chargeable Jump
+//		Given to the Guardian, will probably give to others
+//
+//===========================================================================================
+
+Script "chargeableJump" (void) CLIENTSIDE
+{
+	int holdTime;
+	
+	if(PlayerClass(PlayerNumber())==CLASS_GUARDIAN) //Guardian check
+	{
+		while (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(),APROP_Health) > 0)
+		{
+			if (CheckInventory("JumpChargeActive") == 0)
+			{
+				TakeInventory("JumpCharge", 5);
+			}
+			
+			buttons = GetPlayerInput(-1, INPUT_BUTTONS);
+			nobuttons = GetPlayerInput(-1, INPUT_OLDBUTTONS);
+			
+			//jump state was detected
+			if (buttons & BT_JUMP) 
+			{
+				GiveInventory("JumpChargeActive", 1);
+				//activated by initial trigger and holding down
+				if (nobuttons & BT_JUMP)
+				{
+					if (CheckInventory("JumpCharge") != 5)
+					{
+						holdTime++;
+						
+						if (holdTime == 30)
+						{
+							PlaySound(PLAYER_BASE_TID + PlayerNumber(), "Passives/ChargingJump", 7, 1.0, false, true);
+							GiveInventory("JumpCharge", 1);
+							holdTime = 0;
+						}
+					}
+				}
+				else
+				{
+				}
+			}
+			//release detection
+			else
+			{
+				//check if actor is on the ground, then perform the jump
+				if (nobuttons & BT_JUMP)
+				{
+					if ((GetActorZ(0) - GetActorFloorZ(0)) == 0 && (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0))
+					{
+						int jumpHeight = CheckInventory("JumpCharge");
+						ACS_NamedExecuteAlways("jumpChargeHeight", 0, jumpHeight);
+					}
+					holdTime = 0;
+					TakeInventory("JumpChargeActive", 1);
+					TakeInventory("JumpCharge", 5);
+				}
+				else
+				{
+					//do nothing
+				}
+			}
+		delay(1);	
+		}
+	}
+}
+
+Script "jumpChargeHeight" (int jHeight)
+{
+	int pT = PLAYER_BASE_TID + PlayerNumber();
+	switch (jHeight)
+	{
+		case 0:
+			ThrustThingZ(pT, 35, 0, 0);
+			break;
+		case 1:
+			ThrustThingZ(pT, 45, 0, 0);
+			break;
+		case 2:
+			ThrustThingZ(pT, 50, 0, 0);
+			break;
+		case 3:
+			ThrustThingZ(pT, 55, 0, 0);
+			break;
+		case 4:
+			ThrustThingZ(pT, 60, 0, 0);
+			break;
+		case 5:
+			ThrustThingZ(pT, 65, 0, 0);
+			break;
+		default:
+			Log(s:"The script is broekn!!!!!!!!!!");
+			break;
+	}
+	
+	if (jHeight != 0)
+	{
+		PlaySound(PLAYER_BASE_TID + PlayerNumber(), "Passives/JumpRelease", 7);
+	}
+}
+
+//===========================================================================================
+//
+//		Wall Jumping
+//		Given to the Guardian, will probably give to others
+//
+//===========================================================================================
+
+script "wallClimbing" (void)
+{
+	int playerNum = PlayerNumber();
+	int playerTid = playerNum + PLAYER_BASE_TID;
+	playerJumpCooldown[playerNum] = 0;
+	playerJumpDownPrevTick[playerNum] = false;
+	playerJumpDownCurrTick[playerNum] = false;
+	
+	if (PlayerClass(playerNum) == CLASS_BLAZER)
+	{
+		while (GetActorProperty(playerTid,APROP_Health) > 0) 
+		{
+			recordPlayerJumpGametickPress(playerNum);
+			if (playerEligibleToWallJump(playerNum, playerTid)) 
+			{
+				playerJumpCooldown[playerNum] = Timer();
+				PlaySound(playerTid, "Blazer/Passives/Climb", 0, 1.0, 0, 0);
+				ThrustThingZ(playerTid, THRUST_FORCE, THRUST_UPWARDS_CONSTANT, THRUST_ADD_CONSTANT);
+			}
+			Delay(1);
+		}
+	}
+}
+
+function void recordPlayerJumpGametickPress(int playerNum) {
+	bool isJumpDown = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_JUMP) == BT_JUMP;
+	playerJumpDownPrevTick[playerNum] = playerJumpDownCurrTick[playerNum];
+	playerJumpDownCurrTick[playerNum] = isJumpDown;
+}
+
+function bool playerEligibleToWallJump(int playerNum, int playerTid) {
+	int noGrd = playerIsNotOnTheGround(playerTid);
+	int noCool = playerNotOnJumpCooldown(playerNum);
+	int jmp = isPlayerPressingJumping(playerNum);
+	int atWall = playerIsNearAWallToJumpOffOf(playerNum, playerTid);
+
+	return noGrd && noCool && jmp && atWall;
+}
+
+function bool playerIsNotOnTheGround(int playerTid) {
+	// We want a buffer zone of 8 map units so the player can't walljump
+	// immediately when on the ground.
+	return GetActorZ(playerTid) - GetActorFloorZ(playerTid) >= 16.0;
+}
+
+function bool isPlayerPressingJumping(int playerNum) {
+	return playerJumpDownCurrTick[playerNum] && !playerJumpDownPrevTick[playerNum];
+}
+
+function bool playerNotOnJumpCooldown(int playerNum) {
+	return (Timer() - playerJumpCooldown[playerNum]) > JUMP_COOLDOWN_TICS;
+}
+
+function bool playerIsNearAWallToJumpOffOf(int playerNum, int playerTid) {
+	int x = GetActorX(playerTid);
+	int y = GetActorY(playerTid);
+	int z = GetActorZ(playerTid);
+	//int angle = GetActorAngle(playerTid) > 8 ;
+	
+	int spawned = Spawn("PlayerWallDetector", x + cos(GetActorAngle(playerTid)) * 32, y + sin(GetActorAngle(playerTid)) * 32, z, 1234, 0);
+	if (spawned == 0)
+		return true;
+
+	return false;
+}
+
+//===========================================================================================
+//
+//		Crouch Jumping
+//		Given to the Guardian, will probably give to others
+//
+//===========================================================================================
+script "crouchJumping" (void)
+{
+	int playerNum = PlayerNumber();
+	int playerTid = playerNum + PLAYER_BASE_TID;
+	playerCrouchCooldown[playerNum] = 0;
+	playerCrouchDownPrevTick[playerNum] = false;
+	playerCrouchDownCurrTick[playerNum] = false;
+	
+	if (PlayerClass(playerNum) == CLASS_BANSHEE)
+	{
+		while (GetActorProperty(playerTid,APROP_Health) > 0) 
+		{
+			recordPlayerCrouchGametickPress(playerNum);
+			if (playerEligibleToCrouchJump(playerNum, playerTid)) 
+			{
+				PlaySound(playerTid, "Banshee/Passives/Crouch", 0, 1.0, 0, 0);
+				GiveInventory("CrouchSlide", 1);
+				ACS_NamedExecuteAlways("slideSpeedHandling", 0, 1);
+			}
+			if (isPlayerHoldingCrouch(playerNum))
+			{
+				for (int x = 0; x < 20; x++)
+				{
+					ACS_NamedExecuteAlways("slideSpeedHandling", 0);
+				}
+				
+			}
+			Delay(1);
+		}
+	}
+}
+
+function void recordPlayerCrouchGametickPress(int playerNum) {
+	bool isCrouchDown = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_CROUCH) == BT_CROUCH;
+	playerJumpDownPrevTick[playerNum] = playerCrouchDownCurrTick[playerNum];
+	playerJumpDownCurrTick[playerNum] = isCrouchDown;
+}
+
+function bool playerEligibleToCrouchJump(int playerNum, int playerTid) {
+	int crouch = isPlayerPressingCrouch(playerNum);
+	return crouch;
+}
+
+function bool playerNotOnCrouchCooldown(int playerNum) {
+	return (Timer() - playerCrouchCooldown[playerNum]) > JUMP_COOLDOWN_TICS;
+}
+
+function bool isPlayerPressingCrouch(int playerNum) {
+	return playerCrouchDownCurrTick[playerNum] && !playerCrouchDownPrevTick[playerNum];
+}
+
+function bool isPlayerHoldingCrouch(int playerNum) {
+	return playerCrouchDownCurrTick[playerNum] && playerCrouchDownPrevTick[playerNum];
+}
+
+//Actor KickedAlready : Token { Inventory.InterHubAmount 0 }	//for player to know if he hit someone and slide should stop
+//A_ChangeVelocity(velx/1.33, vely/1.33, velz, CVF_REPLACE)
+
+//===========================================================================================
+//
+//		crouchDiving
+//		Given to the Guardian, will probably give to others
+//
+//===========================================================================================
+script "crouchDiving" (void)
+{
+	int playerNum = PlayerNumber();
+	int playerTid = playerNum + PLAYER_BASE_TID;
+	playerCrouchDownPrevTick[playerNum] = false;
+	playerCrouchDownCurrTick[playerNum] = false;
+	
+	if (PlayerClass(playerNum) == CLASS_BERSERKER)
+	{
+		while (GetActorProperty(playerTid,APROP_Health) > 0) 
+		{
+			recordPlayerCrouchGametickPress(playerNum);
+			if (playerEligibleToCrouchDive(playerNum, playerTid)) 
+			{
+				PlaySound(playerTid, "Berserker/Passives/CrouchDive", 0, 1.0, 0, 0);
+				ThrustThingZ(playerTid, THRUST_CROUCH_FORCE, 1, 1);
+			}
+			Delay(1);
+		}
+	}
+}
+
+function bool playerEligibleToCrouchDive(int playerNum, int playerTid) {
+	int noGrd = playerIsNotOnTheGround(playerTid);
+	int crouch = isPlayerPressingCrouch(playerNum);
+	return noGrd && crouch;
+}
+
+//===========================================================================================
+//
+//		Air Dodge
+//		Given to the Guardian, will probably give to others
+//
+//===========================================================================================
+script "airDodging" (void)
+{
+	int playerNum = PlayerNumber();
+	int playerTid = playerNum + PLAYER_BASE_TID;
+	int angle;
+	int fTap;
+	int bTap;
+	int lTap;
+	int rTap;
+	playerAirDodgeCooldown[playerNum] = 0;
+	playerAirDodgePrevTick[playerNum] = 0;
+	playerAirDodgeCurrTick[playerNum] = 0;
+	
+	if (PlayerClass(playerNum) == CLASS_TERMINATOR)
+	{
+		while (GetActorProperty(playerTid,APROP_Health) > 0) 
+		{
+			buttons = GetPlayerInput(-1, INPUT_BUTTONS);
+			nobuttons = GetPlayerInput(-1, INPUT_OLDBUTTONS);
+			
+			//we need the jump detection to get the rest of the script... as far as i'm aware.
+			if (buttons & BT_JUMP)
+			{
+				
+			}
+		//thrustFired = false;
+		//fCount = 0;
+		Delay(1);
+		}
+	}
+}
+
+script "dodgeThrust" (int playerTid, int angle)
+{
+	if (GetActorZ(playerTid) - GetActorFloorZ(playerTid) > 0.0 && CheckInventory("airDodge") == false)
+	{
+		log(s:"thrusted");
+		GiveInventory("airDodge", 1);
+		PlaySound(playerTid, "Terminator/Passives/Airdodge", 0, 1.0, 0, 0);
+		ThrustThing(angle, THRUST_DODGE_FORCE, 0, playerTid);
+		Delay(105);
+		TakeInventory("airDodge", 1);
+	}
+}
+
+function void recordPlayerDirectionTicPress(int playerNum) {
+	bool forwardPressed = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_FORWARD) == BT_FORWARD;
+	bool backwardPressed = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_BACK) == BT_BACK;
+	bool leftPressed = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVELEFT) == BT_MOVELEFT;
+	bool rightPressed = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVERIGHT) == BT_MOVERIGHT;
+	int directionPressed;
+	
+	if (forwardPressed) 
+		directionPressed = 1;
+	if (backwardPressed)
+		directionPressed = 2;
+	if (leftPressed)
+		directionPressed = 3;
+	if (rightPressed)
+		directionPressed = 4;
+	
+	playerAirDodgePrevTick[playerNum] = playerAirDodgeCurrTick[playerNum];
+	playerAirDodgeCurrTick[playerNum] = directionPressed;
+}
+
+function bool playerEligibleToAirDodge(int playerNum, int playerTid) {
+	int noGrd = playerIsNotOnTheGround(playerTid);
+	int noCool = playerNotOnAirDodgeCooldown(playerNum);
+	int dirAct = isPlayerPressingSameDirection(playerNum);
+	return noGrd & noCool & dirAct;
+}
+
+function bool isPlayerPressingSameDirection(int playerNum) {
+	return playerAirDodgeCurrTick[playerNum] && !playerAirDodgePrevTick[playerNum];
+}
+
+function bool playerNotOnAirDodgeCooldown(int playerNum) {
+	return (Timer() - playerAirDodgeCooldown[playerNum]) > AIRDODGE_COOLDOWN_TICS;
+}
+
+function void resetAirDodgeTickInfo(int playerNum) {
+	playerAirDodgePrevTick[playerNum] = 0;
+	playerAirDodgeCurrTick[playerNum] = 0;
+}
+
+function int getAngleToThrust(int playerNum, int direction)
+{
+	int angle = GetActorAngle(playerNum) >> 8;
+	switch (direction)
+	{
+		case 1:
+			return angle;
+		case 2:
+			return angle + 128;
+		case 3:
+			return angle + 64;
+		case 4:
+			return angle + 192;
+		default:
+			break;
+	}
+	return 0;
+}

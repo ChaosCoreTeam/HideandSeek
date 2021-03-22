@@ -41,8 +41,10 @@ script "TeleporterSecondAbility" (void)
 	ACS_NamedExecuteAlways("activateCooldown", 0, 2);
 	
 	//additonal inventory cases
+	GiveInventory("TeleporterOverchargeAbility", 1);
 	GiveInventory("TeleporterShotPower", 1);
-	PlaySound(0, "Teleporter/Abilities/Overcharge", 0);
+	GiveInventory("TeleporterInfiniteAmmo", 1);
+	PlaySound(0, "Teleporter/Abilities/Overcharge", 0, 1.0, 0, false);
 	
 	ACS_NamedExecuteAlways("abilityStateHandling", 0, 2);
 	//ACS_NamedExecuteAlways("hudOvercharge", 0);	
@@ -55,6 +57,7 @@ script "TeleporterAbilityEnd" (void)
 	//additonal inventory cases
 	//PlaySound(0, "Teleporter/Abilities/EndOvercharge", 0);
 	TakeInventory("TeleporterShotPower", 1);
+	TakeInventory("TeleporterInfiniteAmmo", 1);
 }
 
 
@@ -122,7 +125,7 @@ Script "teleportPlayer" (void)
 	PlayerTID = (FinalTeleporterTID - 2000);
 	
 	SetActorPosition(PlayerTID, GetActorX(FinalTeleporterTID), GetActorY(FinalTeleporterTID), GetActorZ(FinalTeleporterTID), 0);
-	If (!CheckActorInventory(PlayerTID, "OverCharge"))
+	If (!CheckActorInventory(PlayerTID, "AbilityPowerup"))
 	{
 		TakeActorInventory(PlayerTID, "TeleporterAmmo", 1);
 	}

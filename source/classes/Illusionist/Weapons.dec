@@ -8,368 +8,207 @@ Actor IllusionistDecoyWep: Weapon
 	+WEAPON.NOALERT
 }
 
-Actor IllusionistBansheeDecoy : IllusionistDecoyWep
-{
-	Tag "Banshee Decoy"
-	States
-	{
-	Ready:
-		BANH A 1 A_WeaponReady
-		Loop
-	Deselect:
-		BANH A 1 A_Lower
-		Loop
-	Select:
-		BANH A 1 A_Raise
-		Loop
-	Fire:
-		TNT1 A 0 A_JumpIfInventory("decoySpawned", 1, "Exist")
-		BANH A 1 Offset(0, 10)		
-		BANH A 1 Offset(0, 20)
-		BANH A 1 Offset(0, 30)
-		BANH A 1 Offset(0, 40)
-		BANH A 1 Offset(0, 50)
-		TNT1 A 0 A_GiveInventory("decoySpawned", 1)
-		TNT1 A 0 A_PlaySound("Illusionist/Weapons/SpawnDecoy")
-		BANH A 0 A_SpawnItemEx("BansheeDecoy", 0, 0, 0, 0, 0, 0, 0, SXF_SETMASTER, 0, 4999)
-		BANH A 0 ACS_NamedExecuteAlways("handleDecoyId", 0, 0)
-		Goto Ready
-	Exist:	
-		BANH A 1 Offset(0, 50)
-		BANH A 1 Offset(0, 40)
-		BANH A 1 Offset(0, 30)
-		BANH A 1 Offset(0, 20)
-		BANH A 1 Offset(0, 10)
-		TNT1 A 0 A_TakeInventory("decoySpawned", 1)
-		BANH A 0 A_PlaySound("Illusionist/Weapons/SpawnDecoy")
-		BANH A 0 ACS_NamedExecuteAlways("handleDecoyId", 0, 1)
-		Goto Ready
-	AltFire:
-		TNT1 A 0 A_JumpIfInventory("decoyVanished", 1, "DecoyVanishOff")
-		BANH A 1 Offset(0, 10)		
-		BANH A 1 Offset(0, 20)
-		BANH A 1 Offset(0, 30)
-		BANH A 1 Offset(0, 40)
-		BANH A 1 Offset(0, 50)
-		TNT1 A 1 A_PlaySound ("VanishOn", 5)
-		TNT1 A 1 A_GiveInventory("decoyVanished", 1)
-		TNT1 A 1 ACS_NamedExecuteAlways("vanishDecoy", 0, 0)
-		Goto Ready
-	DecoyVanishOff:
-		BANH A 1 Offset(0, 10)		
-		BANH A 1 Offset(0, 20)
-		BANH A 1 Offset(0, 30)
-		BANH A 1 Offset(0, 40)
-		BANH A 1 Offset(0, 50)
-		TNT1 A 1 A_PlaySound ("VanishOff", 5)
-		TNT1 A 1 A_TakeInventory("decoyVanished", 1)
-		TNT1 A 1 ACS_NamedExecuteAlways("vanishDecoy", 0, 1)
-		Goto Ready
-	}
-}
-
-Actor IllusionistBlazerDecoy : IllusionistDecoyWep
-{
-	Tag "Blazer Decoy"
-	States
-	{
-	Ready:
-		BLZD A 1 A_WeaponReady
-		Loop
-	Deselect:
-		BLZD A 1 A_Lower
-		Loop
-	Select:
-		BLZD A 1 A_Raise
-		Loop
-	Fire:
-		TNT1 A 0 A_JumpIfInventory("decoySpawned", 1, "Exist")
-		BLZD A 1 Offset(0, 10)		
-		BLZD A 1 Offset(0, 20)
-		BLZD A 1 Offset(0, 30)
-		BLZD A 1 Offset(0, 40)
-		BLZD A 1 Offset(0, 50)
-		TNT1 A 0 A_GiveInventory("decoySpawned", 1)
-		TNT1 A 0 A_PlaySound("Illusionist/Weapons/SpawnDecoy")
-		BLZD A 0 A_SpawnItemEx("BlazerDecoy", 0, 0, 0, 0, 0, 0, 0, SXF_SETMASTER, 0, 4999)
-		BLZD A 0 ACS_NamedExecuteAlways("handleDecoyId", 0, 0)
-		Goto Ready
-	Exist:	
-		BLZD A 1 Offset(0, 50)
-		BLZD A 1 Offset(0, 40)
-		BLZD A 1 Offset(0, 30)
-		BLZD A 1 Offset(0, 20)
-		BLZD A 1 Offset(0, 10)
-		TNT1 A 0 A_TakeInventory("decoySpawned", 1)
-		BLZD A 0 A_PlaySound("Illusionist/Weapons/SpawnDecoy")
-		BLZD A 0 ACS_NamedExecuteAlways("handleDecoyId", 0, 1)
-		Goto Ready
-	AltFire:
-		TNT1 A 0 A_JumpIfInventory("decoyVanished", 1, "DecoyVanishOff")
-		BLZD A 1 Offset(0, 10)		
-		BLZD A 1 Offset(0, 20)
-		BLZD A 1 Offset(0, 30)
-		BLZD A 1 Offset(0, 40)
-		BLZD A 1 Offset(0, 50)
-		TNT1 A 1 A_PlaySound ("VanishOn", 5)
-		TNT1 A 1 A_GiveInventory("decoyVanished", 1)
-		TNT1 A 1 ACS_NamedExecuteAlways("vanishDecoy", 0, 0)
-		Goto Ready
-	DecoyVanishOff:
-		BLZD A 1 Offset(0, 10)		
-		BLZD A 1 Offset(0, 20)
-		BLZD A 1 Offset(0, 30)
-		BLZD A 1 Offset(0, 40)
-		BLZD A 1 Offset(0, 50)
-		TNT1 A 1 A_PlaySound ("VanishOff", 5)
-		TNT1 A 1 A_TakeInventory("decoyVanished", 1)
-		TNT1 A 1 ACS_NamedExecuteAlways("vanishDecoy", 0, 1)
-		Goto Ready
-	}
-}
-
-Actor IllusionistGuardianDecoy : IllusionistDecoyWep
-{
-	Tag "Guardian Decoy"
-	States
-	{
-	Ready:
-		GUAH A 1 A_WeaponReady
-		Loop
-	Deselect:
-		GUAH A 1 A_Lower
-		Loop
-	Select:
-		GUAH A 1 A_Raise
-		Loop
-	Fire:
-		TNT1 A 0 A_JumpIfInventory("decoySpawned", 1, "Exist")
-		GUAH A 1 Offset(0, 10)		
-		GUAH A 1 Offset(0, 20)
-		GUAH A 1 Offset(0, 30)
-		GUAH A 1 Offset(0, 40)
-		GUAH A 1 Offset(0, 50)
-		TNT1 A 0 A_GiveInventory("decoySpawned", 1)
-		TNT1 A 0 A_PlaySound("Illusionist/Weapons/SpawnDecoy")
-		GUAH A 0 A_SpawnItemEx("GuardianDecoy", 0, 0, 0, 0, 0, 0, 0, SXF_SETMASTER, 0, 4999)
-		GUAH A 0 ACS_NamedExecuteAlways("handleDecoyId", 0, 0)
-		Goto Ready
-	Exist:	
-		GUAH A 1 Offset(0, 50)
-		GUAH A 1 Offset(0, 40)
-		GUAH A 1 Offset(0, 30)
-		GUAH A 1 Offset(0, 20)
-		GUAH A 1 Offset(0, 10)
-		TNT1 A 0 A_TakeInventory("decoySpawned", 1)
-		GUAH A 0 A_PlaySound("Illusionist/Weapons/SpawnDecoy")
-		GUAH A 0 ACS_NamedExecuteAlways("handleDecoyId", 0, 1)
-		Goto Ready
-	AltFire:
-		TNT1 A 0 A_JumpIfInventory("decoyVanished", 1, "DecoyVanishOff")
-		GUAH A 1 Offset(0, 10)		
-		GUAH A 1 Offset(0, 20)
-		GUAH A 1 Offset(0, 30)
-		GUAH A 1 Offset(0, 40)
-		GUAH A 1 Offset(0, 50)
-		TNT1 A 1 A_PlaySound ("VanishOn", 5)
-		TNT1 A 1 A_GiveInventory("decoyVanished", 1)
-		TNT1 A 1 ACS_NamedExecuteAlways("vanishDecoy", 0, 0)
-		Goto Ready
-	DecoyVanishOff:
-		GUAH A 1 Offset(0, 10)		
-		GUAH A 1 Offset(0, 20)
-		GUAH A 1 Offset(0, 30)
-		GUAH A 1 Offset(0, 40)
-		GUAH A 1 Offset(0, 50)
-		TNT1 A 1 A_PlaySound ("VanishOff", 5)
-		TNT1 A 1 A_TakeInventory("decoyVanished", 1)
-		TNT1 A 1 ACS_NamedExecuteAlways("vanishDecoy", 0, 1)
-		Goto Ready
-	}
-}
-
-Actor IllusionistIllusionistDecoy : IllusionistDecoyWep
-{
-	Tag "Illusionist Decoy"
-	States
-	{
-	Ready:
-		ILLH A 1 A_WeaponReady
-		Loop
-	Deselect:
-		ILLH A 1 A_Lower
-		Loop
-	Select:
-		ILLH A 1 A_Raise
-		Loop
-	Fire:
-		TNT1 A 0 A_JumpIfInventory("decoySpawned", 1, "Exist")
-		ILLH A 1 Offset(0, 10)		
-		ILLH A 1 Offset(0, 20)
-		ILLH A 1 Offset(0, 30)
-		ILLH A 1 Offset(0, 40)
-		ILLH A 1 Offset(0, 50)
-		TNT1 A 0 A_GiveInventory("decoySpawned", 1)
-		TNT1 A 0 A_PlaySound("Illusionist/Weapons/SpawnDecoy")
-		ILLH A 0 A_SpawnItemEx("IllusionistDecoy", 0, 0, 0, 0, 0, 0, 0, SXF_SETMASTER, 0, 4999)
-		ILLH A 0 ACS_NamedExecuteAlways("handleDecoyId", 0, 0)
-		Goto Ready
-	Exist:	
-		ILLH A 1 Offset(0, 50)
-		ILLH A 1 Offset(0, 40)
-		ILLH A 1 Offset(0, 30)
-		ILLH A 1 Offset(0, 20)
-		ILLH A 1 Offset(0, 10)
-		TNT1 A 0 A_TakeInventory("decoySpawned", 1)
-		ILLH A 0 A_PlaySound("Illusionist/Weapons/SpawnDecoy")
-		ILLH A 0 ACS_NamedExecuteAlways("handleDecoyId", 0, 1)
-		Goto Ready
-	AltFire:
-		TNT1 A 0 A_JumpIfInventory("decoyVanished", 1, "DecoyVanishOff")
-		ILLH A 1 Offset(0, 10)		
-		ILLH A 1 Offset(0, 20)
-		ILLH A 1 Offset(0, 30)
-		ILLH A 1 Offset(0, 40)
-		ILLH A 1 Offset(0, 50)
-		TNT1 A 1 A_PlaySound ("VanishOn", 5)
-		TNT1 A 1 A_GiveInventory("decoyVanished", 1)
-		TNT1 A 1 ACS_NamedExecuteAlways("vanishDecoy", 0, 0)
-		Goto Ready
-	DecoyVanishOff:
-		ILLH A 1 Offset(0, 10)		
-		ILLH A 1 Offset(0, 20)
-		ILLH A 1 Offset(0, 30)
-		ILLH A 1 Offset(0, 40)
-		ILLH A 1 Offset(0, 50)
-		TNT1 A 1 A_PlaySound ("VanishOff", 5)
-		TNT1 A 1 A_TakeInventory("decoyVanished", 1)
-		TNT1 A 1 ACS_NamedExecuteAlways("vanishDecoy", 0, 1)
-		Goto Ready
-	}
-}
-
-Actor IllusionistRocketeerDecoy : IllusionistDecoyWep
-{
-	Tag "Rocketeer Decoy"
-	States
-	{
-	Ready:
-		ROKH A 1 A_WeaponReady
-		Loop
-	Deselect:
-		ROKH A 1 A_Lower
-		Loop
-	Select:
-		ROKH A 1 A_Raise
-		Loop
-	Fire:
-		TNT1 A 0 A_JumpIfInventory("decoySpawned", 1, "Exist")
-		ROKH A 1 Offset(0, 10)		
-		ROKH A 1 Offset(0, 20)
-		ROKH A 1 Offset(0, 30)
-		ROKH A 1 Offset(0, 40)
-		ROKH A 1 Offset(0, 50)
-		TNT1 A 0 A_GiveInventory("decoySpawned", 1)
-		TNT1 A 0 A_PlaySound("Illusionist/Weapons/SpawnDecoy")
-		ROKH A 0 A_SpawnItemEx("RocketeerDecoy", 0, 0, 0, 0, 0, 0, 0, SXF_SETMASTER, 0, 4999)
-		ROKH A 0 ACS_NamedExecuteAlways("handleDecoyId", 0, 0)
-		Goto Ready
-	Exist:	
-		ROKH A 1 Offset(0, 50)
-		ROKH A 1 Offset(0, 40)
-		ROKH A 1 Offset(0, 30)
-		ROKH A 1 Offset(0, 20)
-		ROKH A 1 Offset(0, 10)
-		TNT1 A 0 A_TakeInventory("decoySpawned", 1)
-		ROKH A 0 A_PlaySound("Illusionist/Weapons/SpawnDecoy")
-		ROKH A 0 ACS_NamedExecuteAlways("handleDecoyId", 0, 1)
-		Goto Ready
-	AltFire:
-		TNT1 A 0 A_JumpIfInventory("decoyVanished", 1, "DecoyVanishOff")
-		ROKH A 1 Offset(0, 10)		
-		ROKH A 1 Offset(0, 20)
-		ROKH A 1 Offset(0, 30)
-		ROKH A 1 Offset(0, 40)
-		ROKH A 1 Offset(0, 50)
-		TNT1 A 1 A_PlaySound ("VanishOn", 5)
-		TNT1 A 1 A_GiveInventory("decoyVanished", 1)
-		TNT1 A 1 ACS_NamedExecuteAlways("vanishDecoy", 0, 0)
-		Goto Ready
-	DecoyVanishOff:
-		ROKH A 1 Offset(0, 10)		
-		ROKH A 1 Offset(0, 20)
-		ROKH A 1 Offset(0, 30)
-		ROKH A 1 Offset(0, 40)
-		ROKH A 1 Offset(0, 50)
-		TNT1 A 1 A_PlaySound ("VanishOff", 5)
-		TNT1 A 1 A_TakeInventory("decoyVanished", 1)
-		TNT1 A 1 ACS_NamedExecuteAlways("vanishDecoy", 0, 1)
-		Goto Ready
-	}
-}
-Actor IllusionistTeleporterDecoy : IllusionistDecoyWep
-{
-	Tag "Teleporter Decoy"
-	States
-	{
-	Ready:
-		TELH A 1 A_WeaponReady
-		Loop
-	Deselect:
-		TELH A 1 A_Lower
-		Loop
-	Select:
-		TELH A 1 A_Raise
-		Loop
-	Fire:
-		TNT1 A 0 A_JumpIfInventory("decoySpawned", 1, "Exist")
-		TELH A 1 Offset(0, 10)		
-		TELH A 1 Offset(0, 20)
-		TELH A 1 Offset(0, 30)
-		TELH A 1 Offset(0, 40)
-		TELH A 1 Offset(0, 50)
-		TNT1 A 0 A_GiveInventory("decoySpawned", 1)
-		TNT1 A 0 A_PlaySound("Illusionist/Weapons/SpawnDecoy")
-		TELH A 0 A_SpawnItemEx("TeleporterDecoy", 0, 0, 0, 0, 0, 0, 0, SXF_SETMASTER, 0, 4999)
-		TELH A 0 ACS_NamedExecuteAlways("handleDecoyId", 0, 0)
-		Goto Ready
-	Exist:	
-		TELH A 1 Offset(0, 50)
-		TELH A 1 Offset(0, 40)
-		TELH A 1 Offset(0, 30)
-		TELH A 1 Offset(0, 20)
-		TELH A 1 Offset(0, 10)
-		TNT1 A 0 A_TakeInventory("decoySpawned", 1)
-		TELH A 0 A_PlaySound("Illusionist/Weapons/SpawnDecoy")
-		TELH A 0 ACS_NamedExecuteAlways("handleDecoyId", 0, 1)
-		Goto Ready
-	AltFire:
-		TNT1 A 0 A_JumpIfInventory("decoyVanished", 1, "DecoyVanishOff")
-		TELH A 1 Offset(0, 10)		
-		TELH A 1 Offset(0, 20)
-		TELH A 1 Offset(0, 30)
-		TELH A 1 Offset(0, 40)
-		TELH A 1 Offset(0, 50)
-		TNT1 A 1 A_PlaySound ("VanishOn", 5)
-		TNT1 A 1 A_GiveInventory("decoyVanished", 1)
-		TNT1 A 1 ACS_NamedExecuteAlways("vanishDecoy", 0, 0)
-		Goto Ready
-	DecoyVanishOff:
-		TELH A 1 Offset(0, 10)		
-		TELH A 1 Offset(0, 20)
-		TELH A 1 Offset(0, 30)
-		TELH A 1 Offset(0, 40)
-		TELH A 1 Offset(0, 50)
-		TNT1 A 1 A_PlaySound ("VanishOff", 5)
-		TNT1 A 1 A_TakeInventory("decoyVanished", 1)
-		TNT1 A 1 ACS_NamedExecuteAlways("vanishDecoy", 0, 1)
-		Goto Ready
-	}
-}
-
-
 Actor DecoyEnergy : Ammo
 {
 	Inventory.MaxAmount 100
 	Inventory.Amount 100
+}
+
+Actor wepFire : Inventory { }
+Actor spawnDecoy : Inventory { }
+
+Actor decoySpawned : Inventory { Inventory.MaxAmount 1 }
+Actor decoyVanished : Inventory { Inventory.MaxAmount 1 }
+
+Actor BlazerSel : Inventory { }
+Actor GuardianSel : Inventory { }
+Actor IllusionistSel : Inventory { }
+Actor RocketeerSel : Inventory { }
+Actor TeleporterSel : Inventory { }
+
+Actor IllusionistNewDecoyWep : IllusionistDecoyWep
+{
+	Tag "Decoys"
+	States
+	{
+	Ready:
+		TNT1 A 0 A_JumpIfInventory("BlazerSel", 1, "BlazReady")
+		TNT1 A 0 A_JumpIfInventory("GuardianSel", 1, "GuarReady")
+		TNT1 A 0 A_JumpIfInventory("IllusionistSel", 1, "IlluReady")
+		TNT1 A 0 A_JumpIfInventory("RocketeerSel", 1, "RockReady")
+		TNT1 A 0 A_JumpIfInventory("TeleporterSel", 1, "TeleReady")
+		BANH A 1 A_WeaponReady
+		Loop
+	BlazReady:
+		BLZD A 1 A_WeaponReady
+		Goto Ready
+	GuarReady:
+		GUAH A 1 A_WeaponReady
+		Goto Ready
+	IlluReady:
+		ILLH A 1 A_WeaponReady
+		Goto Ready
+	RockReady:
+		ROKH A 1 A_WeaponReady
+		Goto Ready
+	TeleReady:
+		TELH A 1 A_WeaponReady
+		Goto Ready
+	Deselect:
+		TNT1 A 0 A_JumpIfInventory("BlazerSel", 1, "BlazLower")
+		TNT1 A 0 A_JumpIfInventory("GuardianSel", 1, "GuarLower")
+		TNT1 A 0 A_JumpIfInventory("IllusionistSel", 1, "IlluLower")
+		TNT1 A 0 A_JumpIfInventory("RocketeerSel", 1, "RockLower")
+		TNT1 A 0 A_JumpIfInventory("TeleporterSel", 1, "TeleLower")
+		BANH A 1 A_Lower
+		Loop
+	BlazLower:	
+		BLZD A 1 A_Lower
+		Goto Deselect
+	GuarLower:
+		GUAH A 1 A_Lower
+		Goto Deselect
+	IlluLower:
+		ILLH A 1 A_Lower
+		Goto Deselect
+	RockLower:
+		ROKH A 1 A_Lower
+		Goto Deselect
+	TeleLower:
+		TELH A 1 A_Lower
+		Goto Deselect
+	Select:
+		TNT1 A 0 A_JumpIfInventory("BlazerSel", 1, "BlazRaise")
+		TNT1 A 0 A_JumpIfInventory("GuardianSel", 1, "GuarRaise")
+		TNT1 A 0 A_JumpIfInventory("IllusionistSel", 1, "IlluRaise")
+		TNT1 A 0 A_JumpIfInventory("RocketeerSel", 1, "RockRaise")
+		TNT1 A 0 A_JumpIfInventory("TeleporterSel", 1, "TeleRaise")
+		BANH A 1 A_Raise
+		Loop
+	BlazRaise:	
+		BLZD A 1 A_Raise
+		Goto Select
+	GuarRaise:
+		GUAH A 1 A_Raise
+		Goto Select
+	IlluRaise:
+		ILLH A 1 A_Raise
+		Goto Select
+	RockRaise:
+		ROKH A 1 A_Raise
+		Goto Select
+	TeleRaise:
+		TELH A 1 A_Raise
+		Goto Select
+	Fire:
+		TNT1 A 0 A_JumpIfInventory("BlazerSel", 1, "BlazFire")
+		TNT1 A 0 A_JumpIfInventory("GuardianSel", 1, "GuarFire")
+		TNT1 A 0 A_JumpIfInventory("IllusionistSel", 1, "IlluFire")
+		TNT1 A 0 A_JumpIfInventory("RocketeerSel", 1, "RockFire")
+		TNT1 A 0 A_JumpIfInventory("TeleporterSel", 1, "TeleFire")
+		BANH A 1
+		TNT1 A 0 A_JumpIfInventory("wepFire", 1, 1)
+		Goto Fire
+		BANH A 1 Offset(0, 10)
+		BANH A 1 Offset(0, 20)
+		BANH A 1 Offset(0, 30)
+		BANH A 1 Offset(0, 40)
+		BANH A 1 Offset(0, 50)
+		TNT1 A 0 A_TakeInventory("wepFire", 1)
+		TNT1 A 0 A_JumpIfInventory("spawnDecoy", 1, 1)
+		Goto Ready
+		BANH A 0 A_SpawnItemEx("BansheeDecoy", 0, 0, 0, 0, 0, 0, 0, SXF_SETMASTER, 0, 4999)
+		TNT1 A 0 A_TakeInventory("spawnDecoy")
+		TNT1 A 0 ACS_NamedExecuteAlways("handleDecoy", 0, 0)
+		Goto Ready
+	BlazFire:
+		BLZD A 1
+		TNT1 A 0 A_JumpIfInventory("wepFire", 1, 1)
+		Goto Fire
+		BLZD A 1 Offset(0, 10)		
+		BLZD A 1 Offset(0, 20)
+		BLZD A 1 Offset(0, 30)
+		BLZD A 1 Offset(0, 40)
+		BLZD A 1 Offset(0, 50)
+		TNT1 A 0 A_TakeInventory("wepFire", 1)
+		TNT1 A 0 A_JumpIfInventory("spawnDecoy", 1, 1)
+		Goto Ready
+		BLZD A 0 A_SpawnItemEx("BlazerDecoy", 0, 0, 0, 0, 0, 0, 0, SXF_SETMASTER, 0, 4999)
+		TNT1 A 0 A_TakeInventory("spawnDecoy", 1)
+		TNT1 A 0 ACS_NamedExecuteAlways("handleDecoy", 0, 0)
+		Goto Ready
+	GuarFire:
+		GUAH A 1
+		TNT1 A 0 A_JumpIfInventory("wepFire", 1, 1)
+		Goto Fire
+		GUAH A 1 Offset(0, 10)		
+		GUAH A 1 Offset(0, 20)
+		GUAH A 1 Offset(0, 30)
+		GUAH A 1 Offset(0, 40)
+		GUAH A 1 Offset(0, 50)
+		TNT1 A 0 A_TakeInventory("wepFire", 1)
+		TNT1 A 0 A_JumpIfInventory("spawnDecoy", 1, 1)
+		Goto Ready
+		GUAH A 0 A_SpawnItemEx("GuardianDecoy", 0, 0, 0, 0, 0, 0, 0, SXF_SETMASTER, 0, 4999)
+		TNT1 A 0 A_TakeInventory("spawnDecoy", 1)
+		TNT1 A 0 ACS_NamedExecuteAlways("handleDecoy", 0, 0)
+		Goto Ready
+	IlluFire:
+		ILLH A 1 
+		TNT1 A 0 A_JumpIfInventory("wepFire", 1, 1)
+		Goto Fire
+		ILLH A 1 Offset(0, 10)		
+		ILLH A 1 Offset(0, 20)
+		ILLH A 1 Offset(0, 30)
+		ILLH A 1 Offset(0, 40)
+		ILLH A 1 Offset(0, 50)
+		TNT1 A 0 A_TakeInventory("wepFire", 1)
+		TNT1 A 0 A_JumpIfInventory("spawnDecoy", 1, 1)
+		Goto Ready
+		GUAH A 0 A_SpawnItemEx("IllusionistDecoy", 0, 0, 0, 0, 0, 0, 0, SXF_SETMASTER, 0, 4999)
+		TNT1 A 0 A_TakeInventory("spawnDecoy", 1)
+		TNT1 A 0 ACS_NamedExecuteAlways("handleDecoy", 0, 0)
+		Goto Ready
+	RockFire:
+		ROKH A 1
+		TNT1 A 0 A_JumpIfInventory("wepFire", 1, 1)
+		Goto Fire
+		ROKH A 1 Offset(0, 10)		
+		ROKH A 1 Offset(0, 20)
+		ROKH A 1 Offset(0, 30)
+		ROKH A 1 Offset(0, 40)
+		ROKH A 1 Offset(0, 50)
+		TNT1 A 0 A_TakeInventory("wepFire", 1)
+		TNT1 A 0 A_JumpIfInventory("spawnDecoy", 1, 1)
+		Goto Ready
+		GUAH A 0 A_SpawnItemEx("RocketeerDecoy", 0, 0, 0, 0, 0, 0, 0, SXF_SETMASTER, 0, 4999)
+		TNT1 A 0 A_TakeInventory("spawnDecoy", 1)
+		TNT1 A 0 ACS_NamedExecuteAlways("handleDecoy", 0, 0)
+		Goto Ready
+	TeleFire:
+		TELH A 1
+		TNT1 A 0 A_JumpIfInventory("wepFire", 1, 1)
+		Goto Fire
+		TELH A 1 Offset(0, 10)		
+		TELH A 1 Offset(0, 20)
+		TELH A 1 Offset(0, 30)
+		TELH A 1 Offset(0, 40)
+		TELH A 1 Offset(0, 50)
+		TNT1 A 0 A_TakeInventory("wepFire", 1)
+		TNT1 A 0 A_JumpIfInventory("spawnDecoy", 1, 1)
+		Goto Ready
+		GUAH A 0 A_SpawnItemEx("TeleporterDecoy", 0, 0, 0, 0, 0, 0, 0, SXF_SETMASTER, 0, 4999)
+		TNT1 A 0 A_TakeInventory("spawnDecoy", 1)
+		TNT1 A 0 ACS_NamedExecuteAlways("handleDecoy", 0, 0)
+		Goto Ready
+	AltFire:
+		TNT1 A 0 A_GiveInventory("wepFire", 1)
+		TNT1 A 0 A_JumpIfInventory("BlazerSel", 1, "BlazFire")
+		TNT1 A 0 A_JumpIfInventory("GuardianSel", 1, "GuarFire")
+		TNT1 A 0 A_JumpIfInventory("IllusionistSel", 1, "IlluFire")
+		TNT1 A 0 A_JumpIfInventory("RocketeerSel", 1, "RockFire")
+		TNT1 A 0 A_JumpIfInventory("TeleporterSel", 1, "TeleFire")
+		BANH A 1
+		Goto Fire
+	}
 }

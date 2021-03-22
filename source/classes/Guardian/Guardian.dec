@@ -4,6 +4,11 @@ ACTOR GuardianArmor : BlueArmor
 	Inventory.Icon "GARMA0"
 }
 
+ACTOR GuardianShieldArmor : GuardianArmor
+{
+	Armor.SavePercent 75
+}
+
 Actor GuardianMegaArmor : GuardianArmor
 {
 	DamageFactor 0.5
@@ -89,31 +94,4 @@ ACTOR GuardianClass : PlayerPawn
 		AGRD A 1 A_PlaySound("Guardian/Abilities/ArmorHit", 4096, 1.0, false, ATTN_NORM)
 	Goto Spawn
 	}
-}
-
-ACTOR JumpChargeActive : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-}
-
-ACTOR JumpChargeFull : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-}
-
-ACTOR JumpCharge : Ammo
-{
-  Game Doom
-  Inventory.PickupMessage "CHARGZ"
-  Inventory.Amount 1
-  Inventory.MaxAmount 5
-  Inventory.Icon "JCHRA0"
-  States
-  {
-  Spawn:
-    JCHR A -1
-    Stop
-  }
 }

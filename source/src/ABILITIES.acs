@@ -91,6 +91,7 @@ script "abilityStateHandling" (int abilitySlot)
 			if (CheckInventory(activeString) == false)
 			{
 				TakeInventory(durationString, abilityDuration);
+				TakeInventory(activeString, 1);
 				ACS_NamedExecuteAlways(abilityEndString,0);
 				Terminate;
 			}
@@ -99,20 +100,27 @@ script "abilityStateHandling" (int abilitySlot)
 		//class specific item that ends the duration early, if we don't have anything 
 		// make a placeholder so we never reach the termination state in this script.
 		//===========================================================================================
-		TakeInventory(durationString, 1);
 		Delay(35);
+		TakeInventory(durationString, 1);
 		
 		//===========================================================================================
 		//Active ability wearing off
 		//===========================================================================================
-		if (x <= 3 && x > 0 )
+		if (x <= 4 && x > 1 )
 		{
 			PlaySound(0, "Abilities/EndWarning", 0, 1.0, false, ATTN_NORM, true);
 		}
 	}
 	
-	TakeInventory(durationString, 1);
 	TakeInventory(activeString, 1);
+	
+	if (checkinventory("AbilityPowerup"))
+	{
+		TakeInventory("AbilityPowerup", 1);
+		GiveInventory("ResetColorMap", 1);
+		Delay(1);
+		TakeInventory("ResetColorMap", 1);
+	}
 	
 	HudMessage(s:abilityNameString(abilitySlot), s:" can now be reused"; HUDMSG_PLAIN, 7, CR_RED, 1.5, 0.65, 3.0, 3.0);
 	

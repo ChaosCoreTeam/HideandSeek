@@ -11,12 +11,7 @@ ACTOR IllusionistClass : PlayerPawn
 	Player.CrouchSprite "PLYC"
 	Player.SoundClass "Illusionist"
 	player.startitem "megasphere", 1
-	player.startitem "IllusionistBansheeDecoy", 1
-	player.startitem "IllusionistBlazerDecoy", 1
-	player.startitem "IllusionistGuardianDecoy", 1
-	player.startitem "IllusionistIllusionistDecoy", 1
-	player.startitem "IllusionistRocketeerDecoy", 1
-	player.startitem "IllusionistTeleporterDecoy", 1
+	player.startitem "IllusionistNewDecoyWep", 1
 	player.startitem "DecoyEnergy", 100
     player.startitem "IllusionistFirstCooldown", 999
     player.startitem "IllusionistSecondCooldown", 999

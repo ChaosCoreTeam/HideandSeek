@@ -1,3 +1,18 @@
+Actor rejEquip : Inventory { }
+Actor rejOut : Inventory { }
+
+ACTOR revCharged : Ammo
+{
+Inventory.Amount 0
+Inventory.MaxAmount 1
+	States
+	{
+	Spawn:
+	TNT1 A -1
+	Loop
+	}
+}
+
 ACTOR Rejuvinator : Weapon
 {
 	Inventory.PickupSound "misc/w_pkup"
@@ -19,9 +34,13 @@ ACTOR Rejuvinator : Weapon
 		STPO C 2 A_WeaponReady
 		Loop
 	Deselect:
+		TNT1 A 0 A_GiveInventory("rejOut", 1)
 		STPO A 1 A_Lower
 		Loop
 	Select:
+		TNT1 A 0 A_TakeInventory("rejOut", 1)
+		TNT1 A 0 A_CustomMissile("BansheeAura", 0, 0, 0, CMF_AIMDIRECTION)
+		//TNT1 A 0 ACS_NamedExecute("bansheeAuraHandling", 0)
 		STPO A 1 A_Raise
 		Loop
 	Fire:
@@ -62,19 +81,6 @@ ACTOR HealingEnergy : Ammo
 		CELL A -1
 		stop
 	}
-}
-
-
-ACTOR revCharged : Ammo
-{
-Inventory.Amount 0
-Inventory.MaxAmount 1
-States
-{
-Spawn:
-TNT1 A -1
-Loop
-}
 }
 
 ACTOR HealingWave
@@ -129,4 +135,24 @@ ACTOR HealingWaveFX2 : HealingWave
       STPR A 0
       Stop 
    } 
+}
+
+Actor BansheeAura
+{
+	+NOGRAVITY
+	+NOINTERACTION
+	var int user_angle;
+    renderstyle Add
+	VisibleToTeam 0
+   States
+   {
+		Spawn:
+		TNT1 A 0 A_JumpIfInventory("rejOut", 1, "Death")
+		REJA A 1 A_Warp(AAPTR_TARGET, 80, 0, 0, user_angle, WARPF_ABSOLUTEANGLE|WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+		TNT1 A 0 A_SetUserVar("user_angle", user_angle + 8)
+		Loop
+		Death:
+		TNT1 A 0
+		Stop
+	}
 }

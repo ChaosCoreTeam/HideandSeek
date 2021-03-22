@@ -82,6 +82,8 @@ graphic hnsfontz, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfontz, 0, 0 }
 graphic hnsslash, 13, 12 { XScale 2.0 YScale 2.0 Patch hnsslash, 0, 0 }
 graphic hnscolon, 5, 12 { XScale 2.0 YScale 2.0 Patch hnscolon, 0, 0 }
 graphic hnsdash, 6, 12 { XScale 2.0 YScale 2.0 Patch hnsdash, 0, 0 }
+graphic radab0, 16, 16 { XScale 1.5 YScale 1.5 Patch radab0, 0, 0 }
+graphic radac0, 16, 16 { XScale 1.5 YScale 1.5 Patch radac0, 0, 0 }
 //Kuchi's Sky Texture
 texture tntsky, 512, 128 { Patch DOWNITE, 0, 0 Patch DOSNITE, 256, 0 }
 

@@ -2,6 +2,11 @@
 //Terminator only has one active
 
 //===========================================================================================
+// Passives
+//===========================================================================================
+
+
+//===========================================================================================
 // Powerups
 //===========================================================================================
 
@@ -47,11 +52,13 @@ ACTOR MorphAbilityGiver : AbilityPowerGiver
 ACTOR BansheeHealingAbility : AbilityPowerGiver { Powerup.Colormap 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 }
 ACTOR GuardianArmorAbility : AbilityPowerGiver { Powerup.Color GreenMap }
 ACTOR IllusionistDisguiseAbility : AbilityPowerGiver { Powerup.Type "PowerDisguise" }
-ACTOR BerserkerBloodlustAbility : AbilityPowerGiver { Powerup.Color Redmap Speed 1.35 Powerup.Type PowerDoubleFiringSpeed }
-Actor TeleporterOverchargeAbility : AbilityPowerGiver { Powerup.Color 0, 0, 192, 0.3 Powerup.Type PowerInfiniteAmmo }
-Actor TeleporterShotPower : SecondAbilityPowerGiver { Powerup.Type PowerDoubleFiringSpeed }
+ACTOR RocketeerIceAbility : AbilityPowerGiver { Powerup.Color 210, 230, 255, 0.3 }
+ACTOR BerserkerBloodlustAbility : AbilityPowerGiver { Powerup.Color Redmap Speed 1.35 }
+Actor TeleporterOverchargeAbility : AbilityPowerGiver { Powerup.Color 0, 0, 192, 0.3 }
+Actor TeleporterInfiniteAmmo : PowerInfiniteAmmo { }
+Actor TeleporterShotPower : PowerDoubleFiringSpeed { }
 Actor PolymorphistSoulFlight : MorphAbilityGiver { Powerup.Type PowerFlight }
-
+ACTOR ResetColorMap : AbilityPowerGiver { Powerup.Color None }
 
 //===========================================================================================
 // Cooldowns
@@ -60,7 +67,7 @@ Actor PolymorphistSoulFlight : MorphAbilityGiver { Powerup.Type PowerFlight }
 Actor GuardianAbilityDuration : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
 Actor IllusionistFirstDuration : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
 Actor IllusionistSecondDuration : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
-Actor RocketeerAbilityDuration : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
+Actor RocketeerAbilityDuration : Ammo { Inventory.Amount 5 Inventory.MaxAmount 5 }
 Actor TeleporterAbilityDuration : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
 Actor HunterFirstDuration : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
 Actor HunterSecondDuration : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }
@@ -84,9 +91,6 @@ Actor IllusionistFirstCooldown : Ammo { Inventory.Amount 25 Inventory.MaxAmount 
 Actor IllusionistSecondCooldown : Ammo { Inventory.Amount 45 Inventory.MaxAmount 45 }
 Actor IllusionistFirstActive : Inventory { }
 Actor IllusionistSecondActive : Inventory { }
-
-Actor decoySpawned : Inventory { }
-Actor decoyVanished : Inventory { }
 
 Actor RocketeerFirstCooldown : Ammo { Inventory.Amount 15  Inventory.MaxAmount 15 }
 Actor RocketeerSecondCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }

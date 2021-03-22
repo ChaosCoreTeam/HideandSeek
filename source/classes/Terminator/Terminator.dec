@@ -23,6 +23,7 @@ ACTOR TerminatorClass : PlayerPawn
   Player.ForwardMove 0.90, 0.90
   Player.SideMove 0.90, 0.90
   Player.Viewheight 56
+  Player.JumpZ 10.0
 	XScale 0.68
 	YScale 0.77
   damagefactor "rocket", 0

@@ -2,6 +2,9 @@
 #import "DEFINITIONS.acs"
 #include "zcommon.acs"
 
+int buttons;
+int nobuttons;
+
 Script "vanishingSetup" (void) 
 {
 	int pNum = PlayerNumber() + PLAYER_BASE_TID;
@@ -53,7 +56,6 @@ Script "vanishingSetup" (void)
 		}
 	}
 }
-
 
 script "HNS_Vanish" (void) NET
 {
@@ -134,6 +136,160 @@ function int hasVanish(int pNumber)
 		}
 	}
 	return 1;
+}
+
+Script "VanishHandling" (void) CLIENTSIDE
+{
+	int vanState;
+	int runVarState;
+	if(PlayerClass(PlayerNumber()) < SEEKER_CLASS_START) //Hider check
+	{
+		while (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(), APROP_Health) > 0)
+		{
+			buttons = GetPlayerInput(-1, INPUT_BUTTONS);
+			nobuttons = GetPlayerInput(-1, INPUT_OLDBUTTONS);
+				//For people with running on
+				if (GetCVar("CL_Run")==1 && isVanished(PLAYER_BASE_TID + PlayerNumber()) == true)
+				{
+					if (runVarState == 0) { runVarState = 2; }
+					if (buttons & BT_SPEED)
+					{
+						if (nobuttons & BT_SPEED)
+							{
+								//Continue to be walking invisibly~
+								if (runVarState == 1)
+								{
+									runVarState = 2;
+									ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
+									//Unless you transition from walking while holding down shift, thena you go invisible.
+								}
+							}
+							else
+							{
+								if (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(), APROP_Health) > 0)
+								{
+									vanState = 1;
+									ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
+									//Become invisible when walking.
+								}
+							}
+					}
+					else if (buttons & (BT_FORWARD | BT_BACK | BT_MOVELEFT | BT_MOVERIGHT | BT_ATTACK))
+					{
+						if (nobuttons & (BT_FORWARD | BT_BACK | BT_MOVELEFT | BT_MOVERIGHT | BT_ATTACK))
+						{
+							//Stay visible while holding keys down.
+							if (vanState == 1)
+							{
+								vanState = 0;
+								ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 9);
+								//Become visible if going from walking to running!
+							}
+							if (runVarState == 1)
+							{
+								vanState = 0;
+								runVarState = 2;
+								ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 9);
+								//Toggling CL_Run won't get you very far.
+							}
+						}
+						else
+						{
+							if (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(), APROP_Health) > 0)
+							{
+								vanState = 0;
+								runVarState = 2;
+								ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 9);
+								//If the player isn't dead and is running around turn visible!
+							}
+						}
+					}
+					else 
+					{
+						if (nobuttons & (BT_FORWARD | BT_BACK | BT_MOVELEFT | BT_MOVERIGHT | BT_ATTACK))
+						{
+							ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
+							//Release the movement keys and you are the invisible man.
+						}
+						else
+						{
+							//And do absolutely nothing while you're not moving at all!
+						}
+					}
+				}
+				if (GetCVar("CL_Run")==0 && isVanished(PLAYER_BASE_TID + PlayerNumber()) == true)
+				//For people with running off (however few there are!)
+				{
+				if (runVarState == 0) { runVarState = 1; }
+					if (buttons & BT_SPEED)
+					{
+						if (nobuttons & BT_SPEED)
+						{
+							//Continue to be running around invisible...Unless...
+							if (runVarState == 2)
+							{
+								runVarState = 1;
+								ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 9);
+								//Unless you transition from running while holding down shift, then you stay visible.
+							}
+						}
+						else
+						{
+							if (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(), APROP_Health) > 0)
+							{
+								vanState = 1;
+								ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 9);
+								//Turn visible while running!
+							}
+						}
+					}
+					else if (buttons & (BT_FORWARD | BT_BACK | BT_MOVELEFT | BT_MOVERIGHT | BT_ATTACK))
+					{
+						if (nobuttons & (BT_FORWARD | BT_BACK | BT_MOVELEFT | BT_MOVERIGHT | BT_ATTACK))
+						{
+							//Keep walking invisibly when the movement keys are held down.
+							if (vanState == 1)
+							{
+								vanState = 0;
+								ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
+								//Start walking invisibly if going from running to walking.
+							}
+							if (runVarState == 2)
+							{
+								vanState = 0;
+								runVarState = 1;
+								ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
+								//Toggling CL_Run won't get you very far.
+							}
+						}
+						else
+						{
+							if (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(), APROP_Health) > 0)
+							{
+								vanState = 0;
+								runVarState = 1;
+								ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
+								//If the player isn't dead and is walking around then don't turn visible.
+							}
+						}
+					}
+					else 
+					{
+						if (nobuttons & (BT_FORWARD | BT_BACK | BT_MOVELEFT | BT_MOVERIGHT | BT_ATTACK | BT_SPEED))
+						{
+							ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
+							//Release the movement keys and you are the invisible man.
+						}
+						else
+						{
+							//And do absolutely nothing while you're not moving at all!
+						}
+					}
+				}
+				//print(s:"running");
+			delay(1);
+		}
+	}
 }
 
 function bool isVanished(int pNumber)
