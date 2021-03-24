@@ -2,42 +2,55 @@
 #import "DEFINITIONS.acs"
 #include "zcommon.acs"
 
-#define JUMP_COOLDOWN_TICS 8
+#define JUMP_COOLDOWN_TICS 7
 #define AIRDODGE_COOLDOWN_TICS 15
 #define TIC_DETECTION_DELAY 5
 #define PLAYER_VIEW_HEIGHT_OFFSET 24.0
 #define THRUST_FORCE 48
 #define THRUST_CROUCH_FORCE 20
-#define THRUST_DODGE_FORCE 10
+#define THRUST_DODGE_FORCE 15
 #define THRUST_UPWARDS_CONSTANT 0
 #define THRUST_ADD_CONSTANT 1
 
 int buttons;
-int nobuttons;	
+int oldbuttons;	
 
-int playerJumpDownPrevTick[MAXPLAYERS];
-int playerJumpDownCurrTick[MAXPLAYERS];
+int playerJumpDownPrevTic[MAXPLAYERS];
+int playerJumpDownCurrTic[MAXPLAYERS];
 int playerJumpCooldown[MAXPLAYERS];
 
-int playerCrouchDownPrevTick[MAXPLAYERS];
-int playerCrouchDownCurrTick[MAXPLAYERS];
+int playerCrouchDownPrevTic[MAXPLAYERS];
+int playerCrouchDownCurrTic[MAXPLAYERS];
 int playerCrouchCooldown[MAXPLAYERS];
 
-int playerLookLeftDownPrevTick[MAXPLAYERS];
-int playerLookLeftDownCurrTick[MAXPLAYERS];
+int playerSpeedPrevTic[MAXPLAYERS];
+int playerSpeedCurrTic[MAXPLAYERS];
 
-int playerLookRightDownPrevTick[MAXPLAYERS];
-int playerLookRightDownCurrTick[MAXPLAYERS];
+int playerLookAngleOldTic[MAXPLAYERS];
+int playerLookAnglePrevTic[MAXPLAYERS];
+int playerLookAngleCurrTic[MAXPLAYERS];
+int playerLookAngleNextTic[MAXPLAYERS];
 
-int playerMoveLeftDownPrevTick[MAXPLAYERS];
-int playerMoveLeftDownCurrTick[MAXPLAYERS];
+//0 for left, 1 for right
+int playerTurnDirOldTic[MAXPLAYERS];
+int playerTurnDirPrevTic[MAXPLAYERS];
+int playerTurnDirCurrTic[MAXPLAYERS];
 
-int playerMoveRightDownPrevTick[MAXPLAYERS];
-int playerMoveRightDownCurrTick[MAXPLAYERS];
+int playerForwardInitialTic[MAXPLAYERS];
+int playerForwardDownPrevTic[MAXPLAYERS];
+int playerForwardDownCurrTic[MAXPLAYERS];
 
-int playerAirDodgePrevTick[MAXPLAYERS];
-int playerAirDodgeCurrTick[MAXPLAYERS];
-int playerAirDodgeCooldown[MAXPLAYERS];
+int playerBackwardInitialTic[MAXPLAYERS];
+int playerBackwardDownPrevTic[MAXPLAYERS];
+int playerBackwardDownCurrTic[MAXPLAYERS];
+
+int playerMoveLeftInitialTic[MAXPLAYERS];
+int playerMoveLeftDownPrevTic[MAXPLAYERS];
+int playerMoveLeftDownCurrTic[MAXPLAYERS];
+
+int playerMoveRightInitialTic[MAXPLAYERS];
+int playerMoveRightDownPrevTic[MAXPLAYERS];
+int playerMoveRightDownCurrTic[MAXPLAYERS];
 
 //===========================================================================================
 //
@@ -56,7 +69,6 @@ Script "doubleJump" (void) CLIENTSIDE
 		while (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(),APROP_Health) > 0)
 		{
 			buttons = GetPlayerInput(-1, INPUT_BUTTONS);
-			nobuttons = GetPlayerInput(-1, INPUT_OLDBUTTONS);
 			//jump state was detected
 			if (buttons & BT_JUMP) 
 			{
@@ -68,7 +80,7 @@ Script "doubleJump" (void) CLIENTSIDE
 					{
 						PlaySound(PLAYER_BASE_TID + PlayerNumber(), "Passives/JumpRelease", 7);
 						ThrustThingZ(0, 45, 0, 0);
-						TakeInventory("secondJump", 1);
+						TakeInventory("SecondJump", 1);
 						secondAct = true;
 					}
 				}
@@ -76,7 +88,7 @@ Script "doubleJump" (void) CLIENTSIDE
 				if (secondGave == false)
 				{
 					delay(5);
-					GiveInventory("secondJump", 1);
+					GiveInventory("SecondJump", 1);
 					log(s:"you can jump again");
 					secondGave = true;
 				}
@@ -89,7 +101,7 @@ Script "doubleJump" (void) CLIENTSIDE
 					//floor detection and resets jump variables if they are true
 					if (secondAct == true || secondGave == true)
 					{
-						TakeInventory("secondJump", 1);
+						TakeInventory("SecondJump", 1);
 						secondAct = false;
 						secondGave = false;
 					}
@@ -121,14 +133,14 @@ Script "chargeableJump" (void) CLIENTSIDE
 			}
 			
 			buttons = GetPlayerInput(-1, INPUT_BUTTONS);
-			nobuttons = GetPlayerInput(-1, INPUT_OLDBUTTONS);
+			oldbuttons = GetPlayerInput(-1, INPUT_OLDBUTTONS);
 			
 			//jump state was detected
 			if (buttons & BT_JUMP) 
 			{
 				GiveInventory("JumpChargeActive", 1);
 				//activated by initial trigger and holding down
-				if (nobuttons & BT_JUMP)
+				if (oldbuttons & BT_JUMP)
 				{
 					if (CheckInventory("JumpCharge") != 5)
 					{
@@ -150,7 +162,7 @@ Script "chargeableJump" (void) CLIENTSIDE
 			else
 			{
 				//check if actor is on the ground, then perform the jump
-				if (nobuttons & BT_JUMP)
+				if (oldbuttons & BT_JUMP)
 				{
 					if ((GetActorZ(0) - GetActorFloorZ(0)) == 0 && (GetActorProperty(1000 + PlayerNumber(), APROP_Health) > 0))
 					{
@@ -192,7 +204,7 @@ Script "jumpChargeHeight" (int jHeight)
 			ThrustThingZ(pT, 60, 0, 0);
 			break;
 		case 5:
-			ThrustThingZ(pT, 65, 0, 0);
+			ThrustThingZ(pT, 75, 0, 0);
 			break;
 		default:
 			Log(s:"The script is broekn!!!!!!!!!!");
@@ -217,16 +229,17 @@ script "wallClimbing" (void)
 	int playerNum = PlayerNumber();
 	int playerTid = playerNum + PLAYER_BASE_TID;
 	playerJumpCooldown[playerNum] = 0;
-	playerJumpDownPrevTick[playerNum] = false;
-	playerJumpDownCurrTick[playerNum] = false;
+	playerJumpDownPrevTic[playerNum] = false;
+	playerJumpDownCurrTic[playerNum] = false;
 	
 	if (PlayerClass(playerNum) == CLASS_BLAZER)
 	{
 		while (GetActorProperty(playerTid,APROP_Health) > 0) 
 		{
-			recordPlayerJumpGametickPress(playerNum);
+			recordPlayerJumpGameTicPress(playerNum);
 			if (playerEligibleToWallJump(playerNum, playerTid)) 
 			{
+				//retriggered....
 				playerJumpCooldown[playerNum] = Timer();
 				PlaySound(playerTid, "Blazer/Passives/Climb", 0, 1.0, 0, 0);
 				ThrustThingZ(playerTid, THRUST_FORCE, THRUST_UPWARDS_CONSTANT, THRUST_ADD_CONSTANT);
@@ -236,29 +249,35 @@ script "wallClimbing" (void)
 	}
 }
 
-function void recordPlayerJumpGametickPress(int playerNum) {
+function void recordPlayerJumpGameTicPress(int playerNum) {
 	bool isJumpDown = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_JUMP) == BT_JUMP;
-	playerJumpDownPrevTick[playerNum] = playerJumpDownCurrTick[playerNum];
-	playerJumpDownCurrTick[playerNum] = isJumpDown;
+	playerJumpDownPrevTic[playerNum] = playerJumpDownCurrTic[playerNum];
+	playerJumpDownCurrTic[playerNum] = isJumpDown;
 }
 
 function bool playerEligibleToWallJump(int playerNum, int playerTid) {
-	int noGrd = playerIsNotOnTheGround(playerTid);
+	int noGrd = playerNotOnGround(playerTid);
 	int noCool = playerNotOnJumpCooldown(playerNum);
-	int jmp = isPlayerPressingJumping(playerNum);
+	int jmp = playerPressingJump(playerNum);
 	int atWall = playerIsNearAWallToJumpOffOf(playerNum, playerTid);
 
 	return noGrd && noCool && jmp && atWall;
 }
 
-function bool playerIsNotOnTheGround(int playerTid) {
+function bool playerNotOnGround(int playerTid) {
 	// We want a buffer zone of 8 map units so the player can't walljump
 	// immediately when on the ground.
 	return GetActorZ(playerTid) - GetActorFloorZ(playerTid) >= 16.0;
 }
 
-function bool isPlayerPressingJumping(int playerNum) {
-	return playerJumpDownCurrTick[playerNum] && !playerJumpDownPrevTick[playerNum];
+function bool playerOnGround(int playerTid) {
+	// We want a buffer zone of 8 map units so the player can't walljump
+	// immediately when on the ground.
+	return GetActorZ(playerTid) - GetActorFloorZ(playerTid) == 0.0;
+}
+
+function bool playerPressingJump(int playerNum) {
+	return playerJumpDownCurrTic[playerNum] && !playerJumpDownPrevTic[playerNum];
 }
 
 function bool playerNotOnJumpCooldown(int playerNum) {
@@ -280,67 +299,485 @@ function bool playerIsNearAWallToJumpOffOf(int playerNum, int playerTid) {
 
 //===========================================================================================
 //
-//		Crouch Jumping
-//		Given to the Guardian, will probably give to others
+//		Crouch Sliding
+//		Given to the Banshee
 //
 //===========================================================================================
-script "crouchJumping" (void)
+script "crouchSliding" (void)
 {
 	int playerNum = PlayerNumber();
 	int playerTid = playerNum + PLAYER_BASE_TID;
+	int hangTime;
+	bool jumped;
+	bool momentumCase;
 	playerCrouchCooldown[playerNum] = 0;
-	playerCrouchDownPrevTick[playerNum] = false;
-	playerCrouchDownCurrTick[playerNum] = false;
+	playerCrouchDownPrevTic[playerNum] = false;
+	playerCrouchDownCurrTic[playerNum] = false;
 	
 	if (PlayerClass(playerNum) == CLASS_BANSHEE)
 	{
 		while (GetActorProperty(playerTid,APROP_Health) > 0) 
 		{
-			recordPlayerCrouchGametickPress(playerNum);
-			if (playerEligibleToCrouchJump(playerNum, playerTid)) 
+			momentumCase = false;
+			recordPlayerSpeed(playerNum);
+			recordPlayerCrouchGameTicPress(playerNum);
+			recordPlayerJumpGameTicPress(playerNum);
+			if (!playerOnGround(playerNum))
 			{
-				PlaySound(playerTid, "Banshee/Passives/Crouch", 0, 1.0, 0, 0);
-				GiveInventory("CrouchSlide", 1);
-				ACS_NamedExecuteAlways("slideSpeedHandling", 0, 1);
-			}
-			if (isPlayerHoldingCrouch(playerNum))
-			{
-				for (int x = 0; x < 20; x++)
+				jumped = true;
+				if (checkinventory("SlideMomentum") == 1 && playerLostMomentum(playerNum))
 				{
-					ACS_NamedExecuteAlways("slideSpeedHandling", 0);
+					int currSpeed = getactorproperty(playerNum, APROP_SPEED);
+					
+					if (currSpeed > 1.00)
+					{
+						setactorproperty(playerNum, APROP_SPEED, currSpeed - 0.15);
+					}
 				}
-				
+				hangTime++;
+			}
+			if (playerEligibleToCrouchSlide(playerNum, playerTid) && checkInventory("SlideMomentum") == 1) 
+			{
+				hangtime = 0;
+				momentumCase = true;
+				TakeInventory("SlideMomentum", 1);
+				ACS_NamedExecute("crouchSlideProcess", 0, hangTime, playerNum, playerTid);
+			}
+			if (playerOnGround(playerNum) && getactorproperty(playerNum, APROP_SPEED) != 1.00 && !playerPressingCrouch(playerNum))
+			{
+				momentumCase = true;
+				TakeInventory("SlideMomentum", 1);
+				SetActorProperty(playerTid, APROP_Speed, 1.00);
+			}
+			
+			recordPlayerCrouchGameTicPress(playerNum);
+			recordPlayerJumpGameTicPress(playerNum);
+			if (playerEligibleToCrouchSlide(playerNum, playerTid) && jumped == true && momentumCase == false) 
+			{
+				jumped = false;
+				hangtime = 0;
+				ACS_NamedExecute("crouchSlideProcess", 0, hangTime, playerNum, playerTid);
+			}
+			if (!checkInventory("CrouchSlide") && !checkInventory("SlideMomentum") && momentumCase == false && getactorproperty(playerNum, APROP_SPEED) != 1.00)
+			{
+				SetActorProperty(playerTid, APROP_Speed, 1.00);
 			}
 			Delay(1);
 		}
 	}
 }
 
-function void recordPlayerCrouchGametickPress(int playerNum) {
+Script "crouchSlideProcess" (int hangTime, int playerNum, int playerTid)
+{
+	int slideTime;
+	slideTime = hangTime / 5;
+	if (hangTime < 15)
+	{
+		slideTime = 3;
+	}
+	if (hangTime >= 15 || hangTime < 20)
+	{
+		slideTime = 4;
+	}
+	if (hangTime > 50)
+	{
+		slideTime = 10;
+	}
+	
+	GiveInventory("CrouchSlide", 1);
+	PlaySound(playerTid, "Banshee/Passives/CrouchSlideStart", 0, 1.0, 0, 1.0);
+	PlaySound(playerTid, "Banshee/Passives/CrouchSlideIdle", 7, 1.0, 1, 1.0);
+	ACS_NamedExecute("crouchslideHandling", 0, playerNum, playerTid);
+	
+	while(checkinventory("CrouchSlide"))
+	{
+		if (slideTime > 0)
+		{
+			delay(35);
+			slideTime--;
+		}
+		
+		if (slideTime == 0)
+			break;
+			
+		Delay(1);
+	}
+	
+	if (slideTime > 0)
+	{
+		terminate;
+	}
+	
+	if (CheckInventory("CrouchSlide") == 1 && slideTime == 0)
+	{
+		ACS_NamedExecuteAlways("endCrouchSlide", 0, 1, playerNum, playerTid);
+	}
+}
+
+Script "endCrouchSlide" (int reason, int playerNum, int playerTid) 
+{
+	StopSound(playerTid, 7);
+	TakeInventory("CrouchSlide", 1);
+	//SetActorProperty(playerTid, APROP_Speed, 1.00);
+	if (reason == 1)
+	{
+		//end by time
+		SetActorProperty(playerTid, APROP_Speed, 1.00);
+	}
+	if (reason == 2)
+	{
+		//ended by lack of speed
+		SetActorProperty(playerTid, APROP_Speed, 1.00);
+	}
+	if (reason == 3)
+	{
+		//ended by uncrouching
+		SetActorProperty(playerTid, APROP_Speed, 1.00);
+	}
+	if (reason == 4)
+	{
+		//ended by jumping
+		GiveInventory("SlideMomentum",1);
+	}
+	if (reason == 5)
+	{
+		SetActorProperty(playerTid, APROP_Speed, 1.00);
+	}
+}
+
+function void recordPlayerCrouchGameTicPress(int playerNum) {
 	bool isCrouchDown = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_CROUCH) == BT_CROUCH;
-	playerJumpDownPrevTick[playerNum] = playerCrouchDownCurrTick[playerNum];
-	playerJumpDownCurrTick[playerNum] = isCrouchDown;
+	playerCrouchDownPrevTic[playerNum] = playerCrouchDownCurrTic[playerNum];
+	playerCrouchDownCurrTic[playerNum] = isCrouchDown;
 }
 
-function bool playerEligibleToCrouchJump(int playerNum, int playerTid) {
-	int crouch = isPlayerPressingCrouch(playerNum);
-	return crouch;
+function bool playerEligibleToCrouchSlide(int playerNum, int playerTid) {
+	int ground = playerOnGround(playerNum);
+	int crouch = playerPressingCrouch(playerNum);
+	//int slide = playerNotSliding(playerNum);
+	//int jmp = playerNotPressingJump(playerNum);
+	return ground && crouch;// && jmp;
 }
 
-function bool playerNotOnCrouchCooldown(int playerNum) {
-	return (Timer() - playerCrouchCooldown[playerNum]) > JUMP_COOLDOWN_TICS;
+function bool playerPressingCrouch(int playerNum) {
+	bool isCrouchDown = (GetPlayerInput(playerNum, INPUT_OLDBUTTONS) & BT_CROUCH) == BT_CROUCH;
+	return playerCrouchDownCurrTic[playerNum] || isCrouchDown;
 }
 
-function bool isPlayerPressingCrouch(int playerNum) {
-	return playerCrouchDownCurrTick[playerNum] && !playerCrouchDownPrevTick[playerNum];
+function bool playerNotSliding(int playerTid) {
+	int isSliding = CheckInventory("CrouchSlide");
+	if (isSliding == 1) { isSliding = 0; }
+	if (isSliding == 0) { isSliding = 1; }
+	return isSliding;
 }
 
-function bool isPlayerHoldingCrouch(int playerNum) {
-	return playerCrouchDownCurrTick[playerNum] && playerCrouchDownPrevTick[playerNum];
+script "crouchSlideHandling" (int playerNum, int playerTid)
+{
+	while(checkInventory("CrouchSlide") == 1)
+	{
+		int pSpeedFactor = getactorproperty(playerNum, APROP_SPEED);
+		recordPlayerCrouchGameTicPress(playerNum);
+		recordPlayerJumpGameTicPress(playerNum);
+		recordPlayerSpeed(playerNum);
+		if (!playerEligibleToContinueSlide(playerNum, playerTid))
+		{
+			if (!playerHasSpeed(playerNum))
+			{
+				ACS_NamedExecuteAlways("endCrouchSlide",0, 2, playerNum, playerTid);
+				break;
+			}
+			if (!playerPressingCrouch(playerNum) && playerOnGround(playerNum))
+			{
+				ACS_NamedExecuteAlways("endCrouchSlide",0, 3, playerNum, playerTid);
+				break;
+			}
+			if (!playerOnGround(playerNum))
+			{
+				ACS_NamedExecuteAlways("endCrouchSlide",0, 4, playerNum, playerTid);
+				break;
+			}
+			else
+			{
+				ACS_NamedExecuteAlways("endCrouchSlide",0, 5, playerNum, playerTid);
+				break;
+			}
+		}
+		if (playerEligibleToContinueSlide(playerNum, playerTid))
+		{
+			recordPlayerDirectionTicPress(playerNum);
+			recordPlayerLookTics(playerNum);
+			recordPlayerTurnDirection(playerNum);
+			if (playerNotStrafing(playerNum) || playerNotTurning(playerNum) || playerLostMomentum(playerNum))
+			{
+				if (getactorproperty(playerNum, APROP_SPEED) > 1.00)
+				{
+					setactorproperty(playerNum, APROP_SPEED, pSpeedFactor - 0.15);
+				}
+			}
+			//if (playerTurnAngleShort(playerNum))
+			//{
+				//setactorproperty(playerNum, APROP_SPEED, pSpeedFactor - 0.10);
+			//}
+			if (playerEligibleForMomentumGain(playerNum, playerTid))
+			{
+				int speedAmt = angleChangeAmount(playerNum);
+				if (getactorproperty(playerNum, APROP_SPEED) < 3.00)
+				{
+					setactorproperty(playerNum, APROP_SPEED, pSpeedFactor + speedAmt);
+				}
+			}
+		}
+		Delay(1);
+	}
 }
 
-//Actor KickedAlready : Token { Inventory.InterHubAmount 0 }	//for player to know if he hit someone and slide should stop
-//A_ChangeVelocity(velx/1.33, vely/1.33, velz, CVF_REPLACE)
+function bool playerEligibleToContinueSlide(int playerNum, int playerTid) {
+	int onGround = playerOnGround(playerNum);
+	int crouch = playerPressingCrouch(playerNum);
+	//int speed = playerHasSpeed(playerNum);
+	//int jmp = playerNotPressingJump(playerNum);
+	return onGround && crouch; //&& jmp;
+}
+
+function bool playerNotPressingJump(int playerNum) {
+	return !playerJumpDownCurrTic[playerNum];
+}
+
+function bool playerNotStrafing(int playerNum) {
+	return !playerMoveLeftDownCurrTic[playerNum] && !playerMoveRightDownCurrTic[playerNum];
+}
+
+function bool playerHasSpeed(int playerNum){
+	return playerSpeedCurrTic[playerNum] > 0;
+}
+
+function bool playerLostMomentum(int playerNum){
+	return playerSpeedCurrTic[playerNum] < playerSpeedPrevTic[playerNum];
+}
+
+function int momentumDifference(int playerNum){
+	return playerSpeedPrevTic[playerNum]- playerSpeedCurrTic[playerNum];
+} 
+
+function void recordPlayerSpeed(int playerNum)
+{
+	int x = GetActorVelX(playerNum);
+    int y = GetActorVelY(playerNum);
+    int z = GetActorVelZ(playerNum);
+    int speed = fixedMul(x, x) + fixedMul(y, y) + fixedMul(z, z);
+	
+	playerSpeedPrevTic[playerNum] = playerSpeedCurrTic[playerNum];
+	playerSpeedCurrTic[playerNum] = speed;
+}
+
+function void recordPlayerDirectionTicPress(int playerNum)
+{
+	playerMoveLeftDownPrevTic[playerNum] = playerMoveLeftDownCurrTic[playerNum];
+	playerMoveRightDownPrevTic[playerNum] = playerMoveRightDownCurrTic[playerNum];
+
+	playerMoveLeftDownCurrTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVELEFT) == BT_MOVELEFT;
+	playerMoveRightDownCurrTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVERIGHT) == BT_MOVERIGHT;
+}
+
+function void recordPlayerLookTics(int playerNum) {
+	int angle = GetActorAngle(playerNum);
+	playerLookAngleOldTic[playerNum] = playerLookAnglePrevTic[playerNum];
+	playerLookAnglePrevTic[playerNum] = playerLookAngleCurrTic[playerNum];
+	playerLookAngleCurrTic[playerNum] = angle;
+}
+function void recordPlayerTurnDirection(int playerNum) {
+	bool turningDirection = ticIsGreater(playerLookAnglePrevTic[playerNum], playerLookAngleCurrTic[playerNum]);	
+	bool rightOpp = oppositeSides(playerLookAngleCurrTic[playerNum], playerLookAnglePrevTic[playerNum]);
+	
+	//in all circumstances where the current tic is less than the prev tic
+	//we return 0 as an identifier to show that we're turning left
+	//we return 1 as an identifier to show that we're turning right
+	playerTurnDirOldTic[playerNum] = playerTurnDirPrevTic[playerNum];
+	playerTurnDirPrevTic[playerNum] = playerTurnDirCurrTic[playerNum];
+	playerTurnDirCurrTic[playerNum] = turningDirection;
+	
+	if (rightOpp == true)
+	{
+		//in the one circumstance where the current tic isn't greater 
+		//than the previous tic when turning right, force it to be
+		//right by declaring it true, when then returns 1
+		//log(s:"returned true");`
+		playerTurnDirCurrTic[playerNum] = rightOpp;
+	}
+}
+
+function bool playerEligibleForMomentumGain(int playerNum, int playerTid) {
+	int turned = playerTurningSameDirection(playerNum);
+	int strafe = playerHoldingStrafe(playerNum);
+	int angStrafe = sameAngleAndStrafeDirection(playerNum);
+	return turned && strafe && angStrafe; //chanAmt && sameDir;
+}
+
+function bool playerNotTurning(int playerNum) {
+	
+	int newTic = playerLookAngleCurrTic[playerNum];
+	int prevTic = playerLookAnglePrevTic[playerNum];
+	int oldTic = playerLookAngleOldTic[playerNum];
+	int diffAmt;
+	
+	if (playerTurnDirCurrTic[playerNum] == 0)
+	{
+		if  (oppositeSides(prevTic,newTic))
+		{
+			diffAmt = (1.0 - prevTic) + newTic;
+			return diffAmt - newTic == 0.0 && prevTic == oldTic;
+		}
+		return playerLookAngleCurrTic[playerNum] - playerLookAnglePrevTic[playerNum] == 0.0 && playerLookAngleCurrTic[playerNum] - playerLookAngleOldTic[playerNum] == 0.0;
+	}
+	if (playerTurnDirCurrTic[playerNum] == 1)
+	{
+		if  (oppositeSides(newTic,prevTic))
+		{
+			diffAmt = (1.0 - newTic) + prevTic;
+			return diffAmt - prevTic == 0.0 && diffAmt - oldTic == 0.0;
+		}
+		return playerLookAnglePrevTic[playerNum] - playerLookAngleCurrTic[playerNum] == 0.0 && playerLookAngleOldTic[playerNum] - playerLookAnglePrevTic[playerNum] == 0.0;
+	}
+	return true;
+}
+
+function bool playerTurningSameDirection(int playerNum) {
+	return playerTurnDirCurrTic[playerNum] == playerTurnDirPrevTic[playerNum] && playerTurnDirCurrTic[playerNum] == playerTurnDirOldTic[playerNum];
+}
+
+function bool sameAngleAndStrafeDirection(int playerNum) {
+	if (playerMoveLeftDownCurrTic[playerNum] == 1 && playerTurnDirCurrTic[playerNum] == 0)
+	{
+		return true;
+	}
+	if (playerMoveRightDownCurrTic[playerNum] == 1 && playerTurnDirCurrTic[playerNum] == 1)
+	{
+		return true;
+	}
+	return false;
+}
+
+function bool playerHoldingStrafe(int playerNum){
+	return playerMoveLeftDownCurrTic[playerNum] == playerMoveLeftDownPrevTic[playerNum] ||
+	playerMoveRightDownCurrTic[playerNum] == playerMoveRightDownPrevTic[playerNum];
+}
+
+//unused function, i was going to use this to give more ways to negatively affect the speed
+//might end up utilizing this in the future, but leaving it for now.
+function bool angleSmallAngleChange(int playerNum){
+	int currPrevDiff = angleDifference(playerNum, playerLookAngleCurrTic[playerNum], playerLookAnglePrevTic[playerNum]);
+	int prevOldDiff = angleDifference(playerNum, playerLookAnglePrevTic[playerNum],  playerLookAngleCurrTic[playerNum]);
+	int currOldDiff = angleDifference(playerNum,  playerLookAngleCurrTic[playerNum], playerLookAngleOldTic[playerNum]);
+	
+	if (currPrevDiff <= 0.01 && prevOldDiff <= 0.01)
+	{
+		return 1.0;
+	}
+	if (currPrevDiff <= 0.02 &&  prevOldDiff <= 0.02)
+	{
+		return 0.75;
+	}
+	return false;
+}
+
+//determines how much you're moving your mouse and gives you the relative speed
+function int angleChangeAmount(int playerNum) {
+	int currPrevDiff = angleDifference(playerNum, playerLookAngleCurrTic[playerNum], playerLookAnglePrevTic[playerNum]);
+	
+	if (currPrevDiff > 0.13)
+	{
+		return 0.175;
+	}
+	if (currPrevDiff > 0.12)
+	{
+		return 0.150;
+	}
+	if (currPrevDiff > 0.11)
+	{
+		return 0.130;
+	}
+	if (currPrevDiff > 0.1)
+	{
+		return 0.105;
+	}
+	if (currPrevDiff > 0.09)
+	{
+		return 0.090;
+	}
+	if (currPrevDiff > 0.08)
+	{
+		return 0.075;
+	}
+	if (currPrevDiff > 0.07)
+	{
+		return 0.06;
+	}
+	if (currPrevDiff > 0.06)
+	{
+		return 0.055;
+	}
+	if (currPrevDiff > 0.05)
+	{
+		return 0.05;
+	}
+	if (currPrevDiff > 0.04)
+	{
+		return 0.045;
+	}
+	if (currPrevDiff > 0.03)
+	{
+		return 0.04;
+	}
+	if (currPrevDiff > 0.02)
+	{
+		return 0.035;
+	}
+	if (currPrevDiff > 0.01)
+	{
+		return 0.030;
+	}
+	return 0;
+}
+
+//finds the angle differences based on which way the tics are facing
+function int angleDifference(int playerNum, int newTic, int oldTic)
+{
+	bool turningLeft = ticIsGreater(newTic, oldTic);
+	bool turningRight = ticIsGreater(oldTic, newTic);
+	int diffAmt;
+	int newAmt;
+	
+	if (turningLeft)
+	{
+		diffAmt = newTic - oldTic;
+		if (oppositeSides(newTic,oldTic))
+		{
+			newAmt = 1.0 - newTic;
+			diffAmt = newAmt + oldTic;
+		}
+	}
+	if (turningRight)
+	{
+		diffAmt = oldTic - newTic;
+		if (oppositeSides(oldTic,newTic))
+		{
+			newAmt = 1.0 - oldTic;
+			diffAmt = newAmt + newTic;
+		}
+	}
+	
+	return diffAmt;
+}
+
+function bool ticIsGreater(int ticOne, int ticTwo)
+{
+	return ticOne > ticTwo;
+}
+
+function bool oppositeSides(int ticOne, int ticTwo)
+{
+	return ticOne > 0.9 && ticTwo < 0.1;
+}
 
 //===========================================================================================
 //
@@ -352,14 +789,15 @@ script "crouchDiving" (void)
 {
 	int playerNum = PlayerNumber();
 	int playerTid = playerNum + PLAYER_BASE_TID;
-	playerCrouchDownPrevTick[playerNum] = false;
-	playerCrouchDownCurrTick[playerNum] = false;
+	playerCrouchDownPrevTic[playerNum] = false;
+	playerCrouchDownCurrTic[playerNum] = false;
+
 	
 	if (PlayerClass(playerNum) == CLASS_BERSERKER)
 	{
 		while (GetActorProperty(playerTid,APROP_Health) > 0) 
 		{
-			recordPlayerCrouchGametickPress(playerNum);
+			recordPlayerCrouchGameTicPress(playerNum);
 			if (playerEligibleToCrouchDive(playerNum, playerTid)) 
 			{
 				PlaySound(playerTid, "Berserker/Passives/CrouchDive", 0, 1.0, 0, 0);
@@ -371,8 +809,8 @@ script "crouchDiving" (void)
 }
 
 function bool playerEligibleToCrouchDive(int playerNum, int playerTid) {
-	int noGrd = playerIsNotOnTheGround(playerTid);
-	int crouch = isPlayerPressingCrouch(playerNum);
+	int noGrd = playerNotOnGround(playerTid);
+	int crouch = playerPressingCrouch(playerNum);
 	return noGrd && crouch;
 }
 
@@ -386,85 +824,222 @@ script "airDodging" (void)
 {
 	int playerNum = PlayerNumber();
 	int playerTid = playerNum + PLAYER_BASE_TID;
-	int angle;
-	int fTap;
-	int bTap;
-	int lTap;
-	int rTap;
-	playerAirDodgeCooldown[playerNum] = 0;
-	playerAirDodgePrevTick[playerNum] = 0;
-	playerAirDodgeCurrTick[playerNum] = 0;
+	playerForwardDownPrevTic[playerNum] = false;
+	playerForwardDownCurrTic[playerNum] = false;
+	playerBackwardDownPrevTic[playerNum] = false;
+	playerBackwardDownCurrTic[playerNum] = false;
+	playerMoveLeftDownPrevTic[playerNum] = false;
+	playerMoveLeftDownCurrTic[playerNum] = false;
+	playerMoveRightDownPrevTic[playerNum] = false;
+	playerMoveRightDownCurrTic[playerNum] = false;
+	playerJumpDownPrevTic[playerNum] = false;
+	playerJumpDownCurrTic[playerNum] = false;
+	bool dodgePerformed;
+	bool dodgeSuccess;
+	bool recordFirst;
+	bool recordSecond;
+	bool initiateThrust;
+	bool airDodgeLoop;
+	int thrustAngle;
+	int delayTime = 1;
 	
 	if (PlayerClass(playerNum) == CLASS_TERMINATOR)
 	{
 		while (GetActorProperty(playerTid,APROP_Health) > 0) 
 		{
-			buttons = GetPlayerInput(-1, INPUT_BUTTONS);
-			nobuttons = GetPlayerInput(-1, INPUT_OLDBUTTONS);
-			
-			//we need the jump detection to get the rest of the script... as far as i'm aware.
-			if (buttons & BT_JUMP)
+			if(GetActorZ(playerTid) - GetActorFloorZ(playerTid) > 0.0)
 			{
-				
+				while (airInputsEmpty(playerNum))
+				{
+					recordInitialDirectionInput(playerNum);
+					recordSecond = true;
+					if (!playerNotOnGround(playerNum))
+					{
+						break;
+					}
+					Delay(1);
+				}
+				while(recordSecond == true)
+				{
+					recordCurrentDirectionInput(playerNum);
+					if (isKeyForward(playerNum) && playerReleasedForward(playerNum))
+					{
+						recordSecond = false;
+						initiateThrust = true;
+					}
+					if (isKeyBackward(playerNum) && playerReleasedBackward(playerNum))
+					{
+						recordSecond = false;
+						initiateThrust = true;
+					}
+					if (isKeyMoveLeft(playerNum) && playerReleasedMoveLeft(playerNum))
+					{
+						recordSecond = false;
+						initiateThrust = true;
+					}
+					if (isKeyMoveRight(playerNum) && playerReleasedMoveRight(playerNum))
+					{
+						recordSecond = false;
+						initiateThrust = true;
+					}
+					if (!playerNotOnGround(playerNum))
+					{
+						break;
+					}
+				Delay(1);
+				}
+				while (initiateThrust == true && dodgePerformed == false)
+				{	
+					recordCurrentDirectionInput(playerNum);
+					if(forwardPressedTwice(playerNum))
+					{
+						thrustAngle = getAngleToThrust(playerNum, 1);
+						dodgePerformed = true;
+					}
+					if(backwardPressedTwice(playerNum))
+					{
+						thrustAngle = getAngleToThrust(playerNum, 2);
+						dodgePerformed = true;
+					}
+					if(leftPressedTwice(playerNum))
+					{
+						thrustAngle = getAngleToThrust(playerNum, 3);
+						dodgePerformed = true;
+					}
+					if(rightPressedTwice(playerNum))
+					{
+						thrustAngle = getAngleToThrust(playerNum, 4);
+						dodgePerformed = true;
+					}
+					if (dodgePerformed == true)
+					{
+						ACS_NamedExecuteAlways("dodgeThrust", 0, playerTid, thrustAngle);
+						thrustAngle = 0;
+						initiateThrust = false;
+						clearInitialDirectionInput(playerNum);
+						recordSecond = false;
+					}
+					if (!playerNotOnGround(playerNum))
+					{
+						break;
+					}
+				Delay(1);
+				}
+				if (!playerNotOnGround(playerNum))
+				{
+					if (dodgePerformed == true)
+					{
+						dodgePerformed = false; 
+					}
+					recordSecond = false;
+					initiateThrust = false;
+					clearInitialDirectionInput(playerNum);
+					thrustAngle = 0;
+				}
 			}
-		//thrustFired = false;
-		//fCount = 0;
-		Delay(1);
-		}
+		delay(1);
+		}	
 	}
 }
+
 
 script "dodgeThrust" (int playerTid, int angle)
 {
-	if (GetActorZ(playerTid) - GetActorFloorZ(playerTid) > 0.0 && CheckInventory("airDodge") == false)
-	{
-		log(s:"thrusted");
-		GiveInventory("airDodge", 1);
-		PlaySound(playerTid, "Terminator/Passives/Airdodge", 0, 1.0, 0, 0);
-		ThrustThing(angle, THRUST_DODGE_FORCE, 0, playerTid);
-		Delay(105);
-		TakeInventory("airDodge", 1);
-	}
+	PlaySound(playerTid, "Terminator/Passives/Airdodge", 0, 1.0, 0, 0);
+	ThrustThing(angle, THRUST_DODGE_FORCE, 0, playerTid);
 }
 
-function void recordPlayerDirectionTicPress(int playerNum) {
-	bool forwardPressed = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_FORWARD) == BT_FORWARD;
-	bool backwardPressed = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_BACK) == BT_BACK;
-	bool leftPressed = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVELEFT) == BT_MOVELEFT;
-	bool rightPressed = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVERIGHT) == BT_MOVERIGHT;
-	int directionPressed;
-	
-	if (forwardPressed) 
-		directionPressed = 1;
-	if (backwardPressed)
-		directionPressed = 2;
-	if (leftPressed)
-		directionPressed = 3;
-	if (rightPressed)
-		directionPressed = 4;
-	
-	playerAirDodgePrevTick[playerNum] = playerAirDodgeCurrTick[playerNum];
-	playerAirDodgeCurrTick[playerNum] = directionPressed;
+function bool airInputsEmpty(int playerNum){
+	return playerForwardInitialTic[playerNum] == 0 && playerBackwardInitialTic[playerNum] == 0 &&
+	playerMoveLeftInitialTic[playerNum] == 0 && playerMoveRightInitialTic[playerNum] == 0;
 }
 
-function bool playerEligibleToAirDodge(int playerNum, int playerTid) {
-	int noGrd = playerIsNotOnTheGround(playerTid);
-	int noCool = playerNotOnAirDodgeCooldown(playerNum);
-	int dirAct = isPlayerPressingSameDirection(playerNum);
-	return noGrd & noCool & dirAct;
+function void recordInitialDirectionInput(int playerNum) {
+	playerForwardInitialTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_FORWARD) == BT_FORWARD;
+	playerBackwardInitialTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_BACK) == BT_BACK;
+	playerMoveLeftInitialTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVELEFT) == BT_MOVELEFT;
+	playerMoveRightInitialTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVERIGHT) == BT_MOVERIGHT;
 }
 
-function bool isPlayerPressingSameDirection(int playerNum) {
-	return playerAirDodgeCurrTick[playerNum] && !playerAirDodgePrevTick[playerNum];
+function void clearInitialDirectionInput(int playerNum) {
+	playerForwardInitialTic[playerNum] = 0;
+	playerBackwardInitialTic[playerNum] = 0;
+	playerMoveLeftInitialTic[playerNum] = 0;
+	playerMoveRightInitialTic[playerNum] = 0;
+	playerForwardDownCurrTic[playerNum] = 0;
+	playerBackwardDownCurrTic[playerNum] = 0;
+	playerMoveLeftDownCurrTic[playerNum] = 0;
+	playerMoveRightDownCurrTic[playerNum] = 0;
+	playerForwardDownPrevTic[playerNum] = 0;
+	playerBackwardDownPrevTic[playerNum] = 0;
+	playerMoveLeftDownPrevTic[playerNum] = 0;
+	playerMoveRightDownPrevTic[playerNum] = 0;
 }
 
-function bool playerNotOnAirDodgeCooldown(int playerNum) {
-	return (Timer() - playerAirDodgeCooldown[playerNum]) > AIRDODGE_COOLDOWN_TICS;
+function void recordCurrentDirectionInput(int playerNum) {
+	playerForwardDownPrevTic[playerNum] = playerForwardDownCurrTic[playerNum];
+	playerBackwardDownPrevTic[playerNum] = playerBackwardDownCurrTic[playerNum];
+	playerMoveLeftDownPrevTic[playerNum] = playerMoveLeftDownCurrTic[playerNum];
+	playerMoveRightDownPrevTic[playerNum] = playerMoveRightDownCurrTic[playerNum];
+	playerForwardDownCurrTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_FORWARD) == BT_FORWARD;
+	playerBackwardDownCurrTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_BACK) == BT_BACK;
+	playerMoveLeftDownCurrTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVELEFT) == BT_MOVELEFT;
+	playerMoveRightDownCurrTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVERIGHT) == BT_MOVERIGHT;
 }
 
-function void resetAirDodgeTickInfo(int playerNum) {
-	playerAirDodgePrevTick[playerNum] = 0;
-	playerAirDodgeCurrTick[playerNum] = 0;
+function bool playerReleasedKey(int playerNum){
+	return playerForwardDownCurrTic[playerNum] == 0 && 
+	playerBackwardDownCurrTic[playerNum] == 0 &&
+	playerMoveLeftDownCurrTic[playerNum] == 0 &&
+	playerMoveRightDownCurrTic[playerNum] == 0;
+}
+
+function bool isKeyForward(int playerNum) {
+	return playerForwardInitialTic[playerNum] == 1;
+}
+
+function bool isKeyBackward(int playerNum) {
+	return playerBackwardInitialTic[playerNum] == 1;
+}
+
+function bool isKeyMoveLeft(int playerNum) {
+	return playerMoveLeftInitialTic[playerNum] == 1;
+}
+
+function bool isKeyMoveRight(int playerNum) {
+	return playerMoveRightInitialTic[playerNum] == 1;
+}
+
+function bool playerReleasedForward(int playerNum){
+	return playerForwardDownCurrTic[playerNum] == 0 && playerForwardDownPrevTic[playerNum] == 1;
+}
+
+function bool playerReleasedBackward(int playerNum){
+	return playerBackwardDownCurrTic[playerNum] == 0 && playerBackwardDownPrevTic[playerNum] == 1;
+}
+
+function bool playerReleasedMoveLeft(int playerNum){
+	return playerMoveLeftDownCurrTic[playerNum] == 0 && playerMoveLeftDownPrevTic[playerNum] == 1;
+}
+
+function bool playerReleasedMoveRight(int playerNum){
+	return playerMoveRightDownCurrTic[playerNum] == 0 && playerMoveRightDownPrevTic[playerNum] == 1;
+}
+
+function bool forwardPressedTwice(int playerNum) {
+	return playerForwardDownCurrTic[playerNum] == 1 && playerForwardInitialTic[playerNum] == 1 && playerForwardDownPrevTic[playerNum] == 0;
+}
+
+function bool backwardPressedTwice(int playerNum) {
+	return playerBackwardDownCurrTic[playerNum] == 1 && playerBackwardInitialTic[playerNum] == 1 && playerBackwardDownPrevTic[playerNum] == 0;
+}
+
+function bool leftPressedTwice(int playerNum) {
+	return playerMoveLeftDownCurrTic[playerNum] == 1 && playerMoveLeftInitialTic[playerNum] == 1 && playerMoveLeftDownPrevTic[playerNum] == 0;
+}
+
+function bool rightPressedTwice(int playerNum) {
+	return playerMoveRightDownCurrTic[playerNum] == 1 && playerMoveRightInitialTic[playerNum] == 1 && playerMoveRightDownPrevTic[playerNum] == 0;;
 }
 
 function int getAngleToThrust(int playerNum, int direction)
@@ -482,6 +1057,149 @@ function int getAngleToThrust(int playerNum, int direction)
 			return angle + 192;
 		default:
 			break;
+	}
+	return 0;
+}
+
+//===========================================================================================
+//
+//		Strafe Jumping
+//
+//===========================================================================================
+script "strafeJumping" (void)
+{
+	int playerNum = PlayerNumber();
+	int playerTid = playerNum + PLAYER_BASE_TID;
+	playerJumpDownPrevTic[playerNum] = false;
+	playerJumpDownCurrTic[playerNum] = false;
+	
+	playerSpeedPrevTic[playerNum]= false;
+	playerSpeedCurrTic[playerNum]= false;
+
+	playerLookAngleOldTic[playerNum]= false;
+	playerLookAnglePrevTic[playerNum]= false;
+	playerLookAngleCurrTic[playerNum]= false;
+	playerLookAngleNextTic[playerNum]= false;
+
+	playerTurnDirOldTic[playerNum]= false;
+	playerTurnDirPrevTic[playerNum]= false;
+	playerTurnDirCurrTic[playerNum]= false;
+
+	
+	if (PlayerClass(playerNum) == CLASS_ROCKETEER)
+	{
+		while (GetActorProperty(playerTid,APROP_Health) > 0) 
+		{
+			
+			if (!playerOnGround(playerNum))
+			{
+				recordPlayerDirectionTicPress(playerNum);
+				recordPlayerLookTics(playerNum);
+				recordPlayerTurnDirection(playerNum);
+				recordPlayerSpeed(playerNum);
+				if (playerLostMomentum(playerNum))
+				{
+					int currSpeed = getactorproperty(playerNum, APROP_SPEED);
+					if (currSpeed > 1.00)
+					{
+						setactorproperty(playerNum, APROP_SPEED, currSpeed - 0.25);
+					}
+				}
+				//hangTime++;
+			}
+			if (playerOnGround(playerNum))
+			{
+				recordPlayerSpeed(playerNum);
+				recordPlayerJumpGameTicPress(playerNum);
+				if (playerUsingJump(playerNum))
+				{
+					if (playerEligibleToGainMomentum(playerNum, playerTid)) 
+					{
+						int speedAmt = jumpAngleChangeAmount(playerNum);
+						if (getactorproperty(playerNum, APROP_SPEED) < 2.00)
+						{
+							currSpeed = getactorproperty(playerNum, APROP_SPEED);
+							setactorproperty(playerNum, APROP_SPEED, currSpeed + speedAmt);
+						}
+					}
+				}
+				if (!playerUsingJump(playerNum))
+				{
+					setactorproperty(playerNum, APROP_SPEED, 1.00);
+				}
+			}
+			Delay(1);
+		}
+	}
+}
+
+function bool playerEligibleToGainMomentum(int playerNum, int playerTid) {
+	//int noGrd = playerOnGround(playerTid);
+	//int jump = playerUsingJump(playerNum);
+	int turned = playerTurningSameDirection(playerNum);
+	int strafe = playerHoldingStrafe(playerNum);
+	int angStrafe = sameAngleAndStrafeDirection(playerNum);
+	return turned && strafe && angStrafe; //&& jump;
+}
+
+function bool playerUsingJump(int playerNum){
+	return playerJumpDownCurrTic[playerNum] == 1;
+}
+
+function int jumpAngleChangeAmount(int playerNum) {
+	int currPrevDiff = angleDifference(playerNum, playerLookAngleCurrTic[playerNum], playerLookAnglePrevTic[playerNum]);
+	
+	if (currPrevDiff > 0.13)
+	{
+		return 0.125;
+	}
+	if (currPrevDiff > 0.12)
+	{
+		return 0.110;
+	}
+	if (currPrevDiff > 0.11)
+	{
+		return 0.1;
+	}
+	if (currPrevDiff > 0.1)
+	{
+		return 0.095;
+	}
+	if (currPrevDiff > 0.09)
+	{
+		return 0.09;
+	}
+	if (currPrevDiff > 0.08)
+	{
+		return 0.085;
+	}
+	if (currPrevDiff > 0.07)
+	{
+		return 0.08;
+	}
+	if (currPrevDiff > 0.06)
+	{
+		return 0.075;
+	}
+	if (currPrevDiff > 0.05)
+	{
+		return 0.07;
+	}
+	if (currPrevDiff > 0.04)
+	{
+		return 0.065;
+	}
+	if (currPrevDiff > 0.03)
+	{
+		return 0.06;
+	}
+	if (currPrevDiff > 0.02)
+	{
+		return 0.055;
+	}
+	if (currPrevDiff > 0.01)
+	{
+		return 0.05;
 	}
 	return 0;
 }

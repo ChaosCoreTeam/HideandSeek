@@ -16,6 +16,8 @@ ACTOR BansheeClass : PlayerPawn
 	player.startitem "MedicArmor", 1
 	player.startitem "BansheeFirstCoolDown", 999
 	player.startitem "BansheeSecondCoolDown", 999
+	Player.CrouchSprite "CRSH"
+	player.jumpz 10
 	damagefactor "rocket", 0
 	damagefactor "healable", 0
 	Species "Banshee"

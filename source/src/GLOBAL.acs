@@ -100,6 +100,10 @@ script "scriptInitializations" (void)
 	delay(1);
 	ACS_NamedExecuteAlways("airDodging",0);
 	delay(1);
+	ACS_NamedExecuteAlways("crouchSliding",0);
+	delay(1);
+	ACS_NamedExecuteAlways("strafeJumping",0);
+	delay(1);
 }
 
 Script "playerDisconnect" (int gone) disconnect

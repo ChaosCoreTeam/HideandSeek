@@ -1,4 +1,7 @@
-Actor secondJump : Inventory { }
+Actor SecondJump : Inventory { }
+
+ACTOR CrouchSlide : Inventory { }
+ACTOR SlideMomentum : Inventory { }
 
 ACTOR JumpChargeActive : Inventory
 {
