@@ -19,7 +19,6 @@ ACTOR TacticianClass : PlayerPawn
   player.startitem "greenarmor", 1
   player.startitem "clip", 200
   player.startitem "isSeeker", 1
-  Player.JumpZ 10
   damagefactor "rocket", 0
   limitedtoteam 1
   +NOSKIN

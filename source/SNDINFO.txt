@@ -23,6 +23,8 @@ VanishOff 	VANISOFF
 Banshee/Abilities/LifeSupport LIFESUPP
 Banshee/Abilities/EnergyShield ENRGFILD
 Banshee/Weapons/HealingWave HEALWAVE
+Banshee/Passives/CrouchSlideStart CRSLSTAR
+Banshee/Passives/CrouchSlideIdle CRSLIDLE
 
 BlazeDeath1 BLAZDETH
 BlazeDeath2 BLAZDTH2

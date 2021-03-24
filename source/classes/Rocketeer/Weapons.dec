@@ -38,7 +38,7 @@ Actor NoDamageRocketLauncher : RocketLauncher
 		MISG A 2 
 		MISG A 4 A_GunFlash
 		MISG B 2
-		MISG D 3 A_FireCustomMissile("IceRocket",0,1,0,0)
+		MISG D 3 A_FireCustomMissile("NoDamageRocket",0,1,0,0)
 		MISG C 3
 		MISG BE 2
 		MISG FG 1
@@ -48,7 +48,7 @@ Actor NoDamageRocketLauncher : RocketLauncher
 		MISG A 2 
 		MISG A 4 A_GunFlash
 		MISG B 2
-		MISG D 3 A_FireCustomMissile("NoDamageRocket",0,1,0,0)
+		MISG D 3 A_FireCustomMissile("IceRocket",0,1,0,0)
 		MISG C 3
 		MISG BE 2
 		MISG FG 1

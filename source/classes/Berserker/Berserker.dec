@@ -18,6 +18,7 @@ ACTOR BerserkerClass : PlayerPawn
 	player.startitem "BerserkerSecondCooldown", 999
 	Player.ForwardMove 0.50, 1.25
 	Player.SideMove 0.50, 1.25
+	Player.CrouchSprite "BSKR"
 	Player.JumpZ 12
 	limitedtoteam 1
 	damagefactor "rocket", 0
