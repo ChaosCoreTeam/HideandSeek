@@ -154,6 +154,65 @@ ACTOR BerserkerFists : Weapon
 	}
 }
 
+ACTOR BerserkerShotgun : Weapon
+{
+    Weapon.Kickback 100
+    Weapon.AmmoUse 2
+    Weapon.AmmoGive 8
+    Weapon.AmmoType "Shell"
+    Obituary "$OB_MPSSHOTGUN"
+    States
+    {
+    Ready:
+        BSSG A 1 A_WeaponReady
+        Loop
+    Deselect:
+        BSSG A 0 A_TakeInventory("BerserkerShotgun", 1, AAPTR_TARGET)
+        BSSG A 1 A_Lower
+        Loop
+    Select:
+        BSSG A 0 A_SpawnItemEx("FloatingShotgun", 0, 48, 40, 0, 0, 0, angle, SXF_CLIENTSIDE)
+        BSSG A 1 A_Raise
+        Goto Select+1
+    Fire:
+        BSSG A 0 A_GunFlash
+        BSSG A 0 A_PlaySound("Berserker/ShotgunFire", CHAN_WEAPON)
+        BSSG A 8 A_FireBullets(11.2, 7.1, 20, 5, "BulletPuff")
+        BSSG A 4
+        BSSG D 3 A_CheckReload
+        BSSG E 3
+        BSSG F 3 A_PlaySound("Berserker/ShotgunOpen", CHAN_WEAPON)
+        BSSG GHIJK 3
+        BSSG L 3 A_PlaySound("Berserker/ShotgunLoad", CHAN_WEAPON)
+        BSSG MNOPQRS 3
+        BSSG S 3 A_PlaySound("Berserker/ShotgunClose", CHAN_WEAPON)
+        BSSG A 3
+        Goto Ready
+    Flash:
+        BSSG B 4 Bright A_Light1
+        BSSG C 4 Bright A_Light2
+        Goto LightDone
+    Spawn:
+        SGN2 A -1
+        Stop
+    }
+}
+
+ACTOR FloatingShotgun
+{
+    // Since we can't exclude visibility, this must be done.
+    VisibleToPlayerClass "BansheeClass", "BlazerClass", "GuardianClass", "HunterClass", "IllusionistClass", "PolymorphistClass", "RocketeerClass", "ScouterClass", "TacticianClass", "TeleporterClass", "TerminatorClass"
+    Scale 0.65
+    +NOINTERACTION
+    States
+    {
+    Spawn:
+        BFSG A 1 A_Warp(AAPTR_TARGET, 48, 0, 40, 0, WARPF_STOP|WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+        TNT1 AAA 0 A_JumpIfInTargetInventory("BerserkerShotgun", 1, "Spawn")
+        Stop
+    }
+}
+
 ACTOR BerserkerHammer : Weapon
 {
   Obituary "%o fell victim to %k's hammer time!!!!!!!!!!!!!!!!!!!!!"
