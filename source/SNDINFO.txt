@@ -276,6 +276,12 @@ $random NyxTaunt { NyxTaunt1 NyxTaunt2 NyxTaunt3 NyxTaunt4 NyxTaunt5 }
 //
 //=======================================================================
 
+// Sounds taken from KDiZD's super shotgun.
+Berserker/ShotgunFire BSSGFIRE
+Berserker/ShotgunOpen BSSGOPEN
+Berserker/ShotgunLoad BSSGLOAD
+Berserker/ShotgunClose BSSGCLOS
+
 Berserker/Taunt BERSTAUN
 Berserker/Leap BERSJMP2
 Berserker/PunchBlast PUNBLAST

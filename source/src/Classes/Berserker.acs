@@ -22,7 +22,7 @@ script "BerserkerAbilityEnd" (void)
 
 script "BerserkerSecondAbility" (void)
 {
-	str weapon = GetWeapon();
+	/*str weapon = GetWeapon();
 	SetPlayerProperty(0, 1, PROP_INSTANTWEAPONSWITCH);
 	GiveInventory("BerserkerHammer", 1);
 	GiveInventory("ThrowingAxe", 1);
@@ -32,5 +32,9 @@ script "BerserkerSecondAbility" (void)
 	SetWeapon(weapon);
 	TakeInventory("BerserkerHammer", 1);
 	Delay(3);
-	SetPlayerProperty(0, 0, PROP_INSTANTWEAPONSWITCH);
+	SetPlayerProperty(0, 0, PROP_INSTANTWEAPONSWITCH);*/
+    
+    SetPlayerProperty(0, 1, PROP_INSTANTWEAPONSWITCH);
+	GiveInventory("BerserkerShotgun", 1);
+	SetWeapon("BerserkerShotgun");
 }
