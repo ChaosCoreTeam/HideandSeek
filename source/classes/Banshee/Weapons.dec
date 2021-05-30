@@ -21,14 +21,15 @@ ACTOR Rejuvinator : Weapon
 	Weapon.AmmoGive 600
 	Weapon.AmmoUse 1
 	Weapon.Kickback 10000000
+	+WEAPON.AMMO_OPTIONAL
 	Obituary "%o somehow defied logic." 
-	AttackSound "Banshee/Weapons/HealingWave"
+	AttackSound "Banshee/Rejuvinator/Fire"
 	States
 	{
 	Spawn:
 		STPO A -1
 		Loop
-		Ready:
+	Ready:
 		STPO A 2 A_WeaponReady
 		STPO B 2 A_WeaponReady
 		STPO C 2 A_WeaponReady
@@ -64,16 +65,27 @@ ACTOR Rejuvinator : Weapon
 	Flash:
 		PDBF A 0
 		Stop
+	Reload:
+		STPO E 0
+		STPO E 35
+		STPO F 35
+		STPO G 35
+		STPO H 35
+		STPO I 35 
+		STPO J 35
+		Goto Ready
 	}
 }
+
+//  A_PlaySound("Banshee/Rejuvinator/Idle")
 
 ACTOR HealingEnergy : Ammo
 {
 	Inventory.PickupMessage "Healing Energy!"
-	Inventory.Amount 100
-	Inventory.MaxAmount 100
-	Ammo.BackpackAmount 100
-	Ammo.BackpackMaxAmount 100
+	Inventory.Amount 600
+	Inventory.MaxAmount 600
+	Ammo.BackpackAmount 600
+	Ammo.BackpackMaxAmount 600
 	Inventory.Icon "CELLA0"
 	States
 	{
@@ -81,6 +93,48 @@ ACTOR HealingEnergy : Ammo
 		CELL A -1
 		stop
 	}
+}
+
+ACTOR PlasmaCell : Ammo
+{
+Inventory.Amount 0
+Inventory.MaxAmount 50
+Ammo.BackpackAmount 0
+Ammo.BackpackMaxAmount 50
+Inventory.Icon "PLASA0"
++IGNORESKILL
+}
+
+ACTOR PurpleCell : Ammo
+{
+	Inventory.PickupMessage "Healing Energy!"
+	Inventory.Amount 200
+	Inventory.MaxAmount 200
+	Ammo.BackpackAmount 200
+	Ammo.BackpackMaxAmount 200
+	Inventory.Icon "CELLA0"
+States
+{
+Spawn:
+CEL2 ABCDDDCB 3
+Loop
+}
+}
+
+ACTOR GreenCell : Ammo
+{
+	Inventory.PickupMessage "Healing Energy!"
+	Inventory.Amount 200
+	Inventory.MaxAmount 200
+	Ammo.BackpackAmount 200
+	Ammo.BackpackMaxAmount 200
+	Inventory.Icon "CELLA0"
+States
+{
+Spawn:
+CEL2 ABCDDDCB 3
+Loop
+}
 }
 
 ACTOR HealingWave
@@ -144,6 +198,7 @@ Actor BansheeAura
 	var int user_angle;
     renderstyle Add
 	VisibleToTeam 0
+	VisibleToPlayerClass "IllusionistClass"
    States
    {
 		Spawn:

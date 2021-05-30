@@ -133,7 +133,7 @@ ACTOR Devcheck : Ammo
    Inventory.MaxAmount 1
 }
 
-ACTOR MiniRockets : Ammo 25048
+ACTOR MiniRockets : Ammo
 {
    Inventory.Amount 6
    Inventory.MaxAmount 100
@@ -175,7 +175,7 @@ ACTOR DevastatorShot
    }
 }
 
-ACTOR MiniRocketBox : MiniRockets 25049
+ACTOR MiniRocketBox : MiniRockets
 {
    +ALWAYSPICKUP
    Inventory.Amount 30

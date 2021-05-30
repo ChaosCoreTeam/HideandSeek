@@ -1,7 +1,7 @@
 ACTOR RocketeerClass : PlayerPawn
 {
 	Speed 1
-	Health 100
+	Health 200
 	Radius 16
 	Height 56
 	Mass 100
@@ -12,10 +12,11 @@ ACTOR RocketeerClass : PlayerPawn
 	Player.SoundClass "Rocketeer"
 	player.startitem "NoDamageRocketLauncher", 1
 	player.startitem "NoDamageRocketAmmo", 25
-	player.startitem "medVanishingPool", 85
+	player.startitem "medVanishingPool", 75
 	player.startitem "megasphere", 1
 	player.startitem "RocketeerFirstCooldown", 999
     player.startitem "RocketeerSecondCooldown", 999
+	player.startitem "isHider", 1
 	damagefactor "rocket", 0
 	Species "Hider"
 	limitedtoteam 0

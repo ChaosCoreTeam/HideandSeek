@@ -28,13 +28,16 @@ ACTOR GuardianClass : PlayerPawn
 	Player.DisplayName "Guardian"
 	Player.SoundClass "Guardian"
 	Player.CrouchSprite "RKTC"
-	player.startitem "Shield", 1
-	player.startitem "medVanishingPool", 50
+	player.startitem "BlueShield", 1
+	player.startitem "RedShield", 1
+	player.startitem "GreenShield", 1
+	player.startitem "lowVanishingPool", 45
 	player.startitem "GuardianArmor", 1
-	player.startitem "GuardianPower", 500
+	player.startitem "GuardianPower", 600
 	player.startitem "GuardianFirstCooldown", 999
 	player.startitem "GuardianSecondCooldown", 999
-	player.startitem "Vanishing", 125
+	player.startitem "HealthNumSpawner2", 1
+	player.startitem "isHider", 1
 	Player.JumpZ 0
 	Species "Hider"
 	var int user_chargecount;
@@ -45,6 +48,7 @@ ACTOR GuardianClass : PlayerPawn
 	{
 	Spawn:
 		AGRD A 0
+		TNT1 A 0 SetPlayerProperty(0,1,2)
 		AGRD A 35
 		AGRD A 0 A_JumpIf (health>=50, 2)
 		AGRD A 0 ACS_NamedExecute("regenHealth",0,0)

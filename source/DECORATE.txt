@@ -1,4 +1,3 @@
-#include "classes/FunStuff.dec"
 #include "classes/Banshee/Banshee.dec"
 #include "classes/Banshee/Weapons.dec"
 #include "classes/Banshee/Abilities.dec"
@@ -24,15 +23,16 @@
 #include "classes/Scouter/Scouter.dec"
 #include "classes/Scouter/Weapons.dec"
 #include "classes/Berserker/Berserker.dec"
-#include "classes/Berserker/ABILITIES.dec"
 #include "classes/Tactician/Tactician.dec"
 #include "classes/Tactician/Weapons.dec"
 #include "classes/Terminator/Terminator.dec"
 #include "classes/Terminator/Weapons.dec"
-#include "classes/Hiders.dec"
-#include "classes/Seekers.dec"
 #include "classes/AbilityItems.dec"
+#include "classes/Vanishing.dec"
 #include "classes/Passives.dec"
+#include "classes/Numbers.dec"
+#include "classes/Misc.dec"
+#include "classes/FunStuff.dec"
 
 projectile Glass //Glass Shard
 {

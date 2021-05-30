@@ -1,7 +1,7 @@
 ACTOR IllusionistClass : PlayerPawn
 {
 	Speed 1
-	Health 100
+	Health 200
 	Radius 16
 	Height 56
 	Mass 200
@@ -15,7 +15,8 @@ ACTOR IllusionistClass : PlayerPawn
 	player.startitem "DecoyEnergy", 100
     player.startitem "IllusionistFirstCooldown", 999
     player.startitem "IllusionistSecondCooldown", 999
-	player.startitem "lowVanishingPool", 45
+	player.startitem "medVanishingPool", 75
+	player.startitem "isHider", 1
   	Player.ForwardMove 0.25, 1.00
   	Player.SideMove 0.25, 1.00
 	Player.JumpZ 12
@@ -34,7 +35,7 @@ ACTOR IllusionistClass : PlayerPawn
 	VSHP A 0 ACS_NamedExecute("rechargeWeapon", 0, 3)
 	Loop
 	See:
-		VSHP ABCD 6
+		VSHP ABCD 3
 	Loop
 	Missile:
 		VSHP E 12

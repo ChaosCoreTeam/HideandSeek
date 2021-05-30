@@ -1,7 +1,39 @@
-Actor SecondJump : Inventory { }
+ACTOR ScoutVision : PowerupGiver
+{
+  +INVENTORY.AUTOACTIVATE
+  +INVENTORY.ALWAYSPICKUP
+  Inventory.MaxAmount 0
+  Powerup.Type "LightAmp"
+  Powerup.Duration 99999999999999999999
+  Inventory.PickupMessage "Light Amplification Visor"
+  States
+  {
+    Spawn:
+    PVIS A 6 Bright
+    PVIS B 6
+    Loop
+  }
+}
 
-ACTOR CrouchSlide : Inventory { }
-ACTOR SlideMomentum : Inventory { }
+ACTOR TeleporterSuit : PowerupGiver
+{
+  +INVENTORY.AUTOACTIVATE
+  +INVENTORY.ALWAYSPICKUP
+  Inventory.MaxAmount 0
+  Powerup.Type "PowerMask"
+  Powerup.Duration 99999999999999999999
+  Powerup.Color 0, 0, 0, 0
+  Inventory.PickupMessage "Radiation Shielding Suit"
+  States
+  {
+  Spawn:
+    SUIT A -1 Bright
+    Stop
+  }
+}
+
+
+Actor SecondJump : Inventory { }
 
 ACTOR JumpChargeActive : Inventory
 {
@@ -50,10 +82,9 @@ Actor PlayerWallDetector
 	}
 }
 
-Actor CrouchSliding : Inventory
-{
-	
-}
+ACTOR CrouchSlide : Inventory { }
+ACTOR SlideMomentum : Inventory { }
+ACTOR SlideAirMomentum : Inventory { }
 
 Actor airDodge : Inventory
 {

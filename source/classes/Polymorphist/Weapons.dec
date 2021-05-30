@@ -1,4 +1,4 @@
-actor PolyShotgun : Weapon 22911
+actor PolyShotgun : Weapon
 {
   Weapon.SelectionOrder 1200
   Weapon.AmmoUse1 1

@@ -1,10 +1,18 @@
 LISTMENU "MainMenu"
 {
-	StaticPatch 94, 2, "M_DOOM"
-	Position 97, 72	//already positioned for "read this" being always there
+	Selector "H_ARROW1", -28, 0
+	StaticPatch 94, 24, "M_DOOM"
+	Position 96, 94	//already positioned for "read this" being always there
 	PatchItem "M_NGAME", "n", "PlayerclassMenu"
+	Position 40, 110	//already positioned for "read this" being always there
 	PatchItem "H_CONFIG", "c", "HNSOptions"
+	Position 72, 126	//already positioned for "read this" being always there
+	PatchItem "H_PSETUP", "p", "PlayerMenu"
+	Position 84, 142	//already positioned for "read this" being always there
+	PatchItem "H_LGAME", "l", "ZA_MultiplayerOptions"
+	Position 100, 158	//already positioned for "read this" being always there
 	PatchItem "M_OPTION","o", "OptionsMenu"
+	Position 91, 174	//already positioned for "read this" being always there
 	PatchItem "M_QUITG", "q", "QuitMenu"
 }
 

@@ -5,137 +5,88 @@
 int buttons;
 int nobuttons;
 
-Script "vanishingSetup" (void) 
-{
-	int pNum = PlayerNumber() + PLAYER_BASE_TID;
-	
-	if(PlayerClass(PlayerNumber()) < SEEKER_CLASS_START) //Hider check
-	{
-		while (isVanished(pNum) == true)
-		{
-			switch (PlayerClass(PlayerNumber()))
-			{
-				case CLASS_BANSHEE:
-					if (CheckActorInventory(pNum, "Vanishing") > 0)
-					{
-						TakeActorInventory(pNum, "Vanishing", 1);
-					}
-					break;
-				case CLASS_BLAZER:
-					if (CheckActorInventory(pNum, "lowVanishingPool") > 0)
-					{
-						TakeActorInventory(pNum, "lowVanishingPool", 1);
-					}
-					break;
-				case CLASS_GUARDIAN:
-					if (CheckActorInventory(pNum, "medVanishingPool") > 0)
-					{
-						TakeActorInventory(pNum, "medVanishingPool", 1);
-					}
-				break;
-				case CLASS_ILLUSIONIST:
-					if (CheckActorInventory(pNum, "lowVanishingPool") > 0)
-					{
-						TakeActorInventory(pNum, "lowVanishingPool", 1);
-					}
-				break;
-				case CLASS_ROCKETEER:
-					if (CheckActorInventory(pNum, "medVanishingPool") > 0)
-					{
-						TakeActorInventory(pNum, "medVanishingPool", 1);
-					}
-				break;
-				case CLASS_TELEPORTER:
-					if (CheckActorInventory(pNum, "lowVanishingPool") > 0)
-					{
-						TakeActorInventory(pNum, "lowVanishingPool", 1);
-					}
-				break;
-			}
-			delay(15);
-		}
-	}
-}
-
 script "HNS_Vanish" (void) NET
 {
 	if(PlayerClass(PlayerNumber()) >= SEEKER_CLASS_START) terminate;
 	
-	if(isVanished(PlayerNumber()) == 1)
+	if(isVanished(PlayerNumber()))
 	{
 		ACS_NamedExecuteAlways("HNS_Visible", 0); 
 	}
 	
-	if(hasVanish(PlayerNumber()) == 0)
+	if(!hasVanish(PlayerNumber()))
 	{
 		ACS_NamedExecuteAlways("HNS_NoVanish", 0);
 		terminate;
 	}
 	
-	PlaySound (PlayerNumber()+ 1000, "VanishOn", 5);
-	HudMessage(s:"You are now vanished!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
-	ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
+	GiveInventory("isVanished", 1);
+	PlaySound (PlayerNumber()+ 1000, "Hiders/Vanish/On", 5);
+	//HudMessage(s:"You are now vanished!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+	SetActorState(PLAYER_BASE_TID + PlayerNumber(), "FadeOut", true);
 }
 
 script "HNS_Visible" (void) NET
 {
 	if(PlayerClass(PlayerNumber()) >= SEEKER_CLASS_START) terminate;
 	
-	if(isVanished(PlayerNumber()) == 0)
+	if(!isVanished(PlayerNumber()))
 	{
 		ACS_NamedExecuteAlways("HNS_Vanish", 0); 
 	}
 	
-	PlaySound (PlayerNumber()+ 1000, "VanishOff");
-	HudMessage(s:"You are now visible!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
-	ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 10);
+	TakeInventory("isVanished", 1);
+	PlaySound (PlayerNumber()+ PLAYER_BASE_TID, "Hiders/Vanish/Off");
+	//HudMessage(s:"You are now visible!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+	SetActorState(PLAYER_BASE_TID + PlayerNumber(), "Visible", true);
 }
 
 script "HNS_NoVanish" (void) CLIENTSIDE
 {	
-	HudMessage(s:"You are out of vanishing power!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
-	ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 10);
+	//HudMessage(s:"You are out of vanishing power!"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+	SetActorState(PLAYER_BASE_TID + PlayerNumber(), "Visible", true);
 }
 
-function int hasVanish(int pNumber)
+function bool hasVanish(int pNum)
 {
-	If (PlayerClass(PlayerNumber()) < SEEKER_CLASS_START)
+		if (CheckActorInventory(pNum + 1000, "Vanishing") > 0
+		|| CheckActorInventory(pNum + 1000, "medVanishingPool") > 0
+		|| CheckActorInventory(pNum + 1000, "lowVanishingPool") > 0)
+			return 1;
+	return 0;
+}
+
+function bool isVanished(int pNum)
+{	
+	if (GetActorProperty(pNum, APROP_Alpha) < 1.0)
 	{
-		switch (PlayerClass(PlayerNumber() + 1000))
-		{
-			case 0:
-				if (CheckActorInventory(pNumber + 1000, "Vanishing") == 0)
-				{
-					return 0;
-				}
-			case 1:
-				if (CheckActorInventory(pNumber + 1000, "lowVanishingPool") == 0)
-				{
-					return 0;
-				}
-			case 2:
-				if (CheckActorInventory(pNumber + 1000, "medVanishingPool") == 0)
-				{
-					return 0;
-				}
-			case 3:
-				if (CheckActorInventory(pNumber + 1000, "lowVanishingPool") == 0)
-				{
-					return 0;
-				}
-			case 4:
-				if (CheckActorInventory(pNumber + 1000, "medVanishingPool") == 0)
-				{
-					return 0;
-				}
-			case 5:
-				if (CheckActorInventory(pNumber + 1000, "lowVanishingPool") == 0)
-				{
-					return 0; 
-				}
-		}
+		return true;
 	}
-	return 1;
+		return false;
+}
+
+Script "vanishingSetup" (void) 
+{
+	int pNum = PlayerNumber() + PLAYER_BASE_TID;
+	while (GetActorProperty(pNum, APROP_Health) > 0)
+	{
+		if(isVanished(pNum))
+		{
+			if (CheckActorInventory(pNum, "Vanishing") > 0)
+			{
+				TakeActorInventory(pNum, "Vanishing", 1);
+			}
+			if (CheckActorInventory(pNum, "medVanishingPool") > 0)
+			{
+				TakeActorInventory(pNum, "medVanishingPool", 1);
+			}
+			if (CheckActorInventory(pNum, "lowVanishingPool") > 0)
+			{
+				TakeActorInventory(pNum, "lowVanishingPool", 1);
+			}
+		}
+		Delay(15);	
+	}
 }
 
 Script "VanishHandling" (void) CLIENTSIDE
@@ -160,7 +111,7 @@ Script "VanishHandling" (void) CLIENTSIDE
 								if (runVarState == 1)
 								{
 									runVarState = 2;
-									ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
+									SetActorState(PLAYER_BASE_TID + PlayerNumber(), "FadeOut", true);
 									//Unless you transition from walking while holding down shift, thena you go invisible.
 								}
 							}
@@ -169,7 +120,7 @@ Script "VanishHandling" (void) CLIENTSIDE
 								if (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(), APROP_Health) > 0)
 								{
 									vanState = 1;
-									ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
+									SetActorState(PLAYER_BASE_TID + PlayerNumber(), "FadeOut", true);
 									//Become invisible when walking.
 								}
 							}
@@ -182,14 +133,14 @@ Script "VanishHandling" (void) CLIENTSIDE
 							if (vanState == 1)
 							{
 								vanState = 0;
-								ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 9);
+								SetActorState(PLAYER_BASE_TID + PlayerNumber(), "FadeIn", true);
 								//Become visible if going from walking to running!
 							}
 							if (runVarState == 1)
 							{
 								vanState = 0;
 								runVarState = 2;
-								ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 9);
+								SetActorState(PLAYER_BASE_TID + PlayerNumber(), "FadeIn", true);
 								//Toggling CL_Run won't get you very far.
 							}
 						}
@@ -199,7 +150,7 @@ Script "VanishHandling" (void) CLIENTSIDE
 							{
 								vanState = 0;
 								runVarState = 2;
-								ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 9);
+								SetActorState(PLAYER_BASE_TID + PlayerNumber(), "FadeIn", true);
 								//If the player isn't dead and is running around turn visible!
 							}
 						}
@@ -208,7 +159,7 @@ Script "VanishHandling" (void) CLIENTSIDE
 					{
 						if (nobuttons & (BT_FORWARD | BT_BACK | BT_MOVELEFT | BT_MOVERIGHT | BT_ATTACK))
 						{
-							ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
+							SetActorState(PLAYER_BASE_TID + PlayerNumber(), "FadeOut", true);
 							//Release the movement keys and you are the invisible man.
 						}
 						else
@@ -229,7 +180,7 @@ Script "VanishHandling" (void) CLIENTSIDE
 							if (runVarState == 2)
 							{
 								runVarState = 1;
-								ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 9);
+								SetActorState(PLAYER_BASE_TID + PlayerNumber(), "FadeOut", true);
 								//Unless you transition from running while holding down shift, then you stay visible.
 							}
 						}
@@ -238,7 +189,7 @@ Script "VanishHandling" (void) CLIENTSIDE
 							if (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(), APROP_Health) > 0)
 							{
 								vanState = 1;
-								ACS_NamedExecuteAlways("stateChange", 0, 1, 0, 9);
+								SetActorState(PLAYER_BASE_TID + PlayerNumber(), "FadeOut", true);
 								//Turn visible while running!
 							}
 						}
@@ -251,14 +202,14 @@ Script "VanishHandling" (void) CLIENTSIDE
 							if (vanState == 1)
 							{
 								vanState = 0;
-								ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
+								SetActorState(PLAYER_BASE_TID + PlayerNumber(), "FadeIn", true);
 								//Start walking invisibly if going from running to walking.
 							}
 							if (runVarState == 2)
 							{
 								vanState = 0;
 								runVarState = 1;
-								ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
+								SetActorState(PLAYER_BASE_TID + PlayerNumber(), "FadeIn", true);
 								//Toggling CL_Run won't get you very far.
 							}
 						}
@@ -268,7 +219,7 @@ Script "VanishHandling" (void) CLIENTSIDE
 							{
 								vanState = 0;
 								runVarState = 1;
-								ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
+								SetActorState(PLAYER_BASE_TID + PlayerNumber(), "FadeIn", true);
 								//If the player isn't dead and is walking around then don't turn visible.
 							}
 						}
@@ -277,7 +228,7 @@ Script "VanishHandling" (void) CLIENTSIDE
 					{
 						if (nobuttons & (BT_FORWARD | BT_BACK | BT_MOVELEFT | BT_MOVERIGHT | BT_ATTACK | BT_SPEED))
 						{
-							ACS_NamedExecuteAlways("stateChange", 0, 0, 1, 8);
+							SetActorState(PLAYER_BASE_TID + PlayerNumber(), "FadeIn", true);
 							//Release the movement keys and you are the invisible man.
 						}
 						else
@@ -290,13 +241,4 @@ Script "VanishHandling" (void) CLIENTSIDE
 			delay(1);
 		}
 	}
-}
-
-function bool isVanished(int pNumber)
-{	
-	if (GetActorProperty(pNumber, APROP_Alpha) < 1.0)
-	{
-		return true;
-	}
-		return false;
 }

@@ -1,0 +1,69 @@
+#library "Impact.acs"
+#import "DEFINITIONS.acs"
+#import "FUNCTION.acs"
+#include "zcommon.acs"
+#define BERSERKER_OWN_RADIUS 256.0
+int seekersNear[MAXPLAYERS][2];
+
+script "BerserkerBlowPlayerAwayHandling" (void)
+{
+	int bersTid = PLAYER_BASE_TID + PlayerNumber();
+	
+	if(PlayerClass(PlayerNumber())==CLASS_BERSERKER) //Guardian check
+	{
+		While(GetActorProperty(bersTid, APROP_HEALTH) > 0)
+		{
+			for (int p = 0; p < MAXPLAYERS; p++)
+			{
+				if (p == PlayerNumber())
+					continue;
+
+				int targetTid = PLAYER_BASE_TID + p;
+				if (CheckActorInventory(targetTid, "isSeeker"))
+					continue;
+
+				if (fixedDistance(bersTid, targetTid) >= BERSERKER_OWN_RADIUS)
+					continue;
+
+				GiveActorInventory(targetTid,"getOwned", 1);
+			}
+			Delay(1);
+		}
+	}
+}
+
+script "hiderBlownAwayHandling" (void)
+{
+	int hiderTid = PLAYER_BASE_TID + PlayerNumber();
+	int seekNum = 0;
+	bool inRadius;
+	
+	if(PlayerClass(PlayerNumber()) < SEEKER_CLASS_START) //Guardian check
+	{
+		While(GetActorProperty(hiderTid, APROP_HEALTH) > 0)
+		{
+			if (seekersNear[hiderTid][0] == 0 && CheckInventory("getOwned"))
+			{
+				for (int p = 0; p < MAXPLAYERS; p++)
+				{
+					if (p == PlayerNumber())
+					continue;
+
+					int targetTid = PLAYER_BASE_TID + p;
+					if (!CheckActorInventory(targetTid, "isBerserker"))
+					continue;
+
+					if (fixedDistance(hiderTid, targetTid) >= BERSERKER_OWN_RADIUS)
+						continue;
+						
+				seekersNear[hiderTid][0] += p;
+				}
+			}
+		Delay(1);
+		if (CheckInventory("getOwned") && seekersNear[hiderTid][0] == 0)
+		{
+			TakeInventory("getOwned", 1);
+		}
+		}
+	}
+}

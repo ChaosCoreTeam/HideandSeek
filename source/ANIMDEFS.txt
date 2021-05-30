@@ -1,18 +1,3 @@
-flat Q2FCMP01
-  pic 1 tics 4
-  pic 2 tics 4
-  pic 3 tics 4
-  pic 4 tics 4
-  pic 5 tics 4
-  
-  texture Q2SWTA01
-  pic 1 tics 8
-  pic 2 tics 8
-  
-    texture Q2SWTB01
-  pic 1 tics 8
-  pic 2 tics 8
-  
-  texture Q2SIGA01
-  pic 1 tics 8
-  pic 2 tics 8
+texture H_ARROW1
+pic H_ARROW1 tics 8
+pic H_ARROW2 tics 8

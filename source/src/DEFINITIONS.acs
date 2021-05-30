@@ -20,30 +20,82 @@
 #libdefine CLASS_POLYMORPHIST 10
 #libdefine CLASS_TACTICIAN 11
 
-#libdefine FIRST_ABILITY_INDEX 0
-#libdefine SECOND_ABILITY_INDEX 12
-
-#libdefine PLAYER_BASE_TID 1000
 #libdefine SEEKER_CLASS_START 6
 #libdefine SEEKER_CLASS_END 12
 
-#libdefine DECOY_TID_INDEX 3400
-#libdefine TRANSLOCATIONMODULE_TID_INDEX 3600
+#libdefine TEAM_HIDERS 0
+#libdefine TEAM_SEEKERS 1
 
 #libdefine teamPlayer_id 0
 #libdefine teamPlayer_distance 1
 
-#libdefine NUM_POWERUPS 24
-#libdefine POWERUP_COOLDOWN 0
-#libdefine POWERUP_NAME 1
-#libdefine POWERUP_HUD_X_OFFSET 300.1
-#libdefine POWERUP_HUD_Y_OFFSET 200.1
-#libdefine POWERUP_HUD_TEXT_VISIBLE_SEC 1.0
+#libdefine JUMP_COOLDOWN_TICS 7
+#libdefine AIRTHRUST_COOLDOWN_TICS 10
+#libdefine THRUST_FORCE 48
+#libdefine THRUST_UPWARDS_CONSTANT 0
+#libdefine THRUST_ADD_CONSTANT 1
+#libdefine THRUST_CROUCH_FORCE 20
+#libdefine THRUST_DODGE_FORCE 15
+
+#libdefine CROUCHSLIDE_MAXSLIDETIME 10
+#libdefine CROUCHSLIDE_MINSLIDETIME 2
+#libdefine MOMENTUM_RESET_THRESHOLD 75
 
 #libdefine ASPECT_4_3 1.3
 #libdefine ASPECT_5_4 1.25
 #libdefine ASPECT_16_9 1.7
 #libdefine ASPECT_16_10 1.6
+
+#libdefine FIRST_ABILITY_INDEX 0
+#libdefine SECOND_ABILITY_INDEX 12
+#libdefine PLAYER_BASE_TID 1000
+#libdefine DECOY_TID_INDEX 3400
+#libdefine TRANSLOCATIONMODULE_TID_INDEX 3600
+#libdefine FIRST_MARKER_TID_INDEX 5000
+#libdefine SECOND_MARKER_TID_INDEX 5064
+#libdefine THIRD_MARKER_TID_INDEX 5128
+#libdefine DEATH_BASE_TID 10000
+#libdefine SPECTATOR_BASE_TID 10100
+#libdefine DISCONNECTED_BASE_TID 10200
+
+int PLAYERS_ALIVE = 0;
+int BANSHEES_ALIVE = 0;
+int HIDERS_ALIVE = 0;
+int SEEKERS_ALIVE = 0;
+
+int PLAYERS_DEAD = 0;
+int HIDERS_DEAD = 0;
+int SEEKERS_DEAD = 0;
+
+int PLAYERS_INMATCH = 0;
+int SPECTATORS_INMATCH = 0;
+int PLAYERS_DISCONNECTED = 0;
+
+int PLAYER_INFORMATION[MAXPLAYERS][5];
+
+#libdefine PINFO_TID 0
+#libdefine PINFO_CLASS 1
+#libdefine PINFO_TEAM 2
+#libdefine PINFO_HEALTH 3
+#libdefine PINFO_STATUS 4
+
+#libdefine IS_DEAD 0
+#libdefine IS_ALIVE 1
+#libdefine IS_SPECTATOR 2
+#libdefine IS_DISCONNECTED 3
+
+int hiderHealth[MAXPLAYERS][4];
+int healthTid[MAXPLAYERS][4];
+
+#libdefine HINFO_HEALTH 0
+#libdefine HINFO_FIRSTNUM 1
+#libdefine HINFO_SECONDNUM 2
+#libdefine HINFO_THIRDNUM 3
+
+#libdefine HTID_PLAYERTID 0
+#libdefine HTID_FIRSTTID 1
+#libdefine HTID_SECONDTID 2
+#libdefine HTID_THIRDTID 3
 
 str classNames[12] = 
 {

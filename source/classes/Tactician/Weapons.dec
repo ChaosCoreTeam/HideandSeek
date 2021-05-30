@@ -123,7 +123,7 @@ Spawn:
 
 ////////////////////// Pipebomb ////////////////////////////
 ///////////////////////////////////////////////////////////
-ACTOR Tactician_Pipebomb : Weapon 25018
+ACTOR Tactician_Pipebomb : Weapon
 {
    Inventory.PickupSound "misc/w_pkup"
    Inventory.PickupMessage "You got a pipebomb!"
@@ -555,7 +555,7 @@ ACTOR D2C_PipebombAmmo : Ammo
 //////////////////////////TacticianMachinegun/////////////////////////////
 /////////////////////////////////////////////////////////////////
 
-ACTOR Tactician_Machinegun : Weapon 602
+ACTOR Tactician_Machinegun : Weapon
 { 
   //$Category Weapons
   //$Sprite HVMGW0
@@ -651,7 +651,7 @@ actor SentryGun
     loop
   ClearTarget:
     SENT A 1 A_ClearTarget
-	Goto Spawn
+	Goto Spawn+1
   }
 }
 
@@ -670,7 +670,7 @@ actor SentryBoom
   }
 }
 
-ACTOR SentryBox : CustomInventory 12369
+ACTOR SentryBox : CustomInventory
 {
   +COUNTITEM
   +INVENTORY.INVBAR

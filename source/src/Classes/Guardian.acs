@@ -2,6 +2,16 @@
 #import "DEFINITIONS.acs"
 #include "zcommon.acs"
 
+int healthPreviousTic[MAXPLAYERS];
+int healthCurrentTic[MAXPLAYERS];
+int altfirePreviousTic[MAXPLAYERS];
+int altfireCurrentTic[MAXPLAYERS];
+int firePreviousTic[MAXPLAYERS];
+int fireCurrentTic[MAXPLAYERS];
+int useInitialTic[MAXPLAYERS];
+int usePreviousTic[MAXPLAYERS];
+int useCurrentTic[MAXPLAYERS];
+
 script "GuardianFirstAbility" (void)
 {
 	Spawn("SmokeCanister", GetActorX(0), GetActorY(0), GetActorZ(0));
@@ -81,4 +91,150 @@ script "GuardianStunner" (void)
 		Delay(105);
 		SetPlayerProperty(0, 0, PROP_TOTALLYFROZEN);
 	}
+}
+
+script "GuardianShieldHandling" (void)
+{
+	int playerNum = PlayerNumber();
+	int playerTid = playerNum + PLAYER_BASE_TID;
+	
+	if (PlayerClass(playerNum) == CLASS_GUARDIAN)
+	{
+		while (GetActorProperty(playerTid,APROP_Health) > 0) 
+		{
+			if (CheckInventory("ShieldFull"))
+			{
+				if (shieldNotCharged(playerNum, playerTid))
+				{
+					print(s:"inside not charged function");
+				}
+				if (checkweapon("GreenShield") && checkinventory("greenmana") < 100)
+				{
+					GiveInventory("ShieldNotFull", 1);
+				}
+			}
+			if (CheckInventory("ShieldUp") == 1)
+			{
+				recordGuardianHealth(playerNum, playerTid);
+				
+				if (playerTookDamage(playerNum))
+				{
+					int dmgAmt = healthPreviousTic[playerNum] - healthCurrentTic[playerNum];
+					log(s:"guardian took... ", d:dmgAmt, s:" damage");
+					int redAmt = dmgAmt / 6;
+					TakeInventory("GuardianPower", dmgAmt);
+					HealThing(redAmt);
+					log(s:"reduced damage was", d:redAmt, s:" damage");
+				}
+				if (checkinventory("GuardianFireState"))
+				{
+					recordAltFirePress(playerNum, playerTid);
+					if (playerPressedAltFire(playerNum))
+					{
+						log(s:"alt fire detected");
+						GiveInventory("GuardianFireAlt", 1);
+					}
+					if (playerPressedUse(playerNum))
+					{
+						log(s:"use detected");
+						GiveInventory("GuardianFireAlt", 1);
+					}
+				}
+				if (checkinventory("GuardianAltFireState"))
+				{
+					recordFirePress(playerNum, playerTid);
+					if (playerPressedFire(playerNum))
+					{
+						GiveInventory("GuardianAltFireAlt", 1);
+						if (checkinventory("greenshieldinv") && getactorproperty(playerNum, APROP_Health) > 150)
+						{
+							TakeInventory("GuardianAltFireAlt", 1);
+							print(s:"already at full health!");
+						}
+						
+					}
+				}
+			}
+		Delay(1);
+		}
+	}
+}
+
+function void recordGuardianHealth(int playerNum, int playerTid) {
+	int health = GetActorProperty(playerTid, APROP_HEALTH);
+	healthPreviousTic[playerNum] = healthCurrentTic[playerNum];
+	healthCurrentTic[playerNum] = health;
+}
+
+function void recordAltFirePress(int playerNum, int playerTid) {
+	int altfire = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_ALTATTACK) == BT_ALTATTACK;
+	altfirePreviousTic[playerNum] = altfireCurrentTic[playerNum];
+	altfireCurrentTic[playerNum] = altfire;
+}
+
+function void recordFirePress(int playerNum, int playerTid) {
+	int fire = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_ATTACK) == BT_ATTACK;
+	firePreviousTic[playerNum] = fireCurrentTic[playerNum];
+	fireCurrentTic[playerNum] = fire;
+}
+
+function void recordUsePress(int playerNum, int playerTid) {
+	int use = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_USE) == BT_USE;
+	useInitialTic[playerNum] = usePreviousTic[playerNum];
+	usePreviousTic[playerNum] = useCurrentTic[playerNum];
+	useCurrentTic[playerNum] = use;
+}
+
+function bool playerTookDamage (int playerNum)
+{
+	return healthCurrentTic[playerNum] < healthPreviousTic[playerNum];
+}
+
+function bool playerPressedAltFire (int playerNum)
+{
+	return altfireCurrentTic[playerNum];
+}
+
+function bool playerPressedFire (int playerNum)
+{
+	return fireCurrentTic[playerNum];
+}
+
+function bool playerPressedUse(int playerNum)
+{
+	return useCurrentTic[playerNum];
+}
+
+function bool shieldNotCharged(int playerNum, int playerTid) {
+	int grn = greenShieldCheck(playerNum);
+	int red = redShieldCheck(playerNum);
+	int blu = blueShieldCheck(playerNum);
+	int yel = yellowShieldCheck(playerNum);
+	int pin = pinkShieldCheck(playerNum);
+	return grn && red && blu && yel && pin;
+}
+
+function bool greenShieldCheck(int playerNum)
+{
+	return checkweapon("GreenShield") && checkinventory("greenmana") < 100;
+}
+
+function bool redShieldCheck (int playerNum)
+{
+	return checkweapon("RedShield") && checkinventory("redmana") < 100;
+}
+
+function bool blueShieldCheck (int playerNum)
+{
+	return checkweapon("BlueShield") && checkinventory("bluemana") < 100;
+}
+
+function bool yellowShieldCheck (int playerNum)
+{
+	return checkweapon("YellowShield") && checkinventory("yellowmana") < 100;
+}
+
+function bool pinkShieldCheck (int playerNum)
+{
+	return checkweapon("PinkShield") && checkinventory("pinkmana") < 100;
 }

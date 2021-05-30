@@ -1,6 +1,74 @@
 #library "Function.acs"
+#include "zcommon.acs"
 #import "DEFINITIONS.acs"
 
+int buttons;
+int oldbuttons;	
+
+int playerJumpDownPrevTic[MAXPLAYERS];
+int playerJumpDownCurrTic[MAXPLAYERS];
+int playerJumpCooldown[MAXPLAYERS];
+
+int playerCrouchDownPrevTic[MAXPLAYERS];
+int playerCrouchDownCurrTic[MAXPLAYERS];
+int playerCrouchCooldown[MAXPLAYERS];
+
+int playerSpeedPrevTic[MAXPLAYERS];
+int playerSpeedCurrTic[MAXPLAYERS];
+
+int playerLookAngleOldTic[MAXPLAYERS];
+int playerLookAnglePrevTic[MAXPLAYERS];
+int playerLookAngleCurrTic[MAXPLAYERS];
+
+int LookAngleTicPrev[MAXPLAYERS];
+int LookAngleTicCurr[MAXPLAYERS];
+
+int isTurningPrevTic[MAXPLAYERS];
+int isTurningCurrTic[MAXPLAYERS];
+
+int turnDirectionTicPrev[MAXPLAYERS];
+int turnDirectionTicCurr[MAXPLAYERS];
+
+int inAirCurr[MAXPLAYERS];
+int inAirPrev[MAXPLAYERS];
+
+int inAirSpeedTicPrev[MAXPLAYERS];
+int inAirSpeedTicCurr[MAXPLAYERS];
+
+//0 for left, 1 for right
+int playerTurnDirOldTic[MAXPLAYERS];
+int playerTurnDirPrevTic[MAXPLAYERS];
+int playerTurnDirCurrTic[MAXPLAYERS];
+
+int playerForwardDownPrevTic[MAXPLAYERS];
+int playerBackwardDownPrevTic[MAXPLAYERS];
+int playerLeftDownPrevTic[MAXPLAYERS];
+int playerRightDownPrevTic[MAXPLAYERS];
+
+//========================================
+//		Air Thrust Variables
+//========================================
+
+int playerForwardInitialTic[MAXPLAYERS];
+int playerBackwardInitialTic[MAXPLAYERS];
+int playerLeftInitialTic[MAXPLAYERS];
+int playerRightInitialTic[MAXPLAYERS];
+
+int playerForwardReleaseCurrTic[MAXPLAYERS];
+int playerBackwardReleaseCurrTic[MAXPLAYERS];
+int playerLeftReleaseCurrTic[MAXPLAYERS];
+int playerRightReleaseCurrTic[MAXPLAYERS];
+
+int playerForwardDownCurrTic[MAXPLAYERS];
+int playerBackwardDownCurrTic[MAXPLAYERS];
+int playerLeftDownCurrTic[MAXPLAYERS];
+int playerRightDownCurrTic[MAXPLAYERS];
+
+int playerThrustCooldown[MAXPLAYERS];
+
+//========================================
+//		Function Start
+//========================================
 function int abs(int n)
 {
     if (n < 0)
@@ -74,4 +142,562 @@ function int getaspectratio(void)
 		return ASPECT_5_4;
 	}
 	return ASPECT_4_3;
+}
+
+//========================================
+//		Passive Functions
+//========================================
+
+//========================================
+//
+//		Commonly Used Fucntions
+//
+//========================================
+
+function bool playerAboveGroundThreshold16(int playerTid) {
+	// We want a buffer zone of 8 map units so the player can't walljump
+	// immediately when on the ground.
+	return GetActorZ(playerTid) - GetActorFloorZ(playerTid) >= 16.0;
+}
+
+function bool playerAboveGroundThreshold(int playerTid) {
+	// We want a buffer zone of 8 map units so the player can't walljump
+	// immediately when on the ground.
+	return GetActorZ(playerTid) - GetActorFloorZ(playerTid) >= 8.0;
+}
+
+function bool playerOnGround(int playerTid) {
+	// We want a buffer zone of 8 map units so the player can't walljump
+	// immediately when on the ground.
+	return GetActorZ(playerTid) - GetActorFloorZ(playerTid) == 0.0;
+}
+
+function bool playerPressingJump(int playerNum) {
+	return playerJumpDownCurrTic[playerNum] & !playerJumpDownPrevTic[playerNum];
+}
+
+function bool playerUsingJump (int playerNum) {
+	return playerJumpDownCurrTic[playerNum] == 1 || playerJumpDownPrevTic[playerNum] == 1;
+}
+
+function bool playerHoldingJump(int playerNum) {
+	return playerJumpDownCurrTic[playerNum] == playerJumpDownPrevTic[playerNum];
+}
+
+function bool playerHoldingStrafe(int playerNum){
+	return playerLeftDownCurrTic[playerNum] == playerLeftDownPrevTic[playerNum] ||
+	playerRightDownCurrTic[playerNum] == playerRightDownPrevTic[playerNum];
+}
+
+function bool playerPressingCrouch(int playerNum) {
+	return playerCrouchDownCurrTic[playerNum] && !playerCrouchDownPrevTic[playerNum];
+}
+
+function bool playerUsingCrouch(int playerNum) {
+	return playerCrouchDownCurrTic[playerNum];
+}
+
+function bool playerFastEnough(int playerNum){
+	return playerSpeedCurrTic[playerNum] > MOMENTUM_RESET_THRESHOLD;
+}
+
+function bool LostMomentum(int playerNum){
+	return playerSpeedCurrTic[playerNum] + 200 < playerSpeedPrevTic[playerNum];
+}
+
+function bool LostAllMomentum(int playerNum){
+	return playerSpeedCurrTic[playerNum] < MOMENTUM_RESET_THRESHOLD;
+}
+
+function bool playerHasSpeed(int playerTid){
+	return getactorproperty(playerTid, APROP_SPEED) > 1.00;
+}
+
+function void playerResetMomentum(int playerTid){
+	setactorproperty(playerTid, APROP_SPEED, 1.00);
+}
+
+function void playerDecreaseMomentum(int playerNum, int playerTid, int speed)
+{
+	int mDiff = playerSpeedCurrTic[playerNum]- playerSpeedPrevTic[playerNum];
+	setactorproperty(playerTid, APROP_SPEED, speed - 0.08);
+}
+
+function int momentumDifference(int playerNum){
+	return playerSpeedCurrTic[playerNum]- playerSpeedPrevTic[playerNum];
+} 
+
+function bool playerNotStrafing(int playerNum) {
+	return !playerLeftDownCurrTic[playerNum] && !playerRightDownCurrTic[playerNum];
+}
+
+function bool playerTurningSameDirection(int playerNum) {
+	return playerTurnDirCurrTic[playerNum] == playerTurnDirPrevTic[playerNum] && playerTurnDirCurrTic[playerNum] == playerTurnDirOldTic[playerNum];
+}
+
+//todo stuff
+function bool playerHasBeenTurning(int playerNum, int currTic, int prevTic){
+	return currTic != prevTic;
+}
+
+function bool playerIsTurning(int playerNum, int currTic, int prevTic) {
+	return currTic != prevTic;
+}
+
+function bool playerTurning(int playerNum) {
+	return playerLookAngleCurrTic[playerNum] != playerLookAnglePrevTic[playerNum];
+}
+
+function bool playerNotTurning(int playerNum) {
+	return playerLookAngleCurrTic[playerNum] != playerLookAnglePrevTic[playerNum] && 
+	playerLookAnglePrevTic[playerNum] != playerLookAngleOldTic[playerNum];
+}
+
+//========================================
+//
+//	 Recording Functions
+//
+//========================================
+
+function void recordPlayerSpeed(int playerNum)
+{
+	int x = GetActorVelX(playerNum);
+    int y = GetActorVelY(playerNum);
+    int z = GetActorVelZ(playerNum);
+    int speed = fixedMul(x, x) + fixedMul(y, y) + fixedMul(z, z);
+	int speedConv1 = speed/20000/5;
+	
+	playerSpeedPrevTic[playerNum] = playerSpeedCurrTic[playerNum];
+	playerSpeedCurrTic[playerNum] = speedConv1;
+}
+
+function void recordJumpPress(int playerNum) {
+	bool isJumpDown = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_JUMP) == BT_JUMP;
+	playerJumpDownPrevTic[playerNum] = playerJumpDownCurrTic[playerNum];
+	playerJumpDownCurrTic[playerNum] = isJumpDown;
+}
+
+function void recordCrouchPress(int playerNum) {
+	bool isCrouchDown = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_CROUCH) == BT_CROUCH;
+	//playerCrouchDownTic4[playerNum] = playerCrouchDownTic3[playerNum];
+	//playerCrouchDownTic3[playerNum] = playerCrouchDownTic2[playerNum];
+	//playerCrouchDownTic2[playerNum] = playerCrouchDownTic1[playerNum];
+	//playerCrouchDownTic1[playerNum] = playerCrouchDownPrevTic[playerNum];
+	playerCrouchDownPrevTic[playerNum] = playerCrouchDownCurrTic[playerNum];
+	playerCrouchDownCurrTic[playerNum] = isCrouchDown;
+}
+
+function void recordInAir(int playerNum) {
+	bool inAir = !playerOnGround(playerNum);
+	
+	inAirPrev[playerNum] = inAirCurr[playerNum];
+	inAirCurr[playerNum] = inAir;
+}
+
+function void recordStrafePress(int playerNum)
+{
+	playerLeftDownPrevTic[playerNum] = playerLeftDownCurrTic[playerNum];
+	playerRightDownPrevTic[playerNum] = playerRightDownCurrTic[playerNum];
+
+	playerLeftDownCurrTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVELEFT) == BT_MOVELEFT;
+	playerRightDownCurrTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVERIGHT) == BT_MOVERIGHT;
+}
+
+function void recordTurnDirection(int playerNum) {
+	bool turningDirection = ticIsGreater(playerLookAnglePrevTic[playerNum], playerLookAngleCurrTic[playerNum]);	
+	bool rightOpp = oppositeSides(playerLookAngleCurrTic[playerNum], playerLookAnglePrevTic[playerNum]);
+	
+	//in all circumstances where the current tic is less than the prev tic
+	//we return 0 as an identifier to show that we're turning left
+	//we return 1 as an identifier to show that we're turning right
+	playerTurnDirOldTic[playerNum] = playerTurnDirPrevTic[playerNum];
+	playerTurnDirPrevTic[playerNum] = playerTurnDirCurrTic[playerNum];
+	playerTurnDirCurrTic[playerNum] = turningDirection;
+	
+	if (rightOpp == true)
+	{
+		//in the one circumstance where the current tic isn't greater 
+		//than the previous tic when turning right, force it to be
+		//right by declaring it true, when then returns 1
+		//log(s:"returned true");`
+		playerTurnDirCurrTic[playerNum] = rightOpp;
+	}
+}
+
+//========================================
+//
+//		WallJumping Functions
+//
+//========================================
+
+function bool playerEligibleToWallJump(int playerNum, int playerTid) {
+	int noGrd = playerAboveGroundThreshold16(playerTid);
+	int noCool = playerNotOnJumpCooldown(playerNum);
+	int jmp = playerPressingJump(playerNum);
+	int atWall = playerIsNearAWallToJumpOffOf(playerNum, playerTid);
+
+	return noGrd && noCool && jmp && atWall;
+}
+
+function bool playerNotOnJumpCooldown(int playerNum) {
+	return (Timer() - playerJumpCooldown[playerNum]) > JUMP_COOLDOWN_TICS;
+}
+
+function bool playerIsNearAWallToJumpOffOf(int playerNum, int playerTid) {
+	int x = GetActorX(playerTid);
+	int y = GetActorY(playerTid);
+	int z = GetActorZ(playerTid);
+	//int angle = GetActorAngle(playerTid) > 8 ;
+	
+	int spawned = Spawn("PlayerWallDetector", x + cos(GetActorAngle(playerTid)) * 32, y + sin(GetActorAngle(playerTid)) * 32, z, 1234, 0);
+	if (spawned == 0)
+		return true;
+
+	return false;
+}
+
+//========================================
+//
+//		Air Thrust Functions
+//
+//========================================
+
+function bool playerEligibleToAirThrust(int playerNum, int playerTid) {
+	int noGrd = !playerOnGround(playerTid);
+	int thresh = playerAboveGroundThreshold(playerTid);
+	int noCool = playerNotOnThrustCooldown(playerNum);
+	
+	return noGrd && noCool && thresh;
+}
+
+function bool playerNotOnThrustCooldown(int playerNum) {
+	return (Timer() - playerThrustCooldown[playerNum]) > AIRTHRUST_COOLDOWN_TICS;
+}
+
+function void clearAllThrustVars(int playerNum) {
+	//initial
+	playerForwardInitialTic[playerNum] = 0;
+	playerBackwardInitialTic[playerNum] = 0;
+	playerLeftInitialTic[playerNum] = 0;
+	playerRightInitialTic[playerNum] = 0;
+	//release
+	playerForwardReleaseCurrTic[playerNum] = 0;
+	playerBackwardReleaseCurrTic[playerNum] = 0;
+	playerLeftReleaseCurrTic[playerNum] = 0;
+	playerRightReleaseCurrTic[playerNum] = 0;
+	//down
+	playerForwardDownCurrTic[playerNum] = 0;
+	playerBackwardDownCurrTic[playerNum] = 0;
+	playerLeftDownCurrTic[playerNum] = 0;
+	playerRightDownCurrTic[playerNum] = 0;
+}
+
+function void recordInitialDirectionInput(int playerNum) {
+	bool fwd = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_FORWARD) == BT_FORWARD;
+	bool bck = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_BACK) == BT_BACK;
+	bool lft = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVELEFT) == BT_MOVELEFT;
+	bool rgt = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVERIGHT) == BT_MOVERIGHT; 
+	playerForwardInitialTic[playerNum] = fwd;
+    playerBackwardInitialTic[playerNum] = bck;
+	playerLeftInitialTic[playerNum] = lft;
+    playerRightInitialTic[playerNum] = rgt;
+}
+
+function bool initialDirectionPressed(int playerNum)
+{
+	bool fwd = playerForwardInitialTic[playerNum]; //&& !playerForwardPrevInitialTic[playerNum];
+	bool bck = playerBackwardInitialTic[playerNum]; //&& !playerBackwardPrevInitialTic[playerNum];
+	bool lft = playerLeftInitialTic[playerNum]; //&& !playerLeftPrevInitialTic[playerNum];
+	bool rgt = playerRightInitialTic[playerNum]; //&& !playerRightPrevInitialTic[playerNum];
+	return fwd || bck || lft || rgt;
+}
+
+function void recordInitialRelease(int playerNum) {
+	bool fRel = (GetPlayerInput(playerNum, INPUT_OLDBUTTONS) & BT_FORWARD) && !(GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_FORWARD);
+	bool bRel = (GetPlayerInput(playerNum, INPUT_OLDBUTTONS) & BT_BACK) && !(GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_BACK);
+	bool lRel =	(GetPlayerInput(playerNum, INPUT_OLDBUTTONS) & BT_MOVELEFT) && !(GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVELEFT);
+	bool rRel = (GetPlayerInput(playerNum, INPUT_OLDBUTTONS) & BT_MOVERIGHT) && !(GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVERIGHT);
+	playerForwardReleaseCurrTic[playerNum] = fRel;
+	playerBackwardReleaseCurrTic[playerNum] = bRel;
+	playerLeftReleaseCurrTic[playerNum] = lRel;
+	playerRightReleaseCurrTic[playerNum] = rRel;
+}
+
+function bool initialReleaseEmpty(int playerNum){
+	return playerForwardReleaseCurrTic[playerNum] == 0 && playerBackwardReleaseCurrTic[playerNum] == 0 &&
+	playerLeftReleaseCurrTic[playerNum] == 0 && playerRightReleaseCurrTic[playerNum] == 0;
+}
+
+function bool matchesFound(int playerNum) 
+{
+	return playerForwardInitialTic[playerNum] && playerForwardReleaseCurrTic[playerNum] || 
+	playerBackwardInitialTic[playerNum] && playerBackwardReleaseCurrTic[playerNum] || 
+	playerLeftInitialTic[playerNum] && playerLeftReleaseCurrTic[playerNum] || 
+	playerRightInitialTic[playerNum] && playerRightReleaseCurrTic[playerNum];
+}
+
+function bool currTicDirectionEmpty(int playerNum){
+	return playerForwardDownCurrTic[playerNum] == 0 && playerBackwardDownCurrTic[playerNum] == 0 &&
+	playerLeftDownCurrTic[playerNum] == 0 && playerRightDownCurrTic[playerNum] == 0;
+}
+
+function void recordCurrDirectionInput(int playerNum) {
+	bool fwd = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_FORWARD) == BT_FORWARD;
+	bool bck = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_BACK) == BT_BACK;
+	bool lft =  (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVELEFT) == BT_MOVELEFT;
+	bool rgt = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVERIGHT) == BT_MOVERIGHT;
+	playerForwardDownCurrTic[playerNum] = fwd;
+	playerBackwardDownCurrTic[playerNum] = bck;
+	playerLeftDownCurrTic[playerNum] = lft;
+	playerRightDownCurrTic[playerNum] = rgt;
+}
+
+function bool directionInputSuccess(int playerNum)
+{
+	bool fwd = playerForwardInitialTic[playerNum] && playerForwardReleaseCurrTic[playerNum] && playerForwardDownCurrTic[playerNum];
+	bool bck = playerBackwardInitialTic[playerNum] && playerBackwardReleaseCurrTic[playerNum] && playerBackwardDownCurrTic[playerNum];
+	bool lft = playerLeftInitialTic[playerNum] && playerLeftReleaseCurrTic[playerNum] && playerLeftDownCurrTic[playerNum];
+	bool rgt = playerRightInitialTic[playerNum] && playerRightReleaseCurrTic[playerNum] && playerRightDownCurrTic[playerNum];
+	return fwd || bck || lft || rgt;
+}
+
+function int thrustDirtoAngle(int playerNum)
+{
+	int angle = GetActorAngle(playerNum) >> 8;
+	
+	if(playerForwardInitialTic[playerNum] && playerForwardReleaseCurrTic[playerNum])
+		return angle;
+	if(playerBackwardInitialTic[playerNum] && playerBackwardReleaseCurrTic[playerNum])
+		return angle + 128;
+	if(playerLeftInitialTic[playerNum] && playerLeftReleaseCurrTic[playerNum])
+		return angle + 64;
+	if(playerRightInitialTic[playerNum] && playerRightReleaseCurrTic[playerNum])
+		return angle + 192;
+		
+	return 0;
+}
+//========================================
+//
+//Crouch Sliding & Strafe Jumping Functions
+//
+//========================================
+
+function bool playerEligibleToCrouchSlide(int playerNum, int playerTid) {
+	//int air = playerWasInAir(playerNum);
+	int ground = playerOnGround(playerNum);
+	int crouch = playerPressingCrouch(playerNum);
+	//int slide = playerNotSliding(playerNum);
+	//int jmp = playerNotPressingJump(playerNum);
+	return ground && crouch; //&& air;
+}
+
+function bool playerEligibleToContinueSlide(int playerNum, int playerTid) {
+	int onGround = playerOnGround(playerNum);
+	int crouch = playerPressingCrouch(playerNum);
+	//int act = crouchSlideActive(playerNum);
+	int mom = LostAllMomentum(playerNum);
+	return onGround && crouch && mom; //&& jmp;
+}
+
+function bool playerEligibleForMomentumGain(int playerNum, int playerTid) {
+	int turned = playerTurningSameDirection(playerNum);
+	int strafe = playerHoldingStrafe(playerNum);
+	int angStrafe = sameAngleAndStrafeDirection(playerNum);
+	int notmax = getactorproperty(playerNum, APROP_SPEED) < 3.00;
+	return turned && strafe && angStrafe && notmax; //chanAmt && sameDir;
+}
+
+//finds the angle differences based on which way the tics are facing
+function int angleDifference(int playerNum, int newTic, int oldTic)
+{
+	bool turningLeft = ticIsGreater(newTic, oldTic);
+	bool turningRight = ticIsGreater(oldTic, newTic);
+	int diffAmt;
+	int newAmt;
+	
+	if (turningLeft)
+	{
+		diffAmt = newTic - oldTic;
+		if (oppositeSides(newTic,oldTic))
+		{
+			newAmt = 1.0 - newTic;
+			diffAmt = newAmt + oldTic;
+		}
+	}
+	if (turningRight)
+	{
+		diffAmt = oldTic - newTic;
+		if (oppositeSides(oldTic,newTic))
+		{
+			newAmt = 1.0 - oldTic;
+			diffAmt = newAmt + newTic;
+		}
+	}
+	
+	return diffAmt;
+}
+
+function bool sameAngleAndStrafeDirection(int playerNum) {
+	if (playerLeftDownCurrTic[playerNum] == 1 && playerTurnDirCurrTic[playerNum] == 0)
+	{
+		return true;
+	}
+	if (playerRightDownCurrTic[playerNum] == 1 && playerTurnDirCurrTic[playerNum] == 1)
+	{
+		return true;
+	}
+	return false;
+}
+
+function int AngleChangeAmount(int playerNum) {
+	int currPrevDiff = angleDifference(playerNum, playerLookAngleCurrTic[playerNum], playerLookAnglePrevTic[playerNum]);
+	int currOldDiff = angleDifference(playerNum, playerLookAngleCurrTic[playerNum], playerLookAngleOldTic[playerNum]);
+
+	if (currPrevDiff > 50)
+	{
+		return 0.15;
+	}
+	//	45 degrees
+	if (currPrevDiff > 45)
+	{
+		return 0.135;
+	}
+	if (currPrevDiff > 40)
+	{
+		return 0.130;
+	}
+	if (currPrevDiff > 35)
+	{
+		return 0.1;
+	}
+	if (currPrevDiff > 30)
+	{
+		return 0.12;
+	}
+	if (currPrevDiff > 25)
+	{
+		return 0.105;
+	}
+	if (currPrevDiff > 20)
+	{
+		return 0.1;
+	}
+	if (currPrevDiff > 15)
+	{
+		return 0.095;
+	}
+	if (currPrevDiff > 10)
+	{
+		return 0.09;
+	}
+	if (currPrevDiff > 5)
+	{
+		return 0.08;
+	}
+	return 0;
+}
+
+//========================================
+//
+//		Strafe Jumping Functions
+//
+//========================================
+function bool playerWindingJump(int playerNum) {
+	//int noGrd = playerOnGround(playerTid);
+	//int jump = playerUsingJump(playerNum);
+	int turned = playerTurningSameDirection(playerNum);
+	int strafe = playerHoldingStrafe(playerNum);
+	int angStrafe = sameAngleAndStrafeDirection(playerNum);
+	return turned && strafe && angStrafe; //&& jump;
+}
+
+function bool playerAirTurningIntoDirection(int playerNum) {
+	//int noGrd = playerOnGround(playerTid);
+	//int jump = playerUsingJump(playerNum);
+	int turned = playerTurningSameDirection(playerNum);
+	int strafe = playerHoldingStrafe(playerNum);
+	int angStrafe = sameAngleAndStrafeDirection(playerNum);
+	return turned && strafe && angStrafe; //&& jump;
+}
+
+function void recordPlayerViewAngle(int playerNum) {
+	int angle = GetActorAngle(playerNum);
+	int angleConversion = angle * 360 / 65536;
+	playerLookAngleOldTic[playerNum] = playerLookAnglePrevTic[playerNum];
+	playerLookAnglePrevTic[playerNum] = playerLookAngleCurrTic[playerNum];
+	playerLookAngleCurrTic[playerNum] = angleConversion;
+}
+
+function bool playerEligibleToGainMomentum(int playerNum, int playerTid) {
+	//int noGrd = playerOnGround(playerTid);
+	//int jump = playerUsingJump(playerNum);
+	int turned = playerTurningSameDirection(playerNum);
+	int strafe = playerHoldingStrafe(playerNum);
+	int angStrafe = sameAngleAndStrafeDirection(playerNum);
+	return turned && strafe && angStrafe; //&& jump;
+}
+
+
+function void recordJumpAngleAmt(int playerNum) {
+	int currPrevDiff = angleDifference(playerNum, playerLookAngleCurrTic[playerNum], playerLookAnglePrevTic[playerNum]);
+	int currOldDiff = angleDifference(playerNum, playerLookAngleCurrTic[playerNum], playerLookAngleOldTic[playerNum]);
+	//log(d:currPrevDiff);
+}
+
+function int jumpAngleChangeAmount(int playerNum) {
+	int currPrevDiff = angleDifference(playerNum, playerLookAngleCurrTic[playerNum], playerLookAnglePrevTic[playerNum]);
+	int currOldDiff = angleDifference(playerNum, playerLookAngleCurrTic[playerNum], playerLookAngleOldTic[playerNum]);
+
+	if (currPrevDiff > 50)
+	{
+		return 0.15;
+	}
+	//	45 degrees
+	if (currPrevDiff > 45)
+	{
+		return 0.135;
+	}
+	if (currPrevDiff > 40)
+	{
+		return 0.130;
+	}
+	if (currPrevDiff > 35)
+	{
+		return 0.1;
+	}
+	if (currPrevDiff > 30)
+	{
+		return 0.12;
+	}
+	if (currPrevDiff > 25)
+	{
+		return 0.105;
+	}
+	if (currPrevDiff > 20)
+	{
+		return 0.1;
+	}
+	if (currPrevDiff > 15)
+	{
+		return 0.095;
+	}
+	if (currPrevDiff > 10)
+	{
+		return 0.09;
+	}
+	if (currPrevDiff > 5)
+	{
+		return 0.4;
+	}
+	return 0;
+}
+
+function bool ticIsGreater(int ticOne, int ticTwo)
+{
+	return ticOne > ticTwo;
+}
+
+function bool oppositeSides(int ticOne, int ticTwo)
+{
+	return ticOne > 0.9 && ticTwo < 0.1;
 }
