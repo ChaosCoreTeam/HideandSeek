@@ -4,14 +4,13 @@
 #import "STATES.acs"
 #import "FUNCTION.acs"
 
-int pteam[MAXPLAYERS];
-int NumPlayers = 0;
-
 /*
 		 			TID ASSIGNMENTS
 
 		 1000-1063 = Players
-		 10000-10063 = Spectating/Disconnected Players
+		 10000 - 1063 = Dead
+		 10100 - 10163 = Spectators
+		 10200 - 10263 = Disconnected
 		 2050-2081 = Teleporter Projectiles
 		 3000-3031 = Teleporter Portals
 		 3400 - 3463 = Illusionist Decoys
@@ -36,7 +35,8 @@ Script "HNS_ClassDescriptionOff" (void)
 }
 
 Script "hudTimer" open //Timer
-{	
+{
+	CreateTranslation(90, 112:127=192:199);
 	if (GetCVar("timelimit") == 0) { Terminate; }
 	int Time = GetCVar("hns_timelimitseconds");
 	Time--;
@@ -51,71 +51,282 @@ Script "hudTimer" open //Timer
 			HudMessageBold(s:"Round Ends In: \cd", d:Time/60, s:":", d:(Time%60)/10, d:Time%10; HUDMSG_PLAIN, 2, CR_WHITE, 0.03, 0.85, 3.5);
 		delay(35);
 		Time--;
-		
+		Delay(1);
 	}
 	for(int i=0;i<MAXPLAYERS;i++)
 	{
 		SetFont("BIGFONT");
 		HudMessageBold(s:"Round Ends In: \cm0:00"; HUDMSG_PLAIN, 2, CR_WHITE, 0.03, 0.85, 5);
-		if(pteam[i]==1) thing_damage(PLAYER_BASE_TID+i,999,0);
+		if(PLAYER_INFORMATION[i][2]==1) thing_damage(PLAYER_BASE_TID+i,999,0);
+	}
+}
+
+script "playersAlive" open
+{
+	while (PlayerCount() > 0)
+	{
+		HudMessageBold(s:"Hiders Left"; HUDMSG_PLAIN, 9001, CR_BLACK, 0.965, 0.87, 3.5); HudMessageBold(s:": ", d:HIDERS_ALIVE; HUDMSG_PLAIN, 9002, CR_WHITE, 0.985, 0.87, 3.5);
+		HudMessageBold(s:"Seekers Left"; HUDMSG_PLAIN, 9003, CR_GOLD, 0.965, 0.89, 3.5); HudMessageBold(s:": ", d:SEEKERS_ALIVE; HUDMSG_PLAIN, 9004, CR_WHITE, 0.99, 0.89, 3.5);
+		Delay(1);
+	ACS_NamedExecute("updatePlayerCounter",0);
+	}
+}
+
+script "showSpeedHUD" (void)
+{
+	while (GetActorProperty(playernumber(), APROP_HEALTH) > 0)
+	{
+		int x = GetActorVelX(playernumber());
+		int y = GetActorVelY(playernumber());
+		int z = GetActorVelZ(playernumber());
+		int speed = fixedMul(x, x) + fixedMul(y, y) + fixedMul(z, z);
+		int speedConv1 = speed/20000/5;
+		HudMessage(s:"Speed: ", d:speedConv1; HUDMSG_PLAIN, 9000, CR_WHITE, 0.03, 0.87, 3.5);
+		Delay(1);
+	}
+}
+
+script "updatePlayerCounter" (void)
+{
+	int pDis = 0;
+	int specNum = 0;
+	int pMatch = 0;
+	int pDead = 0;
+	int hDead = 0;
+	int sDead = 0;
+	int pAlive = 0;
+	int hAlive = 0;
+	int sAlive = 0;
+	int bAlive = 0;
+	
+	for (int p = 0; p < MAXPLAYERS; p++)
+	{
+		if (PLAYER_INFORMATION[p][PINFO_TID] == 0)
+			continue;
+		
+		//Disconnected update
+		if(PLAYER_INFORMATION[p][PINFO_STATUS] == IS_DISCONNECTED)
+		{
+			pDis++;
+			continue;
+		}
+		
+		//Spectator Update
+		if(PLAYER_INFORMATION[p][PINFO_STATUS] == IS_SPECTATOR)
+		{
+			specNum++;
+			continue;
+		}
+		
+		pMatch++;
+		
+		//Dead Update
+		if(PLAYER_INFORMATION[p][PINFO_STATUS] == IS_DEAD)
+		{
+			pDead++;
+			
+			if (PLAYER_INFORMATION[p][PINFO_TEAM]==TEAM_HIDERS)
+				hDead++;
+				
+			if (PLAYER_INFORMATION[p][PINFO_TEAM]==TEAM_SEEKERS)
+				sDead++;
+				
+			continue;
+		}
+		
+		pAlive++;
+		
+		//Alive Update
+		if (PLAYER_INFORMATION[p][PINFO_TEAM]==TEAM_HIDERS)
+		{
+			hAlive++;
+			
+			if (PLAYER_INFORMATION[p][PINFO_CLASS]==CLASS_BANSHEE)
+				bAlive++;
+		}
+			
+		if (PLAYER_INFORMATION[p][PINFO_TEAM]==TEAM_SEEKERS)
+			sAlive++;
+	}
+	if (PLAYERS_ALIVE != pAlive)
+	{
+		PLAYERS_ALIVE = pAlive;
+		BANSHEES_ALIVE = bAlive;
+		HIDERS_ALIVE = hAlive;
+		SEEKERS_ALIVE = sAlive;
+	}
+	if (PLAYERS_DEAD != pDead)
+	{
+		PLAYERS_DEAD = pDead;
+		HIDERS_DEAD = hDead;
+		SEEKERS_DEAD = sDead;
+	}
+	
+	if (PLAYERS_INMATCH != pmatch || SPECTATORS_INMATCH != specNum || PLAYERS_DISCONNECTED != pDis)
+	{
+		PLAYERS_INMATCH = pMatch;
+		SPECTATORS_INMATCH = specNum;
+		PLAYERS_DISCONNECTED = pDis;
+	}
+}
+
+script "recordPlayerData" (int sel)
+{	
+	int pNum = PlayerNumber();
+	int pTid = pNum + PLAYER_BASE_TID;
+	
+	if(PlayerIsBot(PlayerNumber()))
+		GiveInventory("isBot",1);
+	
+	thing_changetid(pTid, 0);
+	thing_changetid(0,pTid);
+	
+	int status = IS_ALIVE;
+	int health = GetActorProperty(pTid, APROP_HEALTH);
+	
+	if (pTid >= 10000)
+	{
+		status = IS_DEAD;
+		health = 0;
+		Thing_Remove(PLAYER_INFORMATION[pNum][pNum+PLAYER_BASE_TID]+4000);
+		Thing_Remove(PLAYER_INFORMATION[pNum][pNum+PLAYER_BASE_TID]+4100);
+		Thing_Remove(PLAYER_INFORMATION[pNum][pNum+PLAYER_BASE_TID]+4200);
+	}
+	
+	if(PlayerIsSpectator(pNum))
+	{
+		pTid = pNum + SPECTATOR_BASE_TID;
+		status = IS_SPECTATOR;
+		health = 0;
+	}
+	
+	PLAYER_INFORMATION[pNum][PINFO_TID] = pTid;
+	PLAYER_INFORMATION[pNum][PINFO_CLASS] = PlayerClass(pNum);
+	PLAYER_INFORMATION[pNum][PINFO_TEAM] = playerteam();
+	PLAYER_INFORMATION[pNum][PINFO_HEALTH] = health;
+	PLAYER_INFORMATION[pNum][PINFO_STATUS] = status;
+}
+
+script "recordPlayerDataDisconnect" (int pNum, int pTid)
+{	
+	PLAYER_INFORMATION[pNum][PINFO_TID] = pTid;
+	PLAYER_INFORMATION[pNum][PINFO_CLASS] = 0;
+	PLAYER_INFORMATION[pNum][PINFO_TEAM] = 0;
+	PLAYER_INFORMATION[pNum][PINFO_HEALTH] = 0;
+	PLAYER_INFORMATION[pNum][PINFO_STATUS] = IS_DISCONNECTED;
+	
+	if(PlayerIsSpectator(pNum))
+	{
+		PLAYER_INFORMATION[pNum][PINFO_TID] = pNum + SPECTATOR_BASE_TID;
+		PLAYER_INFORMATION[pNum][PINFO_STATUS] = IS_SPECTATOR;
 	}
 }
 
 script "playerEnter" enter //Sets TIDs, HUD Scaling for our custom HUD, and executes the scripts!!
 {
-	thing_changetid(0,playernumber()+PLAYER_BASE_TID);
-	pteam[playernumber()]=playerteam();
+	if(PlayerIsSpectator(PlayerNumber())) terminate;
+	ACS_NamedExecuteAlways("recordPlayerData", 0, PlayerNumber(), PlayerNumber()+PLAYER_BASE_TID);
+	delay(1);
 	ACS_NamedExecuteAlways("scriptInitializations", 0);
 }
 
 script "playerRespawn" respawn //Sets TIDs, HUD Scaling for our custom HUD, and executes the scripts!!
 {
-	thing_changetid(0,playernumber()+PLAYER_BASE_TID);
-	pteam[playernumber()]=playerteam();
+	if(PlayerIsSpectator(PlayerNumber())) terminate;
+	ACS_NamedExecuteAlways("recordPlayerData", 0, 0);
+	delay(1);
 	ACS_NamedExecuteAlways("scriptInitializations", 0);
 }
 
-//so we don't have to be redundant
-script "scriptInitializations" (void)
+Script "playerReturn" Return
 {
-	ACS_NamedExecuteAlways("jetpackSetup",0);
+	if(PlayerIsSpectator(PlayerNumber())) terminate;
+	thing_changetid(0, PlayerNumber()+PLAYER_BASE_TID);
+	ACS_NamedExecuteAlways("recordPlayerData", 0, PlayerNumber(), PlayerNumber()+PLAYER_BASE_TID);
 	delay(1);
-	ACS_NamedExecuteAlways("radarSetup", 0); //Scouter Jetpack
-	delay(1);
-	ACS_NamedExecuteAlways("vanishingSetup",0);
-	delay(1);
-	ACS_NamedExecuteAlways("VanishHandling",0);
-	delay(1);
-	Acs_NamedExecuteAlways("chargeableJump",0); //guardian jump setup
-	delay(1);
-	Acs_NamedExecuteAlways("doubleJump",0); //hunter jump setup
-	delay(1);
-	ACS_NamedExecuteAlways("decoyFireHandling",0);
-	delay(1);
-	ACS_NamedExecuteAlways("decoyAltHandling",0);
-	delay(1);
-	ACS_NamedExecuteAlways("wallClimbing",0);
-	delay(1);
-	ACS_NamedExecuteAlways("crouchDiving",0);
-	delay(1);
-	ACS_NamedExecuteAlways("airDodging",0);
-	delay(1);
-	ACS_NamedExecuteAlways("crouchSliding",0);
-	delay(1);
-	ACS_NamedExecuteAlways("strafeJumping",0);
-	delay(1);
+	ACS_NamedExecuteAlways("scriptInitializations", 0);
 }
 
 Script "playerDisconnect" (int gone) disconnect
 // Hopefully gets rid of anyone trying to abuse scripts when spectating
 {
-	Thing_ChangeTID(gone, 10000+gone);
+	//thing_changetid(gone,gone+DISCONNECTED_BASE_TID);
+	ACS_NamedExecuteAlways("recordPlayerData", 0, gone, gone+DISCONNECTED_BASE_TID);
 }
 
-Script "playerDeath" death
+Script "playerDead" death
 //Should change the TID of anyone who freakin' died.
 {
-	Thing_ChangeTID(PLAYER_BASE_TID+PlayerNumber(), 10000+PlayerNumber());
+	GiveInventory("isDead",1);
+	//thing_changetid(PlayerNumber()+PLAYER_BASE_TID,PlayerNumber()+DEATH_BASE_TID);
+	ACS_NamedExecuteAlways("recordPlayerDataDisconnect", 0, PlayerNumber(), PlayerNumber()+DEATH_BASE_TID);
+}
+
+//so we don't have to be redundant
+script "scriptInitializations" (void)
+{
+	int pNum = playerNumber();
+	ACS_NamedExecuteAlways("classDescriptions",0);
+	delay(1);
+	ACS_NamedExecuteAlways("showSpeedHUD",0);
+	delay(1);
+	//if (PLAYER_INFORMATION[pNum][PINFO_TEAM] == TEAM_HIDERS)
+	//{
+		ACS_NamedExecuteAlways("VanishHandling",0);
+		delay(1);
+		ACS_NamedExecuteAlways("vanishingSetup",0);
+		delay(1);
+		ACS_NamedExecuteAlways("hiderHealthHandler",0, PlayerNumber(), PlayerNumber()+PLAYER_BASE_TID);
+		delay(1);
+		if (PLAYER_INFORMATION[pNum][PINFO_CLASS] == CLASS_BANSHEE)
+		{
+		}
+		if (PLAYER_INFORMATION[pNum][PINFO_CLASS] == CLASS_GUARDIAN)
+		{
+			ACS_NamedExecuteAlways("GuardianShieldHandling",0);
+			delay(1);
+		}
+		if (PLAYER_INFORMATION[pNum][PINFO_CLASS] == CLASS_ILLUSIONIST)
+		{
+			ACS_NamedExecuteAlways("decoyFireHandling",0);
+			delay(1);
+			ACS_NamedExecuteAlways("decoyAltHandling",0);
+			delay(1);
+		}
+	//}
+	//if (PLAYER_INFORMATION[pNum][PINFO_TEAM] == TEAM_SEEKERS)
+	//{
+		if (PLAYER_INFORMATION[pNum][PINFO_CLASS] == CLASS_SCOUTER)
+		{
+			ACS_NamedExecuteAlways("jetpackSetup",0);
+			delay(1);
+			ACS_NamedExecuteAlways("radarSetup", 0); //Scouter Jetpack
+			delay(1);
+		}
+		if (PLAYER_INFORMATION[pNum][PINFO_CLASS] == CLASS_BERSERKER)
+		{
+			ACS_NamedExecuteAlways("BerserkerBlowPlayerAwayHandling",0);
+			delay(1);	
+		}
+	//}
+	
+	//Passives are undecided, i'll sort them out later.
+	Acs_NamedExecuteAlways("chargeableJump",0);
+	delay(1);
+	Acs_NamedExecuteAlways("doubleJump",0);
+	delay(1);
+	ACS_NamedExecuteAlways("wallClimbing",0);
+	delay(1);
+	ACS_NamedExecuteAlways("crouchDiving",0);
+	delay(1);
+	ACS_NamedExecuteAlways("airThrusting",0);
+	delay(1);
+	ACS_NamedExecuteAlways("crouchSliding",0);
+	delay(1);
+	ACS_NamedExecuteAlways("strafeJumping",0);
+	delay(1);
+	ACS_NamedExecuteAlways("hiderBlownAwayHandling",0);
+	delay(1);
 }
 
 /* ************************************************** */
@@ -127,41 +338,52 @@ Script "playerDeath" death
 /* ************************************************** */
 
 
-Script 109 respawn CLIENTSIDE
+Script "classDescriptions" (void) CLIENTSIDE
 //Information on player class upon spawning!
 {
 	if(consoleplayernumber() != playernumber()) terminate;
 	
-	if(PlayerClass(PlayerNumber())==1) //Banshee
-    {
-        HudMessage(s:"\ccCLASS : \cuBanshee\n\n\ccWEAPONS : \crRejuvinator"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
-    }
-    if(PlayerClass(PlayerNumber())==2) //Blazer
+	int pNum = PlayerNumber();
+	
+	switch(PlayerClass(pNum))
 	{
-		HudMessage(s:"\ccCLASS : \cuBlazer\n\n\ccWEAPONS : \crNone\n\ccABILITY : \ciExtreme Speed \cc( \cdRun Around! \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
-	}
-	if(PlayerClass(PlayerNumber())==5) //Rocketeer
-	{
-		HudMessage(s:"\ccCLASS : \cuRocketeer\n\n\ccWEAPONS : \crNo-Damage Rocket Launcher\n\ccABILITY : \ciRocket Jumping \cc( \cdJump + Fire At Ground \cc)\n\ccABILITY : \ciAmmo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
-	}
-	if(PlayerClass(PlayerNumber())==6) //Teleporter
-	{
-		HudMessage(s:"\ccCLASS : \cuTeleporter\n\n\ccWEAPONS : \crAutomatic-Relocation Transmission Rifle\n\ccABILITY : \ciRadiation Shield \cc( \cdNo melty-melty! \cc)\n\ccABILITY : \ciAmmo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
-	}
-	if(PlayerClass(PlayerNumber())==7) //Hunter
-	{
-		HudMessage(s:"\ccCLASS : \ckHunter\n\n\ccWEAPONS : \crCombat Shotgun \cc, \crRapid-Fire Chaingun\n\ccABILITY : \ciAmmo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
-	}
-	if(PlayerClass(PlayerNumber())==8) //Scouter
-	{
-		HudMessage(s:"\ccCLASS : \ckScouter\n\n\ccWEAPONS : \crRail Pistol \cc, \crCombat Knife\n\ccABILITY : \ciRadar \cc( \cdLocate Hiders within a short radius \cc)\n\ccABILITY : \ciJetpack \cc( \cdDouble-Jump to enable \cc)\n\ccABILITY : \ciAmmo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
-	}
-	if(PlayerClass(PlayerNumber())==9) //Berserker
-	{
-		HudMessage(s:"\ccCLASS : \ckBerserker\n\n\ccWEAPONS : \crMighty Fists\n\ccABILITY : \ciDrug-Induced Insane Speed \cc( \cdRun Around! \cc)\n\ccABILITY : \ciScream Loudly \cc( \cdAAAAAAAHHHHHHHHH \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
-	}
-	if(PlayerClass(PlayerNumber())==10) //Terminator
-	{
-		HudMessage(s:"\ccCLASS : \ckTerminator\n\n\ccWEAPONS : \crPlasma Rifle \cc, \crFragmentation Grenades\n\ccABILITY : \ciGrenade Throw Strength \cc( \cdHold Down Fire Button To Charge \cc)\n\ccABILITY : \ciPlasma Rifle Ammo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, -1, 1.5, 0.65, 3.5, 7.0);
+		case CLASS_BANSHEE:
+			HudMessage(s:"\ccCLASS : \cuBanshee\n\n\ccWEAPONS : \crRejuvinator"; HUDMSG_FADEOUT, 7, CR_BLUE, 1.5, 0.65, 3.5, 7.0);
+			break;
+		case CLASS_BLAZER:
+			HudMessage(s:"\ccCLASS : \cuBlazer\n\n\ccWEAPONS : \crNone\n\ccABILITY : \ciExtreme Speed \cc( \cdRun Around! \cc)"; HUDMSG_FADEOUT, 7, CR_RED, 1.5, 0.65, 3.5, 7.0);
+			break;
+		case CLASS_GUARDIAN:
+			HudMessage(s:"\ccCLASS : \cuGuardian\n\n\ccWEAPONS : \crNone\n\ccABILITY : \ciN/A \cc( \cdN/A \cc)"; HUDMSG_FADEOUT, 7, CR_RED, 1.5, 0.65, 3.5, 7.0);
+			break;
+		case CLASS_ILLUSIONIST:
+			HudMessage(s:"\ccCLASS : \cuIllusionist\n\n\ccWEAPONS : \crNone\n\ccABILITY : \ciN/A \cc( \cdN/A \cc)"; HUDMSG_FADEOUT, 7, CR_RED, 1.5, 0.65, 3.5, 7.0);
+			break;
+		case CLASS_ROCKETEER:
+			HudMessage(s:"\ccCLASS : \cuRocketeer\n\n\ccWEAPONS : \crNo-Damage Rocket Launcher\n\ccABILITY : \ciRocket Jumping \cc( \cdJump + Fire At Ground \cc)\n\ccABILITY : \ciAmmo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, CR_RED, 1.5, 0.65, 3.5, 7.0);
+			break;
+		case CLASS_TELEPORTER:
+			HudMessage(s:"\ccCLASS : \cuTeleporter\n\n\ccWEAPONS : \crAutomatic-Relocation Transmission Rifle\n\ccABILITY : \ciRadiation Shield \cc( \cdNo melty-melty! \cc)\n\ccABILITY : \ciAmmo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, CR_RED, 1.5, 0.65, 3.5, 7.0);
+			break;
+		case CLASS_HUNTER:
+			HudMessage(s:"\ccCLASS : \ckHunter\n\n\ccWEAPONS : \crCombat Shotgun \cc, \crRapid-Fire Chaingun\n\ccABILITY : \ciAmmo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, CR_RED, 1.5, 0.65, 3.5, 7.0);
+			break;
+		case CLASS_SCOUTER:
+			HudMessage(s:"\ccCLASS : \ckScouter\n\n\ccWEAPONS : \crRail Pistol \cc, \crCombat Knife\n\ccABILITY : \ciRadar \cc( \cdLocate Hiders within a short radius \cc)\n\ccABILITY : \ciJetpack \cc( \cdDouble-Jump to enable \cc)\n\ccABILITY : \ciAmmo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, CR_RED, 1.5, 0.65, 3.5, 7.0);
+			break;
+		case CLASS_BERSERKER:
+			HudMessage(s:"\ccCLASS : \ckBerserker\n\n\ccWEAPONS : \crMighty Fists\n\ccABILITY : \ciDrug-Induced Insane Speed \cc( \cdRun Around! \cc)\n\ccABILITY : \ciScream Loudly \cc( \cdAAAAAAAHHHHHHHHH \cc)"; HUDMSG_FADEOUT, 7, CR_RED, 1.5, 0.65, 3.5, 7.0);
+			break;
+		case CLASS_TERMINATOR:
+			HudMessage(s:"\ccCLASS : \ckTerminator\n\n\ccWEAPONS : \crPlasma Rifle \cc, \crFragmentation Grenades\n\ccABILITY : \ciGrenade Throw Strength \cc( \cdHold Down Fire Button To Charge \cc)\n\ccABILITY : \ciPlasma Rifle Ammo Regen \cc( \cdStand Still to Regen \cc)"; HUDMSG_FADEOUT, 7, CR_RED, 1.5, 0.65, 3.5, 7.0);
+			break;
+		case CLASS_POLYMORPHIST:
+			HudMessage(s:"\ccCLASS : \cuPolymorphist\n\n\ccWEAPONS : \crNone\n\ccABILITY : \ciN/A \cc( \cdN/A \cc)"; HUDMSG_FADEOUT, 7, CR_RED, 1.5, 0.65, 3.5, 7.0);
+			break;
+		case CLASS_TACTICIAN:
+			HudMessage(s:"\ccCLASS : \cuTactician\n\n\ccWEAPONS : \crNone\n\ccABILITY : \ciN/A \cc( \cdN/A \cc)"; HUDMSG_FADEOUT, 7, CR_RED, 1.5, 0.65, 3.5, 7.0);
+			break;
+		default:
+			break;
 	}
 }

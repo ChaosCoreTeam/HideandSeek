@@ -109,6 +109,9 @@ ACTOR ScouterClass : PlayerPawn
    NoFuel:
 	SCP1 A 0 A_PlayWeaponSound("TeleporterNo")
 	goto Spawn
+   Chill1:
+	SCP1 A 0 
+	goto Spawn
   }
 }
 

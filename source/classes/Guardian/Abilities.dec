@@ -21,44 +21,6 @@ Actor SmokeCanister
 	  stop	
     }
 }
-ACTOR SmokeCloud
-{
-  Radius 20
-  Height 30
-  scale 0.95
-  Mass 0x7fffffff
-  ReactionTime 1
-  BounceFactor 0.0
-  MaxStepHeight 64
-  Gravity 0.0001
-  WallBounceFactor 0.0
-  +HEXENBOUNCE 
-  +NOBLOCKMAP
-  +NOGRAVITY
-  +CANNOTPUSH
-  +DROPOFF
-  +DONTSPLASH
-  +FOILINVUL
-  +CANBLAST
-  +BLOODLESSIMPACT
-  +SLIDESONWALLS
-  +FORCEXYBILLBOARD
-  +CLIENTSIDEONLY
-  Renderstyle Translucent
-  Alpha 0.3
-  DeathSound "PoisonShroomDeath"
-
-  States
-  {
-  Spawn:
-    XSMK A 1 A_SetTranslucent(0.15, 1)
-    XSMK A 1 A_Scream
-    XSMK A 175
- Death:
-    XSMK A 1 //A_FadeOut(0.001)
-    loop
-  }
-}
 
 ACTOR SmokeCloud
 {

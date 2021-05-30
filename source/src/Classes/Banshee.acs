@@ -4,7 +4,185 @@
 #import "FUNCTION.acs"
 #define BANSHEE_HEAL_RADIUS 96.0
 #define BANSHEE_HEAL_AMOUNT 25
+#define PRE_DELAY 35
 
+script "hiderHealthHandler" (int pNum, int pTid) CLIENTSIDE
+{
+	if (!ActivatorTid()) terminate;
+	
+	int fIndex = 100;
+	int sIndex = 10;
+	int tIndex = 1;
+	int fNum;
+	int sNum;
+	int tNum;
+	bool recorded;
+	
+	While(GetActorProperty(pTid, APROP_HEALTH) > 0)
+	{
+		PLAYER_INFORMATION[pNum][PINFO_HEALTH] = GetActorProperty(pTid, APROP_HEALTH);
+		
+		if (hiderHealth[pNum][HINFO_HEALTH] != PLAYER_INFORMATION[pNum][PINFO_HEALTH] || recorded == false)
+		{
+			hiderHealth[pNum][HINFO_HEALTH] = PLAYER_INFORMATION[pNum][PINFO_HEALTH];
+			recorded = true;
+			int pHealth = hiderHealth[pNum][HINFO_HEALTH];
+			Thing_Remove(healthTid[pNum][HTID_FIRSTTID]);
+			Thing_Remove(healthTid[pNum][HTID_SECONDTID]);
+			Thing_Remove(healthTid[pNum][HTID_THIRDTID]);
+			fNum = 0;
+			sNum = 0;
+			tNum = 0;
+			While(pHealth > 0)
+			{
+				if (pHealth >= fIndex)
+				{
+					fNum++;
+					pHealth -= 100;
+					continue;
+				}
+				
+				if (pHealth >= sIndex)
+				{
+					sNum++;
+					pHealth -= 10;
+					continue;
+				}
+				if (pHealth >= tIndex)
+				{
+					tNum++;
+					pHealth -= 1;
+					continue;
+				}
+				Delay(1);
+			}
+			hiderHealth[pNum][HINFO_FIRSTNUM] = fNum;
+			hiderHealth[pNum][HINFO_SECONDNUM] = sNum;
+			hiderHealth[pNum][HINFO_THIRDNUM] = tNum;
+			healthTid[pNum][HTID_PLAYERTID] = pTid;
+			healthTid[pNum][HTID_FIRSTTID] = pTid+FIRST_MARKER_TID_INDEX;
+			healthTid[pNum][HTID_SECONDTID] = pTid+SECOND_MARKER_TID_INDEX;
+			healthTid[pNum][HTID_THIRDTID] = pTid+THIRD_MARKER_TID_INDEX;
+			log(d:hiderHealth[pNum][HINFO_FIRSTNUM]);
+			log(d:hiderHealth[pNum][HINFO_SECONDNUM]);
+			log(d:hiderHealth[pNum][HINFO_THIRDNUM]);
+			SpawnAllyHealthMarker(pTid+FIRST_MARKER_TID_INDEX , pTid, 1);
+			SpawnAllyHealthMarker(pTid+SECOND_MARKER_TID_INDEX , pTid, 2);
+			SpawnAllyHealthMarker(pTid+THIRD_MARKER_TID_INDEX, pTid, 3);
+			}
+		Delay(1);
+	}
+}
+
+Script "HNS_AllyHealth_Marker" (void) CLIENTSIDE
+{
+	
+	while(Timer() < PRE_DELAY) delay(PRE_DELAY);
+	
+	if (!ActivatorTid()) terminate;
+	
+	int plr = (ActivatorTid() - 1000) % 64;
+	int ownertid = ActivatorTid();
+	
+	SpawnAllyHealthMarker(FIRST_MARKER_TID_INDEX + plr, plr, 1);
+	SpawnAllyHealthMarker(SECOND_MARKER_TID_INDEX + plr, plr, 2);
+	SpawnAllyHealthMarker(THIRD_MARKER_TID_INDEX + plr, plr, 3);
+	
+}
+
+function void SpawnAllyHealthMarker(int markTid, int pTid, int sel)
+{
+	switch(sel)
+	{
+		case 1:
+			SpawnProjectile(0, "HealthMarkerSlotOne", 0, 0, 0, 0, markTid);
+			break;
+		case 2:
+			SpawnProjectile(0, "HealthMarkerSlotTwo", 0, 0, 0, 0, markTid);
+			break;
+		case 3:
+			SpawnProjectile(0, "HealthMarkerSlotThree", 0, 0, 0, 0, markTid);
+			break;
+	}
+	SetActivator(markTid);
+	SetThingSpecial(markTid,0,pTid);
+}
+
+Script "HealthMarker_Spawned" (int pNum, int slotNum) CLIENTSIDE
+{
+	SetUserVariable(0, "user_z",(ACS_NamedExecuteWithResult("GetActorPropertyACS", 0, APROP_HEIGHT) >> 16) + 40);
+	
+	if (slotNum == 1)
+	{
+		SetUserVariable(0, "user_x", -24);
+		SetUserVariable(0, "user_y", 0);
+		SetUserVariable(0, "user_fSprite", hiderHealth[pNum][HINFO_FIRSTNUM]);
+	}
+	if (slotNum == 2)
+	{
+		SetUserVariable(0, "user_x", 0);
+		SetUserVariable(0, "user_y", 0);
+		SetUserVariable(0, "user_sSprite", hiderHealth[pNum][HINFO_SECONDNUM]);
+	}
+	if (slotNum == 3)
+	{
+		SetUserVariable(0, "user_x", 24);
+		SetUserVariable(0, "user_y", 0);
+		SetUserVariable(0, "user_tSprite", hiderHealth[pNum][HINFO_THIRDNUM]);
+	}
+}
+
+Script "HealthMarker_Disable" (int pNum) CLIENTSIDE
+{
+	SetActivatorToTarget(0);
+	bool result = false;
+	result = GetActorProperty(0,APROP_HEALTH) <= 0;
+	SetResultValue(result);
+}
+
+Script "GetActorPropertyACS" (int APROP)
+{
+	SetActivatorToTarget(0);
+	SetResultValue(GetActorProperty(0,APROP));
+}
+
+Script "NumberActorName" (int num)
+{
+	switch(num)
+	{
+		case 0:
+			SetResultValue(0);
+			break;
+		case 1:
+			SetResultValue(1);
+			break;
+		case 2:
+			SetResultValue(2);
+			break;
+		case 3:
+			SetResultValue(3);
+			break;
+		case 4:
+			SetResultValue(4);
+			break;
+		case 5:
+			SetResultValue(5);
+			break;
+		case 6:
+			SetResultValue(6);
+			break;
+		case 7:
+			SetResultValue(7);
+			break;
+		case 8:
+			SetResultValue(8);
+			break;
+		case 9:
+			SetResultValue(9);
+			break;
+	}
+	SetResultValue(0);
+}
 
 script "bansheeAltFireHeal" (void)
 {

@@ -28,6 +28,7 @@ ACTOR BlazerRecall
 	Radius 16
 	Height 56
 	Speed 0
+	VisibleToTeam 0
 	+NOTELESTOMP
 	-NOGRAVITY
 	Translation "80:127=192:207", "224:231=192:199", "160:167=192:199"

@@ -15,6 +15,7 @@ script "TacticianFirstAbility" (void)
 			ACS_NamedExecute("hudTrip", 0);
 		}
 		Spawn("Mine", x, y, z, MineId, 0);
+		
 		PlaySound(0, "MINE001", 6);
 		ACS_NamedExecute("activateCooldown", 0, 1);
 }

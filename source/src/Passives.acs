@@ -1,56 +1,7 @@
 #library "Passives"
 #import "DEFINITIONS.acs"
+#import "FUNCTION.acs"
 #include "zcommon.acs"
-
-#define JUMP_COOLDOWN_TICS 7
-#define AIRDODGE_COOLDOWN_TICS 15
-#define TIC_DETECTION_DELAY 5
-#define PLAYER_VIEW_HEIGHT_OFFSET 24.0
-#define THRUST_FORCE 48
-#define THRUST_CROUCH_FORCE 20
-#define THRUST_DODGE_FORCE 15
-#define THRUST_UPWARDS_CONSTANT 0
-#define THRUST_ADD_CONSTANT 1
-
-int buttons;
-int oldbuttons;	
-
-int playerJumpDownPrevTic[MAXPLAYERS];
-int playerJumpDownCurrTic[MAXPLAYERS];
-int playerJumpCooldown[MAXPLAYERS];
-
-int playerCrouchDownPrevTic[MAXPLAYERS];
-int playerCrouchDownCurrTic[MAXPLAYERS];
-int playerCrouchCooldown[MAXPLAYERS];
-
-int playerSpeedPrevTic[MAXPLAYERS];
-int playerSpeedCurrTic[MAXPLAYERS];
-
-int playerLookAngleOldTic[MAXPLAYERS];
-int playerLookAnglePrevTic[MAXPLAYERS];
-int playerLookAngleCurrTic[MAXPLAYERS];
-int playerLookAngleNextTic[MAXPLAYERS];
-
-//0 for left, 1 for right
-int playerTurnDirOldTic[MAXPLAYERS];
-int playerTurnDirPrevTic[MAXPLAYERS];
-int playerTurnDirCurrTic[MAXPLAYERS];
-
-int playerForwardInitialTic[MAXPLAYERS];
-int playerForwardDownPrevTic[MAXPLAYERS];
-int playerForwardDownCurrTic[MAXPLAYERS];
-
-int playerBackwardInitialTic[MAXPLAYERS];
-int playerBackwardDownPrevTic[MAXPLAYERS];
-int playerBackwardDownCurrTic[MAXPLAYERS];
-
-int playerMoveLeftInitialTic[MAXPLAYERS];
-int playerMoveLeftDownPrevTic[MAXPLAYERS];
-int playerMoveLeftDownCurrTic[MAXPLAYERS];
-
-int playerMoveRightInitialTic[MAXPLAYERS];
-int playerMoveRightDownPrevTic[MAXPLAYERS];
-int playerMoveRightDownCurrTic[MAXPLAYERS];
 
 //===========================================================================================
 //
@@ -59,7 +10,7 @@ int playerMoveRightDownCurrTic[MAXPLAYERS];
 //
 //===========================================================================================
 
-Script "doubleJump" (void) CLIENTSIDE
+Script "doubleJump" (void)
 {
 	bool jumpInt;
 	bool secondGave;
@@ -68,7 +19,7 @@ Script "doubleJump" (void) CLIENTSIDE
 	{
 		while (GetActorProperty(PLAYER_BASE_TID + PlayerNumber(),APROP_Health) > 0)
 		{
-			buttons = GetPlayerInput(-1, INPUT_BUTTONS);
+			buttons = GetPlayerInput(PlayerNumber(), INPUT_BUTTONS);
 			//jump state was detected
 			if (buttons & BT_JUMP) 
 			{
@@ -89,7 +40,6 @@ Script "doubleJump" (void) CLIENTSIDE
 				{
 					delay(5);
 					GiveInventory("SecondJump", 1);
-					log(s:"you can jump again");
 					secondGave = true;
 				}
 			}
@@ -119,7 +69,7 @@ Script "doubleJump" (void) CLIENTSIDE
 //
 //===========================================================================================
 
-Script "chargeableJump" (void) CLIENTSIDE
+Script "chargeableJump" (void)
 {
 	int holdTime;
 	
@@ -189,22 +139,22 @@ Script "jumpChargeHeight" (int jHeight)
 	switch (jHeight)
 	{
 		case 0:
-			ThrustThingZ(pT, 35, 0, 0);
-			break;
-		case 1:
 			ThrustThingZ(pT, 45, 0, 0);
 			break;
-		case 2:
-			ThrustThingZ(pT, 50, 0, 0);
-			break;
-		case 3:
+		case 1:
 			ThrustThingZ(pT, 55, 0, 0);
 			break;
+		case 2:
+			ThrustThingZ(pT, 65, 0, 0);
+			break;
+		case 3:
+			ThrustThingZ(pT, 75, 0, 0);
+			break;
 		case 4:
-			ThrustThingZ(pT, 60, 0, 0);
+			ThrustThingZ(pT, 85, 0, 0);
 			break;
 		case 5:
-			ThrustThingZ(pT, 75, 0, 0);
+			ThrustThingZ(pT, 95, 0, 0);
 			break;
 		default:
 			Log(s:"The script is broekn!!!!!!!!!!");
@@ -236,65 +186,17 @@ script "wallClimbing" (void)
 	{
 		while (GetActorProperty(playerTid,APROP_Health) > 0) 
 		{
-			recordPlayerJumpGameTicPress(playerNum);
+			recordJumpPress(playerNum);
 			if (playerEligibleToWallJump(playerNum, playerTid)) 
 			{
 				//retriggered....
 				playerJumpCooldown[playerNum] = Timer();
-				PlaySound(playerTid, "Blazer/Passives/Climb", 0, 1.0, 0, 0);
+				PlaySound(playerTid, "Passives/WallClimb", 0, 1.0, 0, 0);
 				ThrustThingZ(playerTid, THRUST_FORCE, THRUST_UPWARDS_CONSTANT, THRUST_ADD_CONSTANT);
 			}
 			Delay(1);
 		}
 	}
-}
-
-function void recordPlayerJumpGameTicPress(int playerNum) {
-	bool isJumpDown = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_JUMP) == BT_JUMP;
-	playerJumpDownPrevTic[playerNum] = playerJumpDownCurrTic[playerNum];
-	playerJumpDownCurrTic[playerNum] = isJumpDown;
-}
-
-function bool playerEligibleToWallJump(int playerNum, int playerTid) {
-	int noGrd = playerNotOnGround(playerTid);
-	int noCool = playerNotOnJumpCooldown(playerNum);
-	int jmp = playerPressingJump(playerNum);
-	int atWall = playerIsNearAWallToJumpOffOf(playerNum, playerTid);
-
-	return noGrd && noCool && jmp && atWall;
-}
-
-function bool playerNotOnGround(int playerTid) {
-	// We want a buffer zone of 8 map units so the player can't walljump
-	// immediately when on the ground.
-	return GetActorZ(playerTid) - GetActorFloorZ(playerTid) >= 16.0;
-}
-
-function bool playerOnGround(int playerTid) {
-	// We want a buffer zone of 8 map units so the player can't walljump
-	// immediately when on the ground.
-	return GetActorZ(playerTid) - GetActorFloorZ(playerTid) == 0.0;
-}
-
-function bool playerPressingJump(int playerNum) {
-	return playerJumpDownCurrTic[playerNum] && !playerJumpDownPrevTic[playerNum];
-}
-
-function bool playerNotOnJumpCooldown(int playerNum) {
-	return (Timer() - playerJumpCooldown[playerNum]) > JUMP_COOLDOWN_TICS;
-}
-
-function bool playerIsNearAWallToJumpOffOf(int playerNum, int playerTid) {
-	int x = GetActorX(playerTid);
-	int y = GetActorY(playerTid);
-	int z = GetActorZ(playerTid);
-	//int angle = GetActorAngle(playerTid) > 8 ;
-	
-	int spawned = Spawn("PlayerWallDetector", x + cos(GetActorAngle(playerTid)) * 32, y + sin(GetActorAngle(playerTid)) * 32, z, 1234, 0);
-	if (spawned == 0)
-		return true;
-
-	return false;
 }
 
 //===========================================================================================
@@ -308,8 +210,10 @@ script "crouchSliding" (void)
 	int playerNum = PlayerNumber();
 	int playerTid = playerNum + PLAYER_BASE_TID;
 	int hangTime;
-	bool jumped;
-	bool momentumCase;
+	bool slideActive;
+	bool keptMomentum;
+	int loopTimes;
+	bool firstJump;
 	playerCrouchCooldown[playerNum] = 0;
 	playerCrouchDownPrevTic[playerNum] = false;
 	playerCrouchDownCurrTic[playerNum] = false;
@@ -318,471 +222,171 @@ script "crouchSliding" (void)
 	{
 		while (GetActorProperty(playerTid,APROP_Health) > 0) 
 		{
-			momentumCase = false;
-			recordPlayerSpeed(playerNum);
-			recordPlayerCrouchGameTicPress(playerNum);
-			recordPlayerJumpGameTicPress(playerNum);
+			recordCrouchPress(playerNum);
 			if (!playerOnGround(playerNum))
 			{
-				jumped = true;
-				if (checkinventory("SlideMomentum") == 1 && playerLostMomentum(playerNum))
-				{
-					int currSpeed = getactorproperty(playerNum, APROP_SPEED);
-					
-					if (currSpeed > 1.00)
-					{
-						setactorproperty(playerNum, APROP_SPEED, currSpeed - 0.15);
-					}
-				}
+				//if (firstJump == false)
+				//{
+					//firstJump = true;
+				//}
 				hangTime++;
-			}
-			if (playerEligibleToCrouchSlide(playerNum, playerTid) && checkInventory("SlideMomentum") == 1) 
-			{
-				hangtime = 0;
-				momentumCase = true;
-				TakeInventory("SlideMomentum", 1);
-				ACS_NamedExecute("crouchSlideProcess", 0, hangTime, playerNum, playerTid);
-			}
-			if (playerOnGround(playerNum) && getactorproperty(playerNum, APROP_SPEED) != 1.00 && !playerPressingCrouch(playerNum))
-			{
-				momentumCase = true;
-				TakeInventory("SlideMomentum", 1);
-				SetActorProperty(playerTid, APROP_Speed, 1.00);
+				recordPlayerSpeed(playerNum);
+				recordStrafePress(playerNum);
+				recordPlayerViewAngle(playerNum);
+				recordTurnDirection(playerNum);
 			}
 			
-			recordPlayerCrouchGameTicPress(playerNum);
-			recordPlayerJumpGameTicPress(playerNum);
-			if (playerEligibleToCrouchSlide(playerNum, playerTid) && jumped == true && momentumCase == false) 
+			if (playerOnGround(playerNum)) 
 			{
-				jumped = false;
-				hangtime = 0;
-				ACS_NamedExecute("crouchSlideProcess", 0, hangTime, playerNum, playerTid);
+				if (!CheckInventory("CrouchSlide"))
+				{	
+					if (playerEligibleToCrouchSlide(playerNum, playerTid)) 
+					{
+						hangtime = 0;
+						ACS_NamedExecute("slideTimeHandling", 0, hangTime, playerNum, playerTid);
+						GiveInventory("CrouchSlide", 1);
+					}
+				}
+				if (CheckInventory("SlideAirMomentum"))
+				{
+					if (!CheckInventory("CrouchSlide") && playerHasSpeed(playerNum))
+					{
+						log(s:"momentum reset air");
+						playerResetMomentum(playerTid);
+						TakeInventory("SlideAirMomentum", 1);
+					}
+				}
 			}
-			if (!checkInventory("CrouchSlide") && !checkInventory("SlideMomentum") && momentumCase == false && getactorproperty(playerNum, APROP_SPEED) != 1.00)
+			
+			if (CheckInventory("SlideAirMomentum"))
 			{
-				SetActorProperty(playerTid, APROP_Speed, 1.00);
+				int speed = getactorproperty(playerNum, APROP_SPEED);
+				log(s:"mDiff = ", d:playerSpeedCurrTic[playerNum]- playerSpeedPrevTic[playerNum]);
+				if (speed > 1.00 && LostMomentum(playerNum))
+				{
+					log(s:"lost significant momentum... ");
+					playerDecreaseMomentum(playerNum, playerTid, speed);
+				}
+				if (LostAllMomentum(playerNum))
+				{
+					log(s:"all momentum lost");
+					playerResetMomentum(playerTid);
+					TakeInventory("SlideAirMomentum", 1);
+				}
+			}
+			//recordJumpPress(playerNum);
+			//recordCrouchPress(playerNum);
+			
+			While(checkInventory("CrouchSlide"))
+			{
+				slideActive = true;
+				int sFactor = getactorproperty(playerNum, APROP_SPEED);
+				recordCrouchPress(playerNum);
+				recordJumpPress(playerNum);
+				recordPlayerSpeed(playerNum);
+				recordStrafePress(playerNum);
+				recordPlayerViewAngle(playerNum);
+				recordTurnDirection(playerNum);
+
+				if (loopTimes == 0)
+				{
+					print(d:loopTimes, s:" loop check");
+					loopTimes++;
+					//Just started Slide, here we control whatever happens the first time around
+					//if(playerJumpAngle)
+				}
+				
+				//crouch death handler
+				if (!playerEligibleToContinueSlide(playerNum, playerTid))
+				{
+					if (!playerPressingCrouch(playerNum) && playerOnGround(playerNum))
+					{
+						log(s:"dead uncrouch");
+						GiveInventory("SlideAirMomentum", 1);
+					}
+					if (!LostAllMomentum(playerNum))
+					{
+						log(s:"dead speed");
+					}
+					if (!playerOnGround(playerNum))
+					{
+						log(s:"dead jump");
+					}
+					TakeInventory("CrouchSlide", 1);
+				}
+				
+				//speed gains
+				if (playerEligibleForMomentumGain(playerNum, playerTid))
+				{
+					int speedAmt = angleChangeAmount(playerNum);
+					setactorproperty(playerNum, APROP_SPEED, sFactor + speedAmt);
+					//if(playerEligibleForExtraGain(playerNum,playerTid))
+					//{
+					//}
+				}
+				
+				//speed penaltiies
+				if (playerHasSpeed(playerNum) && loopTimes > 1)
+				{
+					if (playerNotStrafing(playerNum) && playerNotTurning(playerNum))
+					{
+						log(s:"speed reduced to not turning/strafing");
+						setactorproperty(playerNum, APROP_SPEED, sFactor - 0.075);
+						if (sFactor - 0.075 <= 0)
+						{
+							playerResetMomentum(playerNum);
+						}
+					}
+				}
+				Delay(1);
+			}
+			if (slideActive == true)
+			{
+				slideActive = false;
+				loopTimes = 0;
+				StopSound(playerTid, 7);
 			}
 			Delay(1);
 		}
 	}
 }
 
-Script "crouchSlideProcess" (int hangTime, int playerNum, int playerTid)
+Script "slideTimeHandling" (int hangTime, int playerNum, int playerTid)
 {
-	int slideTime;
-	slideTime = hangTime / 5;
-	if (hangTime < 15)
+	int time = hangTime / 3;
+	
+	if (time < CROUCHSLIDE_MINSLIDETIME)
 	{
-		slideTime = 3;
-	}
-	if (hangTime >= 15 || hangTime < 20)
-	{
-		slideTime = 4;
-	}
-	if (hangTime > 50)
-	{
-		slideTime = 10;
+		time = CROUCHSLIDE_MINSLIDETIME;
 	}
 	
-	GiveInventory("CrouchSlide", 1);
-	PlaySound(playerTid, "Banshee/Passives/CrouchSlideStart", 0, 1.0, 0, 1.0);
-	PlaySound(playerTid, "Banshee/Passives/CrouchSlideIdle", 7, 1.0, 1, 1.0);
-	ACS_NamedExecute("crouchslideHandling", 0, playerNum, playerTid);
-	
-	while(checkinventory("CrouchSlide"))
+	if (time > CROUCHSLIDE_MAXSLIDETIME)
 	{
-		if (slideTime > 0)
+		time = CROUCHSLIDE_MAXSLIDETIME;
+	}
+
+	PlaySound(playerTid, "Passives/CrouchSlide/Start", 8, 1.0, 0, 1.0);
+	PlaySound(playerTid, "Passives/CrouchSlide/Idle", 7, 1.0, 1, 1.0);
+	//ACS_NamedExecute("crouchslideHandling", 0, playerNum, playerTid);
+	
+	until (time == 0 || !CheckInventory("CrouchSlide"))
+	{
+		HudMessage(s:"Time is... ", d:time; HUDMSG_PLAIN, 999, CR_WHITE, 0.5, 0.85, 1.0);
+		delay(35);
+		if (time == 1)
 		{
-			delay(35);
-			slideTime--;
+			log(s:"dead time");
+			TakeInventory("CrouchSlide", 1);
 		}
-		
-		if (slideTime == 0)
-			break;
-			
-		Delay(1);
+		time--;
 	}
-	
-	if (slideTime > 0)
-	{
-		terminate;
-	}
-	
-	if (CheckInventory("CrouchSlide") == 1 && slideTime == 0)
-	{
-		ACS_NamedExecuteAlways("endCrouchSlide", 0, 1, playerNum, playerTid);
-	}
-}
-
-Script "endCrouchSlide" (int reason, int playerNum, int playerTid) 
-{
-	StopSound(playerTid, 7);
-	TakeInventory("CrouchSlide", 1);
-	//SetActorProperty(playerTid, APROP_Speed, 1.00);
-	if (reason == 1)
-	{
-		//end by time
-		SetActorProperty(playerTid, APROP_Speed, 1.00);
-	}
-	if (reason == 2)
-	{
-		//ended by lack of speed
-		SetActorProperty(playerTid, APROP_Speed, 1.00);
-	}
-	if (reason == 3)
-	{
-		//ended by uncrouching
-		SetActorProperty(playerTid, APROP_Speed, 1.00);
-	}
-	if (reason == 4)
-	{
-		//ended by jumping
-		GiveInventory("SlideMomentum",1);
-	}
-	if (reason == 5)
-	{
-		SetActorProperty(playerTid, APROP_Speed, 1.00);
-	}
-}
-
-function void recordPlayerCrouchGameTicPress(int playerNum) {
-	bool isCrouchDown = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_CROUCH) == BT_CROUCH;
-	playerCrouchDownPrevTic[playerNum] = playerCrouchDownCurrTic[playerNum];
-	playerCrouchDownCurrTic[playerNum] = isCrouchDown;
-}
-
-function bool playerEligibleToCrouchSlide(int playerNum, int playerTid) {
-	int ground = playerOnGround(playerNum);
-	int crouch = playerPressingCrouch(playerNum);
-	//int slide = playerNotSliding(playerNum);
-	//int jmp = playerNotPressingJump(playerNum);
-	return ground && crouch;// && jmp;
-}
-
-function bool playerPressingCrouch(int playerNum) {
-	bool isCrouchDown = (GetPlayerInput(playerNum, INPUT_OLDBUTTONS) & BT_CROUCH) == BT_CROUCH;
-	return playerCrouchDownCurrTic[playerNum] || isCrouchDown;
-}
-
-function bool playerNotSliding(int playerTid) {
-	int isSliding = CheckInventory("CrouchSlide");
-	if (isSliding == 1) { isSliding = 0; }
-	if (isSliding == 0) { isSliding = 1; }
-	return isSliding;
-}
-
-script "crouchSlideHandling" (int playerNum, int playerTid)
-{
-	while(checkInventory("CrouchSlide") == 1)
-	{
-		int pSpeedFactor = getactorproperty(playerNum, APROP_SPEED);
-		recordPlayerCrouchGameTicPress(playerNum);
-		recordPlayerJumpGameTicPress(playerNum);
-		recordPlayerSpeed(playerNum);
-		if (!playerEligibleToContinueSlide(playerNum, playerTid))
-		{
-			if (!playerHasSpeed(playerNum))
-			{
-				ACS_NamedExecuteAlways("endCrouchSlide",0, 2, playerNum, playerTid);
-				break;
-			}
-			if (!playerPressingCrouch(playerNum) && playerOnGround(playerNum))
-			{
-				ACS_NamedExecuteAlways("endCrouchSlide",0, 3, playerNum, playerTid);
-				break;
-			}
-			if (!playerOnGround(playerNum))
-			{
-				ACS_NamedExecuteAlways("endCrouchSlide",0, 4, playerNum, playerTid);
-				break;
-			}
-			else
-			{
-				ACS_NamedExecuteAlways("endCrouchSlide",0, 5, playerNum, playerTid);
-				break;
-			}
-		}
-		if (playerEligibleToContinueSlide(playerNum, playerTid))
-		{
-			recordPlayerDirectionTicPress(playerNum);
-			recordPlayerLookTics(playerNum);
-			recordPlayerTurnDirection(playerNum);
-			if (playerNotStrafing(playerNum) || playerNotTurning(playerNum) || playerLostMomentum(playerNum))
-			{
-				if (getactorproperty(playerNum, APROP_SPEED) > 1.00)
-				{
-					setactorproperty(playerNum, APROP_SPEED, pSpeedFactor - 0.15);
-				}
-			}
-			//if (playerTurnAngleShort(playerNum))
-			//{
-				//setactorproperty(playerNum, APROP_SPEED, pSpeedFactor - 0.10);
-			//}
-			if (playerEligibleForMomentumGain(playerNum, playerTid))
-			{
-				int speedAmt = angleChangeAmount(playerNum);
-				if (getactorproperty(playerNum, APROP_SPEED) < 3.00)
-				{
-					setactorproperty(playerNum, APROP_SPEED, pSpeedFactor + speedAmt);
-				}
-			}
-		}
-		Delay(1);
-	}
-}
-
-function bool playerEligibleToContinueSlide(int playerNum, int playerTid) {
-	int onGround = playerOnGround(playerNum);
-	int crouch = playerPressingCrouch(playerNum);
-	//int speed = playerHasSpeed(playerNum);
-	//int jmp = playerNotPressingJump(playerNum);
-	return onGround && crouch; //&& jmp;
-}
-
-function bool playerNotPressingJump(int playerNum) {
-	return !playerJumpDownCurrTic[playerNum];
-}
-
-function bool playerNotStrafing(int playerNum) {
-	return !playerMoveLeftDownCurrTic[playerNum] && !playerMoveRightDownCurrTic[playerNum];
-}
-
-function bool playerHasSpeed(int playerNum){
-	return playerSpeedCurrTic[playerNum] > 0;
-}
-
-function bool playerLostMomentum(int playerNum){
-	return playerSpeedCurrTic[playerNum] < playerSpeedPrevTic[playerNum];
-}
-
-function int momentumDifference(int playerNum){
-	return playerSpeedPrevTic[playerNum]- playerSpeedCurrTic[playerNum];
-} 
-
-function void recordPlayerSpeed(int playerNum)
-{
-	int x = GetActorVelX(playerNum);
-    int y = GetActorVelY(playerNum);
-    int z = GetActorVelZ(playerNum);
-    int speed = fixedMul(x, x) + fixedMul(y, y) + fixedMul(z, z);
-	
-	playerSpeedPrevTic[playerNum] = playerSpeedCurrTic[playerNum];
-	playerSpeedCurrTic[playerNum] = speed;
-}
-
-function void recordPlayerDirectionTicPress(int playerNum)
-{
-	playerMoveLeftDownPrevTic[playerNum] = playerMoveLeftDownCurrTic[playerNum];
-	playerMoveRightDownPrevTic[playerNum] = playerMoveRightDownCurrTic[playerNum];
-
-	playerMoveLeftDownCurrTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVELEFT) == BT_MOVELEFT;
-	playerMoveRightDownCurrTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVERIGHT) == BT_MOVERIGHT;
-}
-
-function void recordPlayerLookTics(int playerNum) {
-	int angle = GetActorAngle(playerNum);
-	playerLookAngleOldTic[playerNum] = playerLookAnglePrevTic[playerNum];
-	playerLookAnglePrevTic[playerNum] = playerLookAngleCurrTic[playerNum];
-	playerLookAngleCurrTic[playerNum] = angle;
-}
-function void recordPlayerTurnDirection(int playerNum) {
-	bool turningDirection = ticIsGreater(playerLookAnglePrevTic[playerNum], playerLookAngleCurrTic[playerNum]);	
-	bool rightOpp = oppositeSides(playerLookAngleCurrTic[playerNum], playerLookAnglePrevTic[playerNum]);
-	
-	//in all circumstances where the current tic is less than the prev tic
-	//we return 0 as an identifier to show that we're turning left
-	//we return 1 as an identifier to show that we're turning right
-	playerTurnDirOldTic[playerNum] = playerTurnDirPrevTic[playerNum];
-	playerTurnDirPrevTic[playerNum] = playerTurnDirCurrTic[playerNum];
-	playerTurnDirCurrTic[playerNum] = turningDirection;
-	
-	if (rightOpp == true)
-	{
-		//in the one circumstance where the current tic isn't greater 
-		//than the previous tic when turning right, force it to be
-		//right by declaring it true, when then returns 1
-		//log(s:"returned true");`
-		playerTurnDirCurrTic[playerNum] = rightOpp;
-	}
-}
-
-function bool playerEligibleForMomentumGain(int playerNum, int playerTid) {
-	int turned = playerTurningSameDirection(playerNum);
-	int strafe = playerHoldingStrafe(playerNum);
-	int angStrafe = sameAngleAndStrafeDirection(playerNum);
-	return turned && strafe && angStrafe; //chanAmt && sameDir;
-}
-
-function bool playerNotTurning(int playerNum) {
-	
-	int newTic = playerLookAngleCurrTic[playerNum];
-	int prevTic = playerLookAnglePrevTic[playerNum];
-	int oldTic = playerLookAngleOldTic[playerNum];
-	int diffAmt;
-	
-	if (playerTurnDirCurrTic[playerNum] == 0)
-	{
-		if  (oppositeSides(prevTic,newTic))
-		{
-			diffAmt = (1.0 - prevTic) + newTic;
-			return diffAmt - newTic == 0.0 && prevTic == oldTic;
-		}
-		return playerLookAngleCurrTic[playerNum] - playerLookAnglePrevTic[playerNum] == 0.0 && playerLookAngleCurrTic[playerNum] - playerLookAngleOldTic[playerNum] == 0.0;
-	}
-	if (playerTurnDirCurrTic[playerNum] == 1)
-	{
-		if  (oppositeSides(newTic,prevTic))
-		{
-			diffAmt = (1.0 - newTic) + prevTic;
-			return diffAmt - prevTic == 0.0 && diffAmt - oldTic == 0.0;
-		}
-		return playerLookAnglePrevTic[playerNum] - playerLookAngleCurrTic[playerNum] == 0.0 && playerLookAngleOldTic[playerNum] - playerLookAnglePrevTic[playerNum] == 0.0;
-	}
-	return true;
-}
-
-function bool playerTurningSameDirection(int playerNum) {
-	return playerTurnDirCurrTic[playerNum] == playerTurnDirPrevTic[playerNum] && playerTurnDirCurrTic[playerNum] == playerTurnDirOldTic[playerNum];
-}
-
-function bool sameAngleAndStrafeDirection(int playerNum) {
-	if (playerMoveLeftDownCurrTic[playerNum] == 1 && playerTurnDirCurrTic[playerNum] == 0)
-	{
-		return true;
-	}
-	if (playerMoveRightDownCurrTic[playerNum] == 1 && playerTurnDirCurrTic[playerNum] == 1)
-	{
-		return true;
-	}
-	return false;
-}
-
-function bool playerHoldingStrafe(int playerNum){
-	return playerMoveLeftDownCurrTic[playerNum] == playerMoveLeftDownPrevTic[playerNum] ||
-	playerMoveRightDownCurrTic[playerNum] == playerMoveRightDownPrevTic[playerNum];
-}
-
-//unused function, i was going to use this to give more ways to negatively affect the speed
-//might end up utilizing this in the future, but leaving it for now.
-function bool angleSmallAngleChange(int playerNum){
-	int currPrevDiff = angleDifference(playerNum, playerLookAngleCurrTic[playerNum], playerLookAnglePrevTic[playerNum]);
-	int prevOldDiff = angleDifference(playerNum, playerLookAnglePrevTic[playerNum],  playerLookAngleCurrTic[playerNum]);
-	int currOldDiff = angleDifference(playerNum,  playerLookAngleCurrTic[playerNum], playerLookAngleOldTic[playerNum]);
-	
-	if (currPrevDiff <= 0.01 && prevOldDiff <= 0.01)
-	{
-		return 1.0;
-	}
-	if (currPrevDiff <= 0.02 &&  prevOldDiff <= 0.02)
-	{
-		return 0.75;
-	}
-	return false;
-}
-
-//determines how much you're moving your mouse and gives you the relative speed
-function int angleChangeAmount(int playerNum) {
-	int currPrevDiff = angleDifference(playerNum, playerLookAngleCurrTic[playerNum], playerLookAnglePrevTic[playerNum]);
-	
-	if (currPrevDiff > 0.13)
-	{
-		return 0.175;
-	}
-	if (currPrevDiff > 0.12)
-	{
-		return 0.150;
-	}
-	if (currPrevDiff > 0.11)
-	{
-		return 0.130;
-	}
-	if (currPrevDiff > 0.1)
-	{
-		return 0.105;
-	}
-	if (currPrevDiff > 0.09)
-	{
-		return 0.090;
-	}
-	if (currPrevDiff > 0.08)
-	{
-		return 0.075;
-	}
-	if (currPrevDiff > 0.07)
-	{
-		return 0.06;
-	}
-	if (currPrevDiff > 0.06)
-	{
-		return 0.055;
-	}
-	if (currPrevDiff > 0.05)
-	{
-		return 0.05;
-	}
-	if (currPrevDiff > 0.04)
-	{
-		return 0.045;
-	}
-	if (currPrevDiff > 0.03)
-	{
-		return 0.04;
-	}
-	if (currPrevDiff > 0.02)
-	{
-		return 0.035;
-	}
-	if (currPrevDiff > 0.01)
-	{
-		return 0.030;
-	}
-	return 0;
-}
-
-//finds the angle differences based on which way the tics are facing
-function int angleDifference(int playerNum, int newTic, int oldTic)
-{
-	bool turningLeft = ticIsGreater(newTic, oldTic);
-	bool turningRight = ticIsGreater(oldTic, newTic);
-	int diffAmt;
-	int newAmt;
-	
-	if (turningLeft)
-	{
-		diffAmt = newTic - oldTic;
-		if (oppositeSides(newTic,oldTic))
-		{
-			newAmt = 1.0 - newTic;
-			diffAmt = newAmt + oldTic;
-		}
-	}
-	if (turningRight)
-	{
-		diffAmt = oldTic - newTic;
-		if (oppositeSides(oldTic,newTic))
-		{
-			newAmt = 1.0 - oldTic;
-			diffAmt = newAmt + newTic;
-		}
-	}
-	
-	return diffAmt;
-}
-
-function bool ticIsGreater(int ticOne, int ticTwo)
-{
-	return ticOne > ticTwo;
-}
-
-function bool oppositeSides(int ticOne, int ticTwo)
-{
-	return ticOne > 0.9 && ticTwo < 0.1;
+	terminate;
 }
 
 //===========================================================================================
 //
-//		crouchDiving
-//		Given to the Guardian, will probably give to others
+//		CrouchDiving
+//		Given to the Berserker, will probably give to others
 //
 //===========================================================================================
 script "crouchDiving" (void)
@@ -791,274 +395,132 @@ script "crouchDiving" (void)
 	int playerTid = playerNum + PLAYER_BASE_TID;
 	playerCrouchDownPrevTic[playerNum] = false;
 	playerCrouchDownCurrTic[playerNum] = false;
-
 	
 	if (PlayerClass(playerNum) == CLASS_BERSERKER)
 	{
 		while (GetActorProperty(playerTid,APROP_Health) > 0) 
 		{
-			recordPlayerCrouchGameTicPress(playerNum);
+			recordCrouchPress(playerNum);
+			recordPlayerSpeed(playerNum);
 			if (playerEligibleToCrouchDive(playerNum, playerTid)) 
 			{
-				PlaySound(playerTid, "Berserker/Passives/CrouchDive", 0, 1.0, 0, 0);
+				PlaySound(playerTid, "Passives/CrouchDive", 0, 1.0, 0, 0);
 				ThrustThingZ(playerTid, THRUST_CROUCH_FORCE, 1, 1);
 			}
-			Delay(1);
+		Delay(1);	
 		}
 	}
 }
 
 function bool playerEligibleToCrouchDive(int playerNum, int playerTid) {
-	int noGrd = playerNotOnGround(playerTid);
+	int noGrd = !playerOnGround(playerTid);
 	int crouch = playerPressingCrouch(playerNum);
 	return noGrd && crouch;
 }
 
 //===========================================================================================
 //
-//		Air Dodge
-//		Given to the Guardian, will probably give to others
+//		Air Thrust
+//		Given to the Berserker, will probably give to others
 //
 //===========================================================================================
-script "airDodging" (void)
+script "airThrusting" (void)
 {
 	int playerNum = PlayerNumber();
 	int playerTid = playerNum + PLAYER_BASE_TID;
-	playerForwardDownPrevTic[playerNum] = false;
-	playerForwardDownCurrTic[playerNum] = false;
-	playerBackwardDownPrevTic[playerNum] = false;
-	playerBackwardDownCurrTic[playerNum] = false;
-	playerMoveLeftDownPrevTic[playerNum] = false;
-	playerMoveLeftDownCurrTic[playerNum] = false;
-	playerMoveRightDownPrevTic[playerNum] = false;
-	playerMoveRightDownCurrTic[playerNum] = false;
-	playerJumpDownPrevTic[playerNum] = false;
-	playerJumpDownCurrTic[playerNum] = false;
-	bool dodgePerformed;
-	bool dodgeSuccess;
-	bool recordFirst;
-	bool recordSecond;
-	bool initiateThrust;
-	bool airDodgeLoop;
-	int thrustAngle;
-	int delayTime = 1;
+	//release
+	playerForwardReleaseCurrTic[playerNum] = 0;
+	playerBackwardReleaseCurrTic[playerNum] = 0;
+	playerLeftReleaseCurrTic[playerNum] = 0;
+	playerRightReleaseCurrTic[playerNum] = 0;
+	//initial
+	playerForwardInitialTic[playerNum] = 0;
+	playerBackwardInitialTic[playerNum] = 0;
+	playerLeftInitialTic[playerNum] = 0;
+	playerRightInitialTic[playerNum] = 0;
+	//current
+	playerForwardDownCurrTic[playerNum] = 0;
+	playerBackwardDownCurrTic[playerNum] = 0;
+	playerLeftDownCurrTic[playerNum] = 0;
+	playerRightDownCurrTic[playerNum] = 0;
+	playerThrustCooldown[playerNum] = 0;
+	
+	int airTicDelay = 5;
+	bool thrustActive;
+	bool hudActive;
 	
 	if (PlayerClass(playerNum) == CLASS_TERMINATOR)
 	{
 		while (GetActorProperty(playerTid,APROP_Health) > 0) 
 		{
-			if(GetActorZ(playerTid) - GetActorFloorZ(playerTid) > 0.0)
+			if(playerOnGround(playerTid))
 			{
-				while (airInputsEmpty(playerNum))
-				{
-					recordInitialDirectionInput(playerNum);
-					recordSecond = true;
-					if (!playerNotOnGround(playerNum))
-					{
-						break;
-					}
-					Delay(1);
-				}
-				while(recordSecond == true)
-				{
-					recordCurrentDirectionInput(playerNum);
-					if (isKeyForward(playerNum) && playerReleasedForward(playerNum))
-					{
-						recordSecond = false;
-						initiateThrust = true;
-					}
-					if (isKeyBackward(playerNum) && playerReleasedBackward(playerNum))
-					{
-						recordSecond = false;
-						initiateThrust = true;
-					}
-					if (isKeyMoveLeft(playerNum) && playerReleasedMoveLeft(playerNum))
-					{
-						recordSecond = false;
-						initiateThrust = true;
-					}
-					if (isKeyMoveRight(playerNum) && playerReleasedMoveRight(playerNum))
-					{
-						recordSecond = false;
-						initiateThrust = true;
-					}
-					if (!playerNotOnGround(playerNum))
-					{
-						break;
-					}
-				Delay(1);
-				}
-				while (initiateThrust == true && dodgePerformed == false)
-				{	
-					recordCurrentDirectionInput(playerNum);
-					if(forwardPressedTwice(playerNum))
-					{
-						thrustAngle = getAngleToThrust(playerNum, 1);
-						dodgePerformed = true;
-					}
-					if(backwardPressedTwice(playerNum))
-					{
-						thrustAngle = getAngleToThrust(playerNum, 2);
-						dodgePerformed = true;
-					}
-					if(leftPressedTwice(playerNum))
-					{
-						thrustAngle = getAngleToThrust(playerNum, 3);
-						dodgePerformed = true;
-					}
-					if(rightPressedTwice(playerNum))
-					{
-						thrustAngle = getAngleToThrust(playerNum, 4);
-						dodgePerformed = true;
-					}
-					if (dodgePerformed == true)
-					{
-						ACS_NamedExecuteAlways("dodgeThrust", 0, playerTid, thrustAngle);
-						thrustAngle = 0;
-						initiateThrust = false;
-						clearInitialDirectionInput(playerNum);
-						recordSecond = false;
-					}
-					if (!playerNotOnGround(playerNum))
-					{
-						break;
-					}
-				Delay(1);
-				}
-				if (!playerNotOnGround(playerNum))
-				{
-					if (dodgePerformed == true)
-					{
-						dodgePerformed = false; 
-					}
-					recordSecond = false;
-					initiateThrust = false;
-					clearInitialDirectionInput(playerNum);
-					thrustAngle = 0;
-				}
+				thrustActive = false;
+				ACS_NamedTerminate("thrustHandler",0);
 			}
-		delay(1);
-		}	
+			
+			if(playerEligibleToAirThrust(playerNum, playerTid) && thrustActive == false)
+			{
+				thrustActive = true;
+				ACS_NamedExecute("thrustHandler", 0, playerNum, playerTid);
+			}
+			
+		Delay(1);
+		}
 	}
 }
 
+Script "thrustHandler" (int playerNum, int playerTid)
+{
+	clearAllThrustVars(playerNum);
+	int timeoutDelay = 35;
+	Until(matchesFound(playerNum))
+	{
+		if(timeoutDelay == 0)
+		{
+			clearAllThrustVars(playerNum);
+			timeoutDelay = 35;
+		}
+		if(!initialDirectionPressed(playerNum))
+		{
+			recordInitialDirectionInput(playerNum);
+			Delay(1);
+			continue;
+		}
+		if(initialReleaseEmpty(playerNum))
+		{
+			recordInitialRelease(playerNum);
+			Delay(1);
+			timeoutDelay--;
+			continue;
+		}
+	Delay(1);
+	}
+	timeoutDelay = 35;
+	Delay(5);
+	
+	
+	Until(directionInputSuccess(playerNum))
+	{
+		if(timeoutDelay == 0)
+			restart;
+			
+		recordCurrDirectionInput(playerNum);
+		Delay(1);
+		timeoutDelay--;
+	}
+	
+	int tAngle = thrustDirtoAngle(playerNum);
+	ACS_NamedExecute("dodgeThrust", 0, playerTid, tAngle);
+	playerThrustCooldown[playerNum] = Timer();
+	terminate;
+}
 
 script "dodgeThrust" (int playerTid, int angle)
 {
-	PlaySound(playerTid, "Terminator/Passives/Airdodge", 0, 1.0, 0, 0);
+	log(d:angle);
+	PlaySound(playerTid, "Passives/AirThrust", 0, 1.0, 0, 0);
 	ThrustThing(angle, THRUST_DODGE_FORCE, 0, playerTid);
-}
-
-function bool airInputsEmpty(int playerNum){
-	return playerForwardInitialTic[playerNum] == 0 && playerBackwardInitialTic[playerNum] == 0 &&
-	playerMoveLeftInitialTic[playerNum] == 0 && playerMoveRightInitialTic[playerNum] == 0;
-}
-
-function void recordInitialDirectionInput(int playerNum) {
-	playerForwardInitialTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_FORWARD) == BT_FORWARD;
-	playerBackwardInitialTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_BACK) == BT_BACK;
-	playerMoveLeftInitialTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVELEFT) == BT_MOVELEFT;
-	playerMoveRightInitialTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVERIGHT) == BT_MOVERIGHT;
-}
-
-function void clearInitialDirectionInput(int playerNum) {
-	playerForwardInitialTic[playerNum] = 0;
-	playerBackwardInitialTic[playerNum] = 0;
-	playerMoveLeftInitialTic[playerNum] = 0;
-	playerMoveRightInitialTic[playerNum] = 0;
-	playerForwardDownCurrTic[playerNum] = 0;
-	playerBackwardDownCurrTic[playerNum] = 0;
-	playerMoveLeftDownCurrTic[playerNum] = 0;
-	playerMoveRightDownCurrTic[playerNum] = 0;
-	playerForwardDownPrevTic[playerNum] = 0;
-	playerBackwardDownPrevTic[playerNum] = 0;
-	playerMoveLeftDownPrevTic[playerNum] = 0;
-	playerMoveRightDownPrevTic[playerNum] = 0;
-}
-
-function void recordCurrentDirectionInput(int playerNum) {
-	playerForwardDownPrevTic[playerNum] = playerForwardDownCurrTic[playerNum];
-	playerBackwardDownPrevTic[playerNum] = playerBackwardDownCurrTic[playerNum];
-	playerMoveLeftDownPrevTic[playerNum] = playerMoveLeftDownCurrTic[playerNum];
-	playerMoveRightDownPrevTic[playerNum] = playerMoveRightDownCurrTic[playerNum];
-	playerForwardDownCurrTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_FORWARD) == BT_FORWARD;
-	playerBackwardDownCurrTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_BACK) == BT_BACK;
-	playerMoveLeftDownCurrTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVELEFT) == BT_MOVELEFT;
-	playerMoveRightDownCurrTic[playerNum] = (GetPlayerInput(playerNum, INPUT_BUTTONS) & BT_MOVERIGHT) == BT_MOVERIGHT;
-}
-
-function bool playerReleasedKey(int playerNum){
-	return playerForwardDownCurrTic[playerNum] == 0 && 
-	playerBackwardDownCurrTic[playerNum] == 0 &&
-	playerMoveLeftDownCurrTic[playerNum] == 0 &&
-	playerMoveRightDownCurrTic[playerNum] == 0;
-}
-
-function bool isKeyForward(int playerNum) {
-	return playerForwardInitialTic[playerNum] == 1;
-}
-
-function bool isKeyBackward(int playerNum) {
-	return playerBackwardInitialTic[playerNum] == 1;
-}
-
-function bool isKeyMoveLeft(int playerNum) {
-	return playerMoveLeftInitialTic[playerNum] == 1;
-}
-
-function bool isKeyMoveRight(int playerNum) {
-	return playerMoveRightInitialTic[playerNum] == 1;
-}
-
-function bool playerReleasedForward(int playerNum){
-	return playerForwardDownCurrTic[playerNum] == 0 && playerForwardDownPrevTic[playerNum] == 1;
-}
-
-function bool playerReleasedBackward(int playerNum){
-	return playerBackwardDownCurrTic[playerNum] == 0 && playerBackwardDownPrevTic[playerNum] == 1;
-}
-
-function bool playerReleasedMoveLeft(int playerNum){
-	return playerMoveLeftDownCurrTic[playerNum] == 0 && playerMoveLeftDownPrevTic[playerNum] == 1;
-}
-
-function bool playerReleasedMoveRight(int playerNum){
-	return playerMoveRightDownCurrTic[playerNum] == 0 && playerMoveRightDownPrevTic[playerNum] == 1;
-}
-
-function bool forwardPressedTwice(int playerNum) {
-	return playerForwardDownCurrTic[playerNum] == 1 && playerForwardInitialTic[playerNum] == 1 && playerForwardDownPrevTic[playerNum] == 0;
-}
-
-function bool backwardPressedTwice(int playerNum) {
-	return playerBackwardDownCurrTic[playerNum] == 1 && playerBackwardInitialTic[playerNum] == 1 && playerBackwardDownPrevTic[playerNum] == 0;
-}
-
-function bool leftPressedTwice(int playerNum) {
-	return playerMoveLeftDownCurrTic[playerNum] == 1 && playerMoveLeftInitialTic[playerNum] == 1 && playerMoveLeftDownPrevTic[playerNum] == 0;
-}
-
-function bool rightPressedTwice(int playerNum) {
-	return playerMoveRightDownCurrTic[playerNum] == 1 && playerMoveRightInitialTic[playerNum] == 1 && playerMoveRightDownPrevTic[playerNum] == 0;;
-}
-
-function int getAngleToThrust(int playerNum, int direction)
-{
-	int angle = GetActorAngle(playerNum) >> 8;
-	switch (direction)
-	{
-		case 1:
-			return angle;
-		case 2:
-			return angle + 128;
-		case 3:
-			return angle + 64;
-		case 4:
-			return angle + 192;
-		default:
-			break;
-	}
-	return 0;
 }
 
 //===========================================================================================
@@ -1079,7 +541,6 @@ script "strafeJumping" (void)
 	playerLookAngleOldTic[playerNum]= false;
 	playerLookAnglePrevTic[playerNum]= false;
 	playerLookAngleCurrTic[playerNum]= false;
-	playerLookAngleNextTic[playerNum]= false;
 
 	playerTurnDirOldTic[playerNum]= false;
 	playerTurnDirPrevTic[playerNum]= false;
@@ -1090,16 +551,21 @@ script "strafeJumping" (void)
 	{
 		while (GetActorProperty(playerTid,APROP_Health) > 0) 
 		{
-			
+			int currSpeed = getactorproperty(playerNum, APROP_SPEED);
 			if (!playerOnGround(playerNum))
 			{
-				recordPlayerDirectionTicPress(playerNum);
-				recordPlayerLookTics(playerNum);
-				recordPlayerTurnDirection(playerNum);
+				recordStrafePress(playerNum);
+				recordPlayerViewAngle(playerNum);
+				recordTurnDirection(playerNum);
 				recordPlayerSpeed(playerNum);
-				if (playerLostMomentum(playerNum))
+				recordJumpAngleAmt(playerNum);
+				if (playerAirTurningIntoDirection(playerNum))
 				{
-					int currSpeed = getactorproperty(playerNum, APROP_SPEED);
+					
+				}
+				if (LostMomentum(playerNum))
+				{
+					
 					if (currSpeed > 1.00)
 					{
 						setactorproperty(playerNum, APROP_SPEED, currSpeed - 0.25);
@@ -1110,96 +576,27 @@ script "strafeJumping" (void)
 			if (playerOnGround(playerNum))
 			{
 				recordPlayerSpeed(playerNum);
-				recordPlayerJumpGameTicPress(playerNum);
-				if (playerUsingJump(playerNum))
+				recordJumpPress(playerNum);
+				if (checkInventory("StrafeMomentum"))
 				{
 					if (playerEligibleToGainMomentum(playerNum, playerTid)) 
 					{
 						int speedAmt = jumpAngleChangeAmount(playerNum);
-						if (getactorproperty(playerNum, APROP_SPEED) < 2.00)
+						if (getactorproperty(playerNum, APROP_SPEED) < 1.5)
 						{
 							currSpeed = getactorproperty(playerNum, APROP_SPEED);
 							setactorproperty(playerNum, APROP_SPEED, currSpeed + speedAmt);
 						}
 					}
 				}
-				if (!playerUsingJump(playerNum))
+				if (!checkInventory("StrafeMomentum") && getactorproperty(playerNum, APROP_SPEED) > 1.0)
 				{
+					log(s:"speed reset to not using jump");
 					setactorproperty(playerNum, APROP_SPEED, 1.00);
+					//jumped = false;
 				}
 			}
 			Delay(1);
 		}
 	}
-}
-
-function bool playerEligibleToGainMomentum(int playerNum, int playerTid) {
-	//int noGrd = playerOnGround(playerTid);
-	//int jump = playerUsingJump(playerNum);
-	int turned = playerTurningSameDirection(playerNum);
-	int strafe = playerHoldingStrafe(playerNum);
-	int angStrafe = sameAngleAndStrafeDirection(playerNum);
-	return turned && strafe && angStrafe; //&& jump;
-}
-
-function bool playerUsingJump(int playerNum){
-	return playerJumpDownCurrTic[playerNum] == 1;
-}
-
-function int jumpAngleChangeAmount(int playerNum) {
-	int currPrevDiff = angleDifference(playerNum, playerLookAngleCurrTic[playerNum], playerLookAnglePrevTic[playerNum]);
-	
-	if (currPrevDiff > 0.13)
-	{
-		return 0.125;
-	}
-	if (currPrevDiff > 0.12)
-	{
-		return 0.110;
-	}
-	if (currPrevDiff > 0.11)
-	{
-		return 0.1;
-	}
-	if (currPrevDiff > 0.1)
-	{
-		return 0.095;
-	}
-	if (currPrevDiff > 0.09)
-	{
-		return 0.09;
-	}
-	if (currPrevDiff > 0.08)
-	{
-		return 0.085;
-	}
-	if (currPrevDiff > 0.07)
-	{
-		return 0.08;
-	}
-	if (currPrevDiff > 0.06)
-	{
-		return 0.075;
-	}
-	if (currPrevDiff > 0.05)
-	{
-		return 0.07;
-	}
-	if (currPrevDiff > 0.04)
-	{
-		return 0.065;
-	}
-	if (currPrevDiff > 0.03)
-	{
-		return 0.06;
-	}
-	if (currPrevDiff > 0.02)
-	{
-		return 0.055;
-	}
-	if (currPrevDiff > 0.01)
-	{
-		return 0.05;
-	}
-	return 0;
 }

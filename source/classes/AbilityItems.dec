@@ -99,9 +99,6 @@ ACTOR RocketeerAbilityActive : Inventory { }
 Actor TeleporterFirstCooldown : Ammo { Inventory.Amount 10 Inventory.MaxAmount 10 }
 Actor TeleporterSecondCooldown : Ammo { Inventory.Amount 45 Inventory.MaxAmount 45 }
 ACTOR TeleporterAbilityActive : Inventory { }
-Actor HasProxy : Inventory { }
-Actor isLooking : Inventory { }
-Actor OverCharge : Inventory { }
 
 Actor HunterFirstCooldown : Ammo { Inventory.Amount 30 Inventory.MaxAmount 30 }
 Actor HunterSecondCooldown : Ammo { Inventory.Amount 60 Inventory.MaxAmount 60 }

@@ -1,147 +1,209 @@
 // ==================================================================================================================
 // General Sounds 
 // ==================================================================================================================
+Player/Impact DIRECHIT
 
 //Ability sounds
 Abilities/Failure ABILFAIL
-Abilities/EndWarning ENDING
+Abilities/Recharged ABILRECH
+Abilities/EndWarning ABILWARN
+Abilities/End ABILSILE
+Abilities/Silence ABILSILE
 
-Passives/ChargingJump JUMPCHAR
-Passives/JumpRelease JUMPRELE
+//Hider Passives
+Passives/DoubleJump/Charge DUJUMPST
+Passives/DoubleJump/Release DUJUMPRL
+Passives/CrouchSlide/Start CRSLSTAR
+Passives/CrouchSlide/Idle CRSLIDLE
+Passives/ChargeJump/Start CHAJUMST
+Passives/ChargeJump/Release CHAJUMPR
+
+Climb1 BLAZCLM1
+Climb2 BLAZCLM2
+Climb3 BLAZCLM3
+Climb4 BLAZCLM4
+$random Passives/WallClimb { Climb1 Climb2 Climb3 Climb4 }
+
+//Seeker Passives
+Passives/CrouchDive BERSDIVE
+Passives/Jetpack/Go		DSJPKYES
+Passives/Jetpack/Die		DSJPKNO
+Passives/Jetpack/Explode	SCOUJEXP
+Passives/Radar			DSRADAR
+AirThrust1 TAIRDOD1
+AirThrust2 TAIRDOD2
+AirThrust3 TAIRDOD3
+$random Passives/AirThrust { AirThrust1 AirThrust2 AirThrust3 }
 
 // ==================================================================================================================
 // Hider Sounds 
 // ==================================================================================================================
 
-VanishOn 	VANISHON
-VanishOff 	VANISOFF
+Hiders/Vanish/On VANISHON
+Hiders/Vanish/Off VANISOFF	
 
 //=======================================================================
-//Banshee Class Sounds
+//Hider Abilities
 //=======================================================================
 
-Banshee/Abilities/LifeSupport LIFESUPP
-Banshee/Abilities/EnergyShield ENRGFILD
-Banshee/Weapons/HealingWave HEALWAVE
-Banshee/Passives/CrouchSlideStart CRSLSTAR
-Banshee/Passives/CrouchSlideIdle CRSLIDLE
+Banshee/Abilities/LifeSupport/Start1 LIFEUO1
+Banshee/Abilities/LifeSupport/Start2 LIFEUO2
+Banshee/Abilities/LifeSupport/Idle LIFESUIDL
+Banshee/Abilities/LifeSupport/Off LIFESUOFF
 
-BlazeDeath1 BLAZDETH
-BlazeDeath2 BLAZDTH2
-BlazeDeath3 BLAZDTH3
-$random BlazeDeath { BlazeDeath1 BlazeDeath2 BlazeDeath3 }
+Blazer/Abilities/Dash DASHACTV
+Blazer/Abilities/RecallStart RECALLST
+Blazer/Abilities/RecallEnd RECALLEN
+
+Guardian/Abilities/ArmorHit ARMORDMG
+Guardian/Abilities/ArmorActivate ARMSHLD
+
+Illusionist/Abilities/Shrink		DSSHRINK
+Illusionist/Abilities/Unshrink		DSLARGE
+Illusionist/Abilities/Disguise	DISGUISE
+
+Rocketeer/Abilities/IceActivated ICERKACT
+Rocketeer/Abilities/ConBlastFire ROCONFR
+Rocketeer/Abilities/ConBlastFire2 ROCONFR2
+Rocketeer/Abilities/ConBlastReload ROCONRD1
+Rocketeer/Abilities/ConBlastReload2 ROCONRD2 
+
+Teleporter/Abilities/OverCharge OVERCHAR
+Teleporter/Abilities/SecurityCamera 
+
+//=======================================================================
+//Seeker Abilities
+//=======================================================================
+
+Berserker/Abilities/BloodLust BLOODLUS
+Berserker/Abilities/HammerThrow HAMFIR
+Berserker/Abilities/HammerIdle HAMFLY
+Berserker/Abilities/HammerWall		HAMWAL1
+HammerHit1 HAMHIT1
+HammerHit2 HAMHIT2
+$random Berserker/Abilities/HammerHit { HAMHIT1 HAMHIT2 }
+Abilities/Polymorph/Start 	MORPHSTA
+Abilities/Polymorph/Idle 	MORPHACT
+Abilities/Polymoprh/End  	MORPHBAC
+
+//=======================================================================
+//Banshee
+//=======================================================================
+
+Banshee/Rejuvinator/Fire REJUVFIR
+Banshee/Rejuvinator/Idle REJUVIDL
+Banshee/Rejuvinator/NoAmmo REJUVOUT
+Banshee/Rejuvinator/LowAmmo REJUVLOW
+Banshee/Rejuvinator/Empty REJVEMPT
+Banshee/Rejuvinator/Charge REJUVREC
+Banshee/Rejuvinator/Convert1 REJVCON1
+Banshee/Rejuvinator/Convert2 REJVCON2
+Banshee/Rejuvinator/Convert3 REJVCON3
+Banshee/Rejuvinator/Convert4 REJVCON4
+Banshee/Rejuvinator/Convert5 REJVCON
+Banshee/Rejuvinator/Reload1 REJVREL1
+Banshee/Rejuvinator/Reload2 REJVREL2
+Banshee/Rejuvinator/Reload3 REJVREL3
+Banshee/Rejuvinator/Reload4 REJVREL4
+Banshee/Rejuvinator/Reload5 REJVREL5
+Banshee/Rejuvinator/Charge1 REJUVCH1
+Banshee/Rejuvinator/Charge2 REJUVCH2
+Banshee/Rejuvinator/Charge3 REJUVCH3
+Banshee/Rejuvinator/Charge4 REJUVCH4
+Banshee/Rejuvinator/Charge5 REJUVCH5
 
 BansheeLowPain1 BANSPAIN
 BansheeLowPain2 BANSPA90
 BansheeLowPain3 BANSPA85
-
 BansheeMedPain1 BANSPA75
 BansheeMedPain2 BANSPA55
 BansheeMedPain3 BANSPA50
-
 BansheeHighPain1 BANSPA50
 BansheeHighPain2 BANSPA25
+BansheeDeath1 BANSDETH
+BansheeDeath2 BANSDTH2
+BansheeDeath3 BANSDTH3
 
-$random BansheeLowPain { BansheeLowPain1 BansheeLowPain2 BansheeLowPain3} 
-$random BansheeMedPain { BansheeLowPain2 BansheeLowPain3 BansheeMedPain1 BansheeMedPain2 } 
-$random BansheeHighPain { BansheeMedPain2 BansheeMedPain3 BansheeHighPain1 BansheeHighPain2 } 
+$random Banshee/Player/BansheeDeath { BansheeDeath1 BansheeDeath2 BansheeDeath3 }
+$random Banshee/Player/BansheeLowPain { BansheeLowPain1 BansheeLowPain2 BansheeLowPain3 } 
+$random Banshee/Player/BansheeMedPain { BansheeLowPain2 BansheeLowPain3 BansheeMedPain1 BansheeMedPain2 } 
+$random Banshee/Player/BansheeHighPain { BansheeMedPain2 BansheeMedPain3 BansheeHighPain1 BansheeHighPain2 }
 
-$playeralias	Banshee	male	*death		BansheeDeath
-$playeralias	Banshee	male	*xdeath		BansheeDeath
-$playeralias	Banshee	male	*gibbed		BansheeDeath
-$playeralias	Banshee	male	*pain100	BansheeLowPain
-$playeralias	Banshee	male	*pain75		BansheeMedPain
-$playeralias	Banshee	male	*pain50		BansheeMedPain
-$playeralias	Banshee	male	*pain25		BansheeHighPain
+$playeralias	Banshee	male	*death		Banshee/Player/BansheeDeath
+$playeralias	Banshee	male	*xdeath		Banshee/Player/BansheeDeath
+$playeralias	Banshee	male	*gibbed		Banshee/Player/BansheeDeath
+$playeralias	Banshee	male	*pain100	Banshee/Player/BansheeLowPain
+$playeralias	Banshee	male	*pain75		Banshee/Player/BansheeMedPain
+$playeralias	Banshee	male	*pain50		Banshee/Player/BansheeMedPain
+$playeralias	Banshee	male	*pain25		Banshee/Player/BansheeHighPain
 $playersound	Banshee	male	*land		BANSLAND
 $playersound	Banshee	male	*usefail	BANSOOF
 $playersound	Banshee	male	*dive		WATR_UN
 $playersound	Banshee male	*surface	BANSGASP
 
 //=======================================================================
-//Blazer Class Sounds
+//Blazer
 //=======================================================================
-
-//Blazer Sounds
-Blazer/Abilities/Dash DSDASH
-Blazer/Abilities/Recall DSFORCE
-
-Climb1 BLAZCLM1
-Climb2 BLAZCLM2
-Climb3 BLAZCLM3
-Climb4 BLAZCLM4
-$random Blazer/Passives/Climb { Climb1 Climb2 Climb3 Climb4 }
 
 BlazeDeath1 BLAZDETH
 BlazeDeath2 BLAZDTH2
 BlazeDeath3 BLAZDTH3
-$random BlazeDeath { BlazeDeath1 BlazeDeath2 BlazeDeath3 }
-
 BlazerLowPain1 BLAZPAIN
 BlazerMedPain1 BLAZPA75
 BlazerMedPain2 BLAZPA50
 BlazerHighPain2	BLAZPA25
-$random BlazerLowPain { BlazerLowPain1 BlazerMedPain1 } 
-$random BlazerMedPain { BlazerLowPain1 BlazerMedPain1 BlazerMedPain2 } 
-$random BlazerHighPain { BlazerMedPain2 BlazerHighPain2 } 
+$random Blazer/Player/BlazeDeath  { BlazeDeath1 BlazeDeath2 BlazeDeath3 }
+$random Blazer/Player/BlazerLowPain { BlazerLowPain1 BlazerMedPain1 } 
+$random Blazer/Player/BlazerMedPain { BlazerLowPain1 BlazerMedPain1 BlazerMedPain2 } 
+$random Blazer/Player/BlazerHighPain { BlazerMedPain2 BlazerHighPain2 } 
 
-$playeralias	Blazer	male	*death		BlazeDeath
-$playeralias	Blazer	male	*xdeath		BlazeDeath
-$playeralias	Blazer	male	*pain100	BlazerLowPain
-$playeralias	Blazer	male	*pain75		BlazerMedPain
-$playeralias	Blazer	male	*pain50		BlazerHighPain
-$playeralias	Blazer	male	*pain25		BlazerHighPain
+$playeralias	Blazer	male	*death		Blazer/Player/BlazeDeath
+$playeralias	Blazer	male	*xdeath		Blazer/Player/BlazeDeath
+$playeralias	Blazer	male	*pain100	Blazer/Player/BlazerLowPain
+$playeralias	Blazer	male	*pain75		Blazer/Player/BlazerMedPain
+$playeralias	Blazer	male	*pain50		Blazer/Player/BlazerHighPain
+$playeralias	Blazer	male	*pain25		Blazer/Player/BlazerHighPain
 $playersound	Blazer	male	*land		BLAZLAND
 $playersound	Blazer	male	*usefail	BLAZOOF
 $playersound	Blazer	male	*dive		WATR_UN
 $playersound	Blazer male		*surface	WATR_OUT
 $playersound	Blazer male		*gasp		BLAZGASP
 
-
 //=======================================================================
 //Guardian Class Sounds
 //=======================================================================
+
+Guardian/Weapons/ShieldChange SHLDCHAN
+Guardian/Weapons/ShieldCharge SHLDCHAR
+Guardian/Shield/Pain { GUSHPAI1 GUSHPAI2 GUSHPAI3 GUSHPAI4 }
+Guardian/Shield/Impact { SHLDIMP1 SHLDIMP2 SHLDIMP3 SHLDIMP4 }
+Guardian/Energy/Impact { ENRGIMP1 ENRGIMP2 ENRGIMP3 ENRGIMP4 }
+Guardian/Impact/Shield SHIELHIT
+Guardian/Impact/Energy ENERGHIT
 
 GuardLowPain1 GUARPAIN
 GuardMedPain1 GUARPA75
 GuardMedPain2 GUARPA50
 GuardHighPain2	GUARPA25
+$random Guardian/Player/GuardLowPain { GuardLowPain1 GuardMedPain1 } 
+$random Guardian/Player/GuardMedPain { GuardLowPain1 GuardMedPain1 GuardMedPain2 } 
+$random Guardian/Player/GuardHighPain { GuardMedPain2 GuardHighPain2 } 
+$random Guardian/Player/GuardDeath { GuardDeath1 GuardDeath2 GuardDeath3 }
 
-Guardian/Abilities/ArmorHit ARMORDMG
-Guardian/Abilities/ArmorActivate ARMSHLD
-
-Guardian/Weapons/ShieldCharge SHLDCHAR
-
-Smokebomb/Hiss	SMOKEHIS
-Smokebomb/Bang	SMOKEBAG
-
-$random GuardLowPain { GuardLowPain1 GuardMedPain1 } 
-
-$random GuardMedPain { GuardLowPain1 GuardMedPain1 GuardMedPain2 } 
-
-$random GuardHighPain { GuardMedPain2 GuardHighPain2 } 
-
-
-$random GuardDeath { GuardDeath1 GuardDeath2 GuardDeath3 }
-GuardDeath1 GUARDETH
-GuardDeath2 GUARDTH2
-GuardDeath3 GUARDTH3
-
-$random GuardJump { GuardJump1 GuardJump2 None }
 GuardJump1 "Sounds/Guardian/GUARDJump1.ogg"
 GuardJump2 "Sounds/Guardian/GUARDJump2.ogg"
-
 $volume GuardJump1 0.8
 $volume GuardJump2 0.8
 $attenuation GuardJump1 2.0
 $attenuation GuardJump2 2.0
+$random Guardian/Player/GuardJump { GuardJump1 GuardJump2 }
 
-$playeralias	Guardian	male	*death		GuardDeath
-$playeralias	Guardian	male	*xdeath		GuardDeath
-$playeralias	Guardian	male	*pain100	GuardLowPain
-$playeralias	Guardian	male	*pain75		GuardLowPain
-$playeralias	Guardian	male	*pain50		GuardMedPain
-$playeralias	Guardian	male	*pain25		GuardHighPain
+$playeralias	Guardian	male	*death		Guardian/Player/GuardDeath
+$playeralias	Guardian	male	*xdeath		Guardian/Player/GuardDeath
+$playeralias	Guardian	male	*pain100	Guardian/Player/GuardLowPain
+$playeralias	Guardian	male	*pain75		Guardian/Player/GuardLowPain
+$playeralias	Guardian	male	*pain50		Guardian/Player/GuardMedPain 
+$playeralias	Guardian	male	*pain25		Guardian/Player/GuardHighPain
 $playersound	Guardian	male	*land		GUARDLAN
 $playersound	Guardian	male	*usefail	GUARDOOF
 $playersound	Guardian	male	*dive		WATR_UN
@@ -151,82 +213,72 @@ $playersound	Guardian 	male	*surface	WATR_OUT
 // Illusionist Class Sounds
 //=======================================================================
 
-$random IllDeath { llDeath1 llDeath2 llDeath3 }
+//Illusionist Sounds
+Illusionist/Decoy/Spawn 	DECOY
+
 IllDeath1 ILLUDETH
 IllDeath2 ILLUDTH2
 IllDeath3 ILLUDTH3
-
 IllusionistLowPain1 ILLUPAIN
 IllusionistMedPain1 ILLUPA75
 IllusionistMedPain2 ILLUPA50
 IllusionistHighPain2	ILLUPA25
+$random Illusionist/Player/IllDeath { llDeath1 llDeath2 llDeath3 }
+$random Illusionist/Player/LowPain  { IllusionistLowPain1 IllusionistMedPain1 } 
+$random Illusionist/Player/MedPain { IllusionistLowPain1 IllusionistMedPain1 IllusionistMedPain2 } 
+$random Illusionist/Player/HighPain { IllusionistMedPain2 IllusionistHighPain2 } 
 
-$random IllusionistLowPain { IllusionistLowPain1 IllusionistMedPain1 } 
-
-$random IllusionistMedPain { IllusionistLowPain1 IllusionistMedPain1 IllusionistMedPain2 } 
-
-$random IllusionistHighPain { IllusionistMedPain2 IllusionistHighPain2 } 
-
-$playeralias	Illusionist	male	*death		IllDeath
-$playeralias	Illusionist	male	*xdeath		IllDeath
-$playeralias	Illusionist	male	*pain100	IllusionistLowPain
-$playeralias	Illusionist	male	*pain75		IllusionistMedPain
-$playeralias	Illusionist	male	*pain50		IllusionistHighPain
-$playeralias	Illusionist	male	*pain25		IllusionistHighPain
+$playeralias	Illusionist	male	*death		Illusionist/Player/IllDeath
+$playeralias	Illusionist	male	*xdeath		Illusionist/Player/IllDeath
+$playeralias	Illusionist	male	*pain100	Illusionist/Player/LowPain 
+$playeralias	Illusionist	male	*pain75		Illusionist/Player/MedPain
+$playeralias	Illusionist	male	*pain50		Illusionist/Player/HighPain
+$playeralias	Illusionist	male	*pain25		Illusionist/Player/HighPain
 $playersound	Illusionist	male	*usefail	ILLULAND
 $playersound	Illusionist	male	*dive		WATR_UN
 $playersound	Illusionist male	*surface	WATR_OUT
 $playersound	Illusionist male	*gasp		ILLUGASP
 
-//Illusionist Sounds
-MiniDeath	DSMDEAD
-MiniPain	DSMPAIN
-MiniOof		DSMOOF
-Illusionist/Abilities/Shrink		DSSHRINK
-Illusionist/Abilities/UnShrink		DSLARGE
-Illusionist/Abilities/Disguise DISGUISE
-Illusionist/Weapons/SpawnDecoy DECOY
+Illusionist/Shrunk/Death	DSMDEAD
+Illusionist/Shrunk/Pain		DSMPAIN
+Illusionist/Shrunk/Oof		DSMOOF
 
-$playersound	mini	male	*death		dsmdeth
-$playersound	mini	male	*xdeath		dsmdiehi
+$playersound	mini	male	*death		Illusionist/Shrunk/Death
+$playersound	mini	male	*xdeath		Illusionist/Shrunk/Death
 $playersound	mini	male	*gibbed		dsslop
-$playersound	mini	male	*pain100	dsmpain
+$playersound	mini	male	*pain100	Illusionist/Shrunk/Pain
 $playersounddup	mini	male	*pain75		*pain100
 $playersounddup	mini	male	*pain50		*pain100
 $playersounddup	mini	male	*pain25		*pain100
-$playersound	mini	male	*land		dsmoof
+$playersound	mini	male	*land		Illusionist/Shrunk/Oof
 $playersound	mini	male	*jump		dsjump
 $playersound	mini	male	*fist		dspunch
-$playersound	mini	male	*usefail	dsmoof
+$playersound	mini	male	*usefail	Illusionist/Shrunk/Oof
 
 //=======================================================================
 //Rocketeer Class Sounds
 //=======================================================================
-Rocketeer/Abilities/IceActivated ICERKACT
 
-$random RockDeath { RockDeath1 RockDeath2 RockDeath3 }
 RockDeath1 ROCKDETH
 RockDeath2 ROCKDTH2
 RockDeath3 ROCKDTH3
-
 RocketeerLowPain1 ROCKPAIN
 RocketeerMedPain1 ROCKPA75
 RocketeerMedPain2 ROCKPA50
 RocketeerHighPain2	ROCKPA25
 
-$random RocketeerLowPain { RocketeerLowPain1 RocketeerMedPain1 } 
+$random Rocketeer/Player/RocketeerLowPain { RocketeerLowPain1 RocketeerMedPain1 } 
+$random Rocketeer/Player/RocketeerMedPain { RocketeerLowPain1 RocketeerMedPain1 RocketeerMedPain2 } 
+$random Rocketeer/Player/RocketeerHighPain  { RocketeerMedPain2 RocketeerHighPain2 } 
+$random Rocketeer/Player/RockDeath { RockDeath1 RockDeath2 RockDeath3 }
 
-$random RocketeerMedPain { RocketeerLowPain1 RocketeerMedPain1 RocketeerMedPain2 } 
-
-$random RocketeerHighPain { RocketeerMedPain2 RocketeerHighPain2 } 
-
-$playeralias	Rocketeer	male	*death		RockDeath
-$playeralias	Rocketeer	male	*xdeath		RockDeath
+$playeralias	Rocketeer	male	*death		Rocketeer/Player/RockDeath
+$playeralias	Rocketeer	male	*xdeath		Rocketeer/Player/RockDeath
 $playersound	Rocketeer	male	*gibbed		dsslop
-$playeralias	Rocketeer	male	*pain100	RocketeerLowPain
-$playeralias	Rocketeer	male	*pain75		RocketeerMedPain
-$playeralias	Rocketeer	male	*pain50		RocketeerMedPain
-$playeralias	Rocketeer	male	*pain25		RocketeerHighPain
+$playeralias	Rocketeer	male	*pain100	Rocketeer/Player/RocketeerLowPain
+$playeralias	Rocketeer	male	*pain75		Rocketeer/Player/RocketeerMedPain
+$playeralias	Rocketeer	male	*pain50		Rocketeer/Player/RocketeerMedPain
+$playeralias	Rocketeer	male	*pain25		Rocketeer/Player/RocketeerHighPain
 $playersound	Rocketeer	male	*usefail	ROCKLAND
 $playersound	Rocketeer	male	*dive		WATR_UN
 $playersound	Rocketeer 	male	*surface	WATR_OUT
@@ -237,15 +289,12 @@ $playersound	Rocketeer 	male	*gasp		ROCKGASP
 // Teleporter Class Sounds
 //=======================================================================
 
-
 //Teleporter Sounds
 Teleporter/Weapons/TeleporterShot	DSPORTF
 Teleporter/Weapons/TeleporterHit	DSPORTH
 Teleporter/Weapons/TeleporterNo	    DSTPNOAM
-Teleporter/Abilities/Mine		MINE001
-Teleporter/Abilities/Mine2      MINE002
-Teleporter/Abilities/OverCharge OVERCHAR
-Teleporter/Weapons/SecurityCamera SECCAM
+Teleporter/Weapons/Mine		MINE001
+Teleporter/Weapons/Mine2      MINE002
 Teleporter/Weapons/ModuleLand PROXBOUN
 Teleporter/Weapons/ModuleDetonate PROXBEEP
 
@@ -260,8 +309,6 @@ NyxTaunt3 "Sounds/TAUNTS/NyxTaunt3.ogg"
 NyxTaunt4 "Sounds/TAUNTS/NyxTaunt4.ogg"
 NyxTaunt5 "Sounds/TAUNTS/NyxTaunt5.ogg"
 $random NyxTaunt { NyxTaunt1 NyxTaunt2 NyxTaunt3 NyxTaunt4 NyxTaunt5 }
-
-
 // ==================================================================================================================
 // Seeker Sounds 
 // ==================================================================================================================
@@ -276,99 +323,71 @@ $random NyxTaunt { NyxTaunt1 NyxTaunt2 NyxTaunt3 NyxTaunt4 NyxTaunt5 }
 //
 //=======================================================================
 
+
 // Sounds taken from KDiZD's super shotgun.
 Berserker/ShotgunFire BSSGFIRE
 Berserker/ShotgunOpen BSSGOPEN
 Berserker/ShotgunLoad BSSGLOAD
 Berserker/ShotgunClose BSSGCLOS
 
-Berserker/Taunt BERSTAUN
-Berserker/Leap BERSJMP2
-Berserker/PunchBlast PUNBLAST
-Berserker/PunchThunder PUNTHUND
-Berserker/Abilities/BloodLust BLOODLUS
-Berserker/Abilities/HammerThrow HAMFIR
-Berserker/Abilities/HammerIdle HAMFLY
-Berserker/Passives/CrouchDive BERSDIVE
-
-dsjugstp	dsjugstp
-PUNCHHIT	PUNCHHIT
-PUNCHMIS	PUNCHMIS
-PUNCHWAL 	PUNCHWAL
-
-
-$random Berserker/Abilities/HammerHit { HAMHIT1 HAMHIT2 }
-$random BDEATH	{ BDEATH1  BDEATH2  BDEATH3 }
-
+Berserker/Punch/Blast PUNBLAST
+Berserker/Punch/Thunder PUNTHUND
+Berserker/Punch/Miss PUNCHMIS
+Berserker/Punch/Own PUNCHOWN
+Berserker/Player/Taunt BERSTAUN
+Berserker/Player/Jump BERSJMP2
 BDEATH1	BRSDTH1
 BDEATH2	BRSDTH2
 BDEATH3	BRSDTH3
+$random Berserker/Player/Death	{ BRSDTH1  BRSDTH2  BRSDTH3 }
 
-$playeralias		berserker	male	*death					BDEATH
+$playeralias		berserker	male	*death					Berserker/Player/Death
 $playersound		berserker	male	*death-drowning			BERSDRWN
 $playersound		berserker	male	*pain100				BRSPNFUL
 $playersound		berserker	male	*pain75					BERSPA75
 $playersound		berserker	male	*pain50					BERSPA50
 $playersound		berserker	male	*pain25					BERSPA25
-$playersound		berserker	male	*jump					BERSJUMP
+$playersound		berserker	male	*jump					Berserker/Player/Jump
 $playersounddup		berserker	male	*fist					*fist
 $playersound		berserker	male	*dive					WATR_UN
 $playersound		berserker 	male	*surface				WATR_OUT
 $playersound		berserker 	male	*gasp					BERSGASP
 $playersound		berserker	male	*land					BERSLAND
 
-dsjugstp	dsjugstp
-AXE5	AXE5
-PUNCHMIS	PUNCHMIS
-HAMWAL1		HAMWAL1
-
 //=======================================================================
 // Hunter Class Sounds
 //=======================================================================
 
 //Other Seeker-Weapon-Related Sounds
-PistolFire		DSPSFIRE
-ShotgunFire		DSSGFIRE
-ShotgunCock		DSSGCOCK
-ChaingunFire	DSCGFIRE
-PlasmaFire		DSPLFIRE
-TeleporterFire	DSTPFIRE
-HookShot	DSHOKSHT
-HookHit		DSHOKHIT
-Hunter/Abilities/GETOVER		DSGETOVR
+Hunter/Pistol/Fire		DSPSFIRE
+Hunter/Shotgun/Fire		DSSGFIRE
+Hunter/Shotgun/Cock		DSSGCOCK
+Hunter/Chaingun/Fire	DSCGFIRE
 
-$random HuntDeath { HuntDeath1 HuntDeath2 }
+HuntNoway HUNTNOWA
+HuntNoway2 HUNTNOW2
 HuntDeath1 HUNTDETH
 HuntDeath2 HUNTDTH2
-
-$random duke/noway { duke/noway1 duke/noway2 }
-duke/noway1 HUNTNOWA
-duke/noway2 HUNTNOW2
-
 HunterLowPain1	HUNTPAIN
 HunterLowPain2	HUNTPA95
 HunterLowPain3	HUNTPA90
-
-$random HunterLowPain { HunterLowPain1 HunterLowPain2 HunterLowPain3 } 
-
 HunterMedPain1	HUNTPA80
 HunterMedPain2	HUNTPA75
-
-$random HunterMedPain { HunterLowPain3 HunterMedPain1 HunterMedPain2 } 
-
 HunterHighPain1	HUNTPA50
 HunterHighPain2	HUNTPA25
+$random Hunter/Player/LowPain { HunterLowPain1 HunterLowPain2 HunterLowPain3 } 
+$random Hunter/Player/MedPain  { HunterLowPain3 HunterMedPain1 HunterMedPain2 } 
+$random Hunter/Player/HighPain  { HunterMedPain2 HunterHighPain1 HunterHighPain2 }  
+$random Hunter/Player/Death { HuntDeath1 HuntDeath2 }
+$random Hunter/Player/Oof { HuntNoway HuntNoway2}
 
-$random HunterHighPain { HunterMedPain2 HunterHighPain1 HunterHighPain2 } 
-
-//Duke Sounds
-$playeralias	Hunter	male	*death			HuntDeath
+$playeralias	Hunter	male	*death			Hunter/Player/Death
 $playersound	Hunter	male	*falling		HUNTFALL
-$playeralias	Hunter	male	*pain100		HunterLowPain
-$playeralias	Hunter	male	*pain75			HunterMedPain
-$playeralias	Hunter	male	*pain50			HunterMedPain
-$playeralias	Hunter	male	*pain25			HunterHighPain
-$playeralias	Hunter	male	*usefail		duke/noway
+$playeralias	Hunter	male	*pain100		Hunter/Player/LowPain
+$playeralias	Hunter	male	*pain75			Hunter/Player/MedPain 
+$playeralias	Hunter	male	*pain50			Hunter/Player/HighPain
+$playeralias	Hunter	male	*pain25			Hunter/Player/HighPain
+$playeralias	Hunter	male	*usefail		Hunter/Player/Oof
 $playersound	Hunter	male	*land			HUNTLAND
 $playersound	Hunter 	male	*gasp			HUNTGASP
 $playersound    Hunter  male    *jump   		HUNTJUMP
@@ -379,45 +398,6 @@ $playersound	Hunter 	male	*surface		WATR_OUT
 //=======================================================================
 // Polymorphist Class Sounds
 //=======================================================================
-
-//Polymorphist Sounds
-Polymorphist/Abilities/Nopower POLYNOPOW
-Polymorphist/Weapons/Fire DS12GFR
-Polymorphist/Weapons/Cock DS12GCK
-
-
-// Polymorph projectile
-Polymorphist/Abilities/Polymorph 	POLYMORP
-Polymorphist/Abilities/Unpolymorph  POLYUNMO
-
-PolymorphistLowPain1	POLYPAIN
-PolymorphistLowPain2	POLYPAI2
-PolymorphistLowPain3	POLYPA75
-
-$random PolymorphistLowPain { PolymorphistLowPain1 PolymorphistLowPain2 PolymorphistLowPain3 } 
-
-PolymorphistMedPain1	POLYPA50
-
-$random PolymorphistMedPain { PolymorphistLowPain2 PolymorphistLowPain3 PolymorphistMedPain1 } 
-
-PolymorphistHighPain1	POLYPA25
-
-$random PolymorphistHighPain { PolymorphistMedPain1 PolymorphistHighPain1 } 
-
-$playeralias	Polymorphist	male	*death			PolymorphistDeath
-$playersound	Polymorphist	male	*xdeath			POLYGIB
-$playersound	Polymorphist	male	*falling		POLYFALL
-$playeralias	Polymorphist	male	*pain100		PolymorphistLowPain
-$playeralias	Polymorphist	male	*pain75			PolymorphistMedPain
-$playeralias	Polymorphist	male	*pain50			PolymorphistMedPain
-$playeralias	Polymorphist	male	*pain25			PolymorphistHighPain
-$playersound	Polymorphist	male	*usefail		POLYNOWA
-$playersound	Polymorphist	male	*land			POLYLAND		
-$playersound    Polymorphist    male    *jump   		POLYJUMP
-$playersound	Polymorphist 	male	*gasp			POLYGASP
-$playersound	Polymorphist	male	*dive			WATR_UN
-$playersound	Polymorphist    male	*surface		WATR_OUT
-
 
 // CHICKEN AND PIG ACTOR SOUNDS FOR POLYMORPH
 
@@ -434,33 +414,49 @@ PigPlayerThink                  dspigsql
 PigPain                         dspigpai
 PigDeath                        dspigdth
 
+Polymorphist/Weapons/Fire DS12GFR
+Polymorphist/Weapons/Cock DS12GCK
+
+PolymorphistLowPain1	POLYPAIN
+PolymorphistLowPain2	POLYPAI2
+PolymorphistLowPain3	POLYPA75
+PolymorphistMedPain1	POLYPA50
+PolymorphistHighPain1	POLYPA25
+
+$random Polymorphist/Player/LowPain { PolymorphistLowPain1 PolymorphistLowPain2 PolymorphistLowPain3 } 
+$random Polymorphist/Player/MedPain { PolymorphistLowPain2 PolymorphistLowPain3 PolymorphistMedPain1 } 
+$random Polymorphist/Player/HighPain { PolymorphistMedPain1 PolymorphistHighPain1 } 
+
+$playeralias	Polymorphist	male	*death			PolymorphistDeath
+$playersound	Polymorphist	male	*xdeath			POLYGIB
+$playersound	Polymorphist	male	*falling		POLYFALL
+$playeralias	Polymorphist	male	*pain100		Polymorphist/Player/LowPain
+$playeralias	Polymorphist	male	*pain75			Polymorphist/Player/MedPain
+$playeralias	Polymorphist	male	*pain50			Polymorphist/Player/MedPain
+$playeralias	Polymorphist	male	*pain25			Polymorphist/Player/HighPain 
+$playersound	Polymorphist	male	*usefail		POLYNOWA
+$playersound	Polymorphist	male	*land			POLYLAND		
+$playersound    Polymorphist    male    *jump   		POLYJUMP
+$playersound	Polymorphist 	male	*gasp			POLYGASP
+$playersound	Polymorphist	male	*dive			WATR_UN
+$playersound	Polymorphist    male	*surface		WATR_OUT
 //=======================================================================
 // Scouter Class Sounds
 //=======================================================================
 
-//Scouter Sounds 
-KnifeHitThing	DSKNIFE
-KnifeHitWall	DSKNIFE3	
-KnifeMiss		DSKNIFE2
-
-//Uh, Jetpack!!
-JetpackGo		DSJPKYES
-JetpackDie		DSJPKNO
-JetpackExplode	SCOUJEXP
-
-//Teehee
-Radar			DSRADAR
-
+Scouter/Knife/HitThing	DSKNIFE
+Scouter/Knife/HitWall	DSKNIFE3	
+Scouter/Knife/Miss		DSKNIFE2
 
 ScoutDeath1 SCOUDETH
 ScoutDeath2 SCOUDTH2
 ScoutDeath3 SCOUDTH3
-$random ScoutDeath { ScoutDeath1 ScoutDeath2 ScoutDeath3 }
-
 ScouterLowPain1 SCOUPAIN
 ScouterMedPain1 SCOUPA75
 ScouterMedPain2 SCOUPA50
 ScouterHighPain2	SCOUPA25
+
+$random ScoutDeath { ScoutDeath1 ScoutDeath2 ScoutDeath3 }
 $random ScouterLowPain { ScouterLowPain1 ScouterMedPain1 } 
 $random ScouterMedPain { ScouterLowPain1 ScouterMedPain1 ScouterMedPain2 } 
 $random ScouterHighPain { ScouterMedPain2 ScouterHighPain2 } 
@@ -484,15 +480,15 @@ $playersound	Scouter male	*gasp		SCOUGASP
 //Tactician_Pipebombs
 weapons/pbbounce		dspipbnc
 weapons/pbthrow		        dspipthr
-weapons/pbarm		        dspiparm
+weapons/pbarm		        dspiparm 
 weapons/explode1	        dspipex1
 weapons/explode2	        dspipex2
 weapons/explode3	        dspipex3
 weapons/explode4	        dspipex4
-$random weapons/explode  { weapons/explode1 weapons/explode2 weapons/explode3 weapons/explode4 }
+$random weapons/explode  { weapons/explode1 weapons/explode2  weapons/explode3 weapons/explode4	 }
 
 //Tactician_Machinegun
-weapons/Machinegun	        DSMCGUNF
+Tactician/Machinegun	        DSMCGUNF
 
 //Tactician SentryGun
 Sentry/Active	DSSENTID
@@ -500,37 +496,27 @@ Sentry/Death	DSSENTDI
 Sentry/Attack	DSSENTFI
 $limit Sentry/Attack	0
 
-//Mines
-MINE001		MINE001
-MINE002		MINE002
-
-TacticianLowPain1	TACTPAIN
-TacticianLowPain2	TACTPAI2
-
-$random TacticianLowPain { TacticianLowPain1 TacticianLowPain2 } 
-
-TacticianMedPain1	TACTPA75
-TacticianMedPain2	TACTPA50
-
-$random TacticianMedPain { TacticianLowPain2 TacticianMedPain1 TacticianMedPain2} 
-
-TacticianHighPain1	TACTPA25
-
-$random TacticianHighPain { TacticianMedPain2 TacticianHighPain1 } 
-
 TacticianDeath1 TACTDETH
 TacticianDeath2 TACTDTH2
 TacticianDeath3 TACTDTH3
+TacticianLowPain1	TACTPAIN
+TacticianLowPain2	TACTPAI2
+TacticianMedPain1	TACTPA75
+TacticianMedPain2	TACTPA50
+TacticianHighPain1	TACTPA25
 
-$random TacticianDeath {  TacticianDeath1 TacticianDeath2 TacticianDeath3	} 
+$random Tactician/Player/LowPain{ TacticianLowPain1 TacticianLowPain2 }  
+$random Tactician/Player/MedPain  { TacticianLowPain2 TacticianMedPain1 TacticianMedPain2 } 
+$random Tactician/Player/HighPain { TacticianMedPain2 TacticianHighPain1 } 
+$random Tactician/Player/Death { TacticianDeath1 TacticianDeath2 TacticianDeath3 } 
 
-$playeralias	Tactician	male	*death			TacticianDeath
+$playeralias	Tactician	male	*death			Tactician/Player/Death 
 $playersound	Tactician	male	*death-drowning	TACTDRWN
 $playersound	Tactician	male	*falling		TACTFALL
-$playeralias	Tactician	male	*pain100		TacticianLowPain
-$playeralias	Tactician	male	*pain75			TacticianLowPain
-$playeralias	Tactician	male	*pain50			TacticianMedPain
-$playeralias	Tactician	male	*pain25			TacticianHighPain
+$playeralias	Tactician	male	*pain100		Tactician/Player/LowPain
+$playeralias	Tactician	male	*pain75			Tactician/Player/LowPain
+$playeralias	Tactician	male	*pain50			Tactician/Player/MedPain
+$playeralias	Tactician	male	*pain25			 Tactician/Player/HighPain
 $playeralias	Tactician	male	*usefail		TACTOOF
 $playeralias	Tactician	male	*land			TACTOOF
 $playersound    Tactician 	male    *jump   		TACTJUMP
@@ -543,32 +529,23 @@ $playersound	Tactician 	male	*surface		WATR_OUT
 // Terminator Class Sounds
 //=======================================================================
 
+Terminator/Player/Taunt    TERMTAUN
+
 TerminatorLowPain1	TERMPAIN
 TerminatorLowPain2	TERMPA75
-Terminator/Taunt    TERMTAUN
-
-Airdodge1 TAIRDOD1
-Airdodge2 TAIRDOD2
-Airdodge3 TAIRDOD3
-$random Terminator/Passives/Airdodge { Airdodge1 Airdodge2 Airdodge3 } 
-
-$random TerminatorLowPain { TerminatorLowPain1 TerminatorLowPain2 } 
-
 TerminatorMedPain1	TERMPA50
-
-$random TerminatorMedPain { TerminatorLowPain2 TerminatorMedPain1 } 
-
 TerminatorHighPain1	TERMPA25
-
-$random TerminatorHighPain { TerminatorMedPain1 TerminatorHighPain1 } 
+$random Terminator/Player/LowPain { TerminatorLowPain1 TerminatorLowPain2 }  
+$random Terminator/Player/MedPain { TerminatorLowPain2 TerminatorMedPain1 } 
+$random Terminator/Player/HighPain { TerminatorMedPain1 TerminatorHighPain1 } 
 
 //Terminator Sounds
 $playersound		Terminator		male	*death		TERMDETH
 $playersound		Terminator		male	*xdeath		TERMDETH
-$playersound		Terminator		male	*pain100	TerminatorLowPain
-$playersound		Terminator		male	*pain75		TerminatorLowPain
-$playersound		Terminator		male	*pain50		TerminatorMedPain
-$playersound		Terminator		male	*pain25		TerminatorHighPain1
+$playersound		Terminator		male	*pain100	Terminator/Player/LowPain
+$playersound		Terminator		male	*pain75		Terminator/Player/MedPain
+$playersound		Terminator		male	*pain50		Terminator/Player/MedPain
+$playersound		Terminator		male	*pain25		Terminator/Player/HighPain
 $playersound		Terminator		male	*land		TERMOOF
 $playersound		Terminator		male	*usefail	TERMNOWA
 $playersound        Terminator      male    *jump       TERMJUMP
@@ -584,7 +561,7 @@ weapons/explode1	        dsboomx1
 weapons/explode2	        dsboomx2
 weapons/explode3	        dsboomx3
 weapons/explode4	        dsboomx4
-$random weapons/explode  { weapons/explode1 weapons/explode2 weapons/explode3 weapons/explode4 }
+$random weapons/explode  { weapons/explode1 weapons/explode2  weapons/explode3	 weapons/explode4 }
 
 //Devastator sounds
 weapons/devshot dsdevsht
@@ -634,11 +611,30 @@ $random ZedekTaunt { ZedekTaunt1 ZedekTaunt2 ZedekTaunt3 ZedekTaunt4}
 
 //=======================================================================
 
+//New custom player sounds because it sounded funny
+
+Player/Fall/Water { FALLWATR FALLWAT2 FALLWAT3 }
+Player/Dead/LightFall { LIGHFAL1 LIGHFAL2 LIGHFAL3 }
+Player/Dead/AverageFall { AVERFAL1 AVERFAL2 AVERFAL3 }
+Player/Dead/HardFall { HARDFAL1 HARDFAL2 HARDFAL3 }
+Player/Dead/BlownFall { BLOWFAL1 BLOWFAL2 BLOWFAL3 BLOWFAL4 }
+Player/BlownAway/PushedStart BLOWBAC1
+Player/BlownAway/PushedIdle BLOWBAC1
+Player/BlownAway/FallingStart BLOWFAL1
+Player/BlownAway/FallingIdle BLOWFAL2
+Player/BlownAway/ImpactWallStart ROCKEXPS
+Player/BlownAway/ImpactWallSecond ROCKEXPM
+Player/BlownAway/ImpactWallFinish ROCKEXPE
+$random Player/Metal/Fall { METAFAL1 METAFAL2 }
+
+//Whenever we defined objects
+Objects/Push OBJEPUSH
+
 //DELICIOUS GIBS
 splash/gib1 DSGIBLD1
 splash/gib2 DSGIBLD2
 splash/gib3 DSGIBLD3
-$random splash/gibs { splash/gib1 splash/gib2 splash/gib3 }
+$random splash/gibs { splash/gib1 splash/gib2 splash/gib3 GIBSHIT}
 
 //Splashes for liquid flats
 splash/hot					dshtsiz
@@ -658,7 +654,14 @@ $RANDOM splash/blooddrop { splash/blood1 splash/blood2 splash/bloodsmall1 splash
 njmt						dsempty
 
 //Bullet ricochet sounds
-$random weapons/ricochet { weapons/ricochet1 weapons/ricochet2 weapons/ricochet3 weapons/ricochet4 weapons/ricochet5 weapons/ricochet6 weapons/ricochet7 }
+$random Bullets/Passby { BULLFLY1 BULLFLY2 BULLFLY3 BULLFLY4 }
+$random Bullets/Distance { BULLDIST1 BULLDIST2 BULLDIST3 }
+$random Bullets/Impact/Flesh { FLESIMP1 FLESIMP2 FLESIMP3 FLESIMP4 FLESIMP5 FLESIMP6 FLESIMP7 FLESIMP8 FLESIMP9 }
+$random Bullets/Impact/Armor { ARMOIMP1 ARMOIMP2 ARMOIMP3 ARMOIMP4 }
+$random Bullets/Impact/Water { WATRIMP1 WATRIMP2 WATRIMP3 WATRIMP4 WATRIMP5 WATRIMP6 WATRIMP7 }
+
+
+$random weapons/ricochet { weapons/ricochet1 weapons/ricochet2 weapons/ricochet3 weapons/ricochet4 weapons/ricochet5 weapons/ricochet6 weapons/ricochet7 BULLRICO1 BULLRICO2 BULLRICO3 }
 $limit weapons/ricochet 0
 weapons/ricochet1	DSRICO1
 weapons/ricochet2	DSRICO2
@@ -773,6 +776,13 @@ floor/wood02	dswood2
 floor/wood03	dswood3
 floor/wood04	dswood4
 $limit floor/wood 1
+
+//Decorations
+Fountain/Loop	DSWFOUNT
+DSCHAFIR DSCHAFIR
+stone/break		wallbrk
+TOILET1      TOILET1
+BREAK1       BREAK1
 
 //Map Sounds
 Glass				dsglass

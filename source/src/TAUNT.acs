@@ -19,19 +19,19 @@ script "HNS_Taunt" (int hTaunt, int sTaunt) NET CLIENTSIDE
 				GiveActorInventory(pNum, "Vanishing", 15);
 			break;
 			case CLASS_BLAZER:
-				GiveActorInventory(pNum, "lowVanishingPool", 15);
+				GiveActorInventory(pNum, "lowVanishingPool", 5);
 			break;
 			case CLASS_GUARDIAN:
-				GiveActorInventory(pNum, "medVanishingPool", 15);
+				GiveActorInventory(pNum, "lowVanishingPool", 10);
 			break;
 			case CLASS_ILLUSIONIST:
-				GiveActorInventory(pNum, "lowVanishingPool", 15);
+				GiveActorInventory(pNum, "medVanishingPool", 15);
 			break;
 			case CLASS_ROCKETEER:
 				GiveActorInventory(pNum, "medVanishingPool", 15);
 			break;
 			case CLASS_TELEPORTER:
-				GiveActorInventory(pNum, "lowVanishingPool", 15);
+				GiveActorInventory(pNum, "lowVanishingPool", 5);
 			break;
 		}
 		Delay(100);

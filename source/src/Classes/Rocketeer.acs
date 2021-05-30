@@ -34,24 +34,47 @@ script "actorSlowed" (void)
 	{
 		int chance = random(0,100);
 	
-		if (chance >= 66)
+		if (chance >= 55)
 		{
 			SetFont("BIGFONT");
+
+			CreateTranslation (90, 160:167=192:202, 96:111=192:202, 128:143=192:202, 152:159=192:202, 48:79=192:202);
+			CreateTranslation (91, 160:167=192:204, 96:111=192:204, 128:143=192:204, 152:159=192:204, 48:79=192:204);
+			CreateTranslation (92, 160:167=192:207, 96:111=192:207, 128:143=192:207, 152:159=192:207, 48:79=192:207);
+			CreateTranslation (93, 160:167=194:207, 96:111=194:207, 128:143=194:207, 152:159=194:207, 48:79=194:207);
+			CreateTranslation (94, 160:167=196:207, 96:111=196:207, 128:143=196:207, 152:159=196:207, 48:79=196:207);
+			CreateTranslation (95, 160:167=198:207, 96:111=198:207, 128:143=198:207, 152:159=198:207, 48:79=198:207);
+			CreateTranslation (96, 160:167=160:167, 96:111=96:111, 128:143=128:143, 152:159=152:159, 48:79=48:79);
 			SetActorProperty(0, APROP_Speed, 0.25);
+			Thing_SetTranslation (0, 90);
 			HudMessage(s:"Chilled"; HUDMSG_PLAIN, 0, CR_RED, 0.5, 0.5, 3.0, 1.0);
+			//SetActorProperty(0,APROP_RenderStyle,STYLE_Stencil);
+			//SetActorProperty(0, APROP_StencilColor, 0X9999ff);
 			FadeTo(210, 230, 255, 0.60, 0.5);
 			Delay(17);
 			FadeTo(210, 2230, 255, 0.50, 0.5);
+			Thing_SetTranslation (0, 91);
+			//SetActorProperty(0, APROP_StencilColor, 0X8080ff);
 			Delay(17);
 			FadeTo(210, 2230, 255, 0.40, 0.5);
+			Thing_SetTranslation (0, 92);
+			//SetActorProperty(0, APROP_StencilColor, 0X6666ff);
 			Delay(17);
 			FadeTo(210, 230, 255, 0.30, 0.5);
+			Thing_SetTranslation (0, 93);
+			//SetActorProperty(0, APROP_StencilColor, 0X3333ff);
 			Delay(17);
-			FadeTo(210, 2230, 255, 0.20, 0.5);
+			FadeTo(210, 2230, 255, 0.20, 0.5);	
+			Thing_SetTranslation (0, 94);
+			//SetActorProperty(0, APROP_StencilColor, 0X4d4dff);
 			Delay(17);
 			FadeTo(210, 2230, 255, 0.10, 0.5);
+			Thing_SetTranslation (0, 95);
+			//SetActorProperty(0, APROP_StencilColor, 0X3333ff);
 			Delay(17);
 			FadeTo(210, 2230, 255, 0.0, 0.5);
+			Thing_SetTranslation (0, 96);
+			//SetActorProperty(0, APROP_RenderStyle, STYLE_Normal);
 			SetActorProperty(0, APROP_Speed, 1.00);
 		}
 	}

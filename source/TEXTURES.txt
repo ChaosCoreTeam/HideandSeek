@@ -1,93 +1,1364 @@
-//main hud gfx
-graphic hudleft, 158, 66 { XScale 2.0 YScale 2.0 Patch hudleft, 0, 0 }
-graphic hudritbb, 158, 66 { XScale 2.0 YScale 2.0 Patch hudritbb, 0, 0 }
-graphic hudritgb, 158, 66 { XScale 2.0 YScale 2.0 Patch hudritgb, 0, 0 }
-graphic hudritgg, 158, 66 { XScale 2.0 YScale 2.0 Patch hudritgg, 0, 0 }
-graphic hudbar01, 100, 24 { XScale 2.0 YScale 2.0 Patch hudbar01, 0, 0 }
-graphic hudbar02, 100, 24 { XScale 2.0 YScale 2.0 Patch hudbar02, 0, 0 }
-graphic hudbar03, 77, 24 { XScale 2.0 YScale 2.0 Patch hudbar03, 0, 0 }
-graphic hudbar04, 77, 24 { XScale 2.0 YScale 2.0 Patch hudbar04, 0, 0 }
-graphic hudbar05, 100, 24 { XScale 2.0 YScale 2.0 Patch hudbar05, 0, 0 }
-graphic hudbar11, 100, 24 { XScale 2.0 YScale 2.0 Patch hudbar11, 0, 0 }
-graphic hudbar12, 100, 24 { XScale 2.0 YScale 2.0 Patch hudbar12, 0, 0 }
-graphic hudbar13, 77, 24 { XScale 2.0 YScale 2.0 Patch hudbar13, 0, 0 }
-graphic hudbar14, 77, 24 { XScale 2.0 YScale 2.0 Patch hudbar14, 0, 0 }
-graphic hudbar15, 100, 24 { XScale 2.0 YScale 2.0 Patch hudbar15, 0, 0 }
-graphic hudabil, 123, 37 { XScale 2.0 YScale 2.0 Patch hudabil, 0, 0 }
-graphic hudabrd, 142, 40 { XScale 2.0 YScale 2.0 Patch hudabrd, 0, 0 }
-graphic dashbar0, 117, 38 { XScale 2.0 YScale 2.0 Patch dashbar0, 0, 0 }
-graphic dashbar1, 117, 38 { XScale 2.0 YScale 2.0 Patch dashbar1, 0, 0 }
-graphic dashbar2, 117, 38 { XScale 2.0 YScale 2.0 Patch dashbar2, 0, 0 }
-graphic dashbar3, 117, 38 { XScale 2.0 YScale 2.0 Patch dashbar3, 0, 0 }
-//graphic hudradar, 158, 158 { XScale 2.0 YScale 2.0 Patch hudradar, 0, 0 }
-graphic hudnone, 48, 28 { XScale 2.0 YScale 2.0 Patch hudnone, 0, 0 }
-graphic hudammo, 48, 28 { XScale 2.0 YScale 2.0 Patch hudammo, 0, 0 }
-graphic hudblue, 48, 28 { XScale 2.0 YScale 2.0 Patch hudblue, 0, 0 }
-graphic hudbserk, 48, 28 { XScale 2.0 YScale 2.0 Patch hudbserk, 0, 0 }
-graphic hudcell, 48, 28 { XScale 2.0 YScale 2.0 Patch hudcell, 0, 0 }
-graphic hudcellp, 48, 28 { XScale 2.0 YScale 2.0 Patch hudcellp, 0, 0 }
-graphic hudclip, 48, 28 { XScale 2.0 YScale 2.0 Patch hudclip, 0, 0 }
-graphic hudgreen, 48, 28 { XScale 2.0 YScale 2.0 Patch hudgreen, 0, 0 }
-graphic hudgren, 48, 28 { XScale 2.0 YScale 2.0 Patch hudgren, 0, 0 }
-graphic hudknife, 48, 28 { XScale 2.0 YScale 2.0 Patch hudknife, 0, 0 }
-graphic hudmdkit, 48, 28 { XScale 2.0 YScale 2.0 Patch hudmdkit, 0, 0 }
-graphic hudrockt, 48, 28 { XScale 2.0 YScale 2.0 Patch hudrockt, 0, 0 }
-graphic hudshbox, 48, 28 { XScale 2.0 YScale 2.0 Patch hudshbox, 0, 0 }
-graphic hudshell, 48, 28 { XScale 2.0 YScale 2.0 Patch hudshell, 0, 0 }
-graphic hudthrow, 48, 28 { XScale 2.0 YScale 2.0 Patch hudthrow, 0, 0 }
-graphic hudjetpk, 48, 28 { XScale 2.0 YScale 2.0 Patch hudjetpk, 0, 0 }
-graphic hudchick, 48, 28 { XScale 2.0 YScale 2.0 Patch hudchick, 0, 0 }
-graphic hudmin, 80, 80 { XScale 3.0 YScale 3.0 Patch hudmin, 0, 0 }
-graphic hudserp, 80, 80 { XScale 3.0 YScale 3.0 Patch hudserp, 0, 0 }
-graphic huddash, 19, 23 { XScale 2.0 YScale 2.0 Patch huddash, 0, 0 }
-graphic hudafrit, 80, 80 { XScale 3.0 YScale 3.0 Patch hudafrit, 0, 0 }
-graphic hudsmoke, 25, 31 { XScale 3.0 YScale 3.0 Patch hudsmoke, 0, 0 }
-//font hud gfx
-graphic hnsfont0, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont0, 0, 0 }
-graphic hnsfont1, 7, 12 { XScale 2.0 YScale 2.0 Patch hnsfont1, 0, 0 }
-graphic hnsfont2, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont2, 0, 0 }
-graphic hnsfont3, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont3, 0, 0 }
-graphic hnsfont4, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont4, 0, 0 }
-graphic hnsfont5, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont5, 0, 0 }
-graphic hnsfont6, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont6, 0, 0 }
-graphic hnsfont7, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont7, 0, 0 }
-graphic hnsfont8, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont8, 0, 0 }
-graphic hnsfont9, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfont9, 0, 0 }
-graphic hnsfonta, 15, 12 { XScale 2.0 YScale 2.0 Patch hnsfonta, 0, 0 }
-graphic hnsfontb, 15, 12 { XScale 2.0 YScale 2.0 Patch hnsfontb, 0, 0 }
-graphic hnsfontc, 14, 12 { XScale 2.0 YScale 2.0 Patch hnsfontc, 0, 0 }
-graphic hnsfontd, 15, 12 { XScale 2.0 YScale 2.0 Patch hnsfontd, 0, 0 }
-graphic hnsfonte, 14, 12 { XScale 2.0 YScale 2.0 Patch hnsfonte, 0, 0 }
-graphic hnsfontf, 12, 12 { XScale 2.0 YScale 2.0 Patch hnsfontf, 0, 0 }
-graphic hnsfontg, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfontg, 0, 0 }
-graphic hnsfonth, 15, 12 { XScale 2.0 YScale 2.0 Patch hnsfonth, 0, 0 }
-graphic hnsfonti, 6, 12 { XScale 2.0 YScale 2.0 Patch hnsfonti, 0, 0 }
-graphic hnsfontj, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfontj, 0, 0 }
-graphic hnsfontk, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfontk, 0, 0 }
-graphic hnsfontl, 11, 12 { XScale 2.0 YScale 2.0 Patch hnsfontl, 0, 0 }
-graphic hnsfontm, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfontm, 0, 0 }
-graphic hnsfontn, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfontn, 0, 0 }
-graphic hnsfonto, 17, 12 { XScale 2.0 YScale 2.0 Patch hnsfonto, 0, 0 }
-graphic hnsfontp, 14, 12 { XScale 2.0 YScale 2.0 Patch hnsfontp, 0, 0 }
-graphic hnsfontq, 17, 12 { XScale 2.0 YScale 2.0 Patch hnsfontq, 0, 0 }
-graphic hnsfontr, 15, 12 { XScale 2.0 YScale 2.0 Patch hnsfontr, 0, 0 }
-graphic hnsfonts, 15, 12 { XScale 2.0 YScale 2.0 Patch hnsfonts, 0, 0 }
-graphic hnsfontt, 12, 12 { XScale 2.0 YScale 2.0 Patch hnsfontt, 0, 0 }
-graphic hnsfontu, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfontu, 0, 0 }
-graphic hnsfontv, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfontv, 0, 0 }
-graphic hnsfontw, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfontw, 0, 0 }
-graphic hnsfontx, 14, 12 { XScale 2.0 YScale 2.0 Patch hnsfontx, 0, 0 }
-graphic hnsfonty, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfonty, 0, 0 }
-graphic hnsfontz, 16, 12 { XScale 2.0 YScale 2.0 Patch hnsfontz, 0, 0 }
-graphic hnsslash, 13, 12 { XScale 2.0 YScale 2.0 Patch hnsslash, 0, 0 }
-graphic hnscolon, 5, 12 { XScale 2.0 YScale 2.0 Patch hnscolon, 0, 0 }
-graphic hnsdash, 6, 12 { XScale 2.0 YScale 2.0 Patch hnsdash, 0, 0 }
-graphic radab0, 16, 16 { XScale 1.5 YScale 1.5 Patch radab0, 0, 0 }
-graphic radac0, 16, 16 { XScale 1.5 YScale 1.5 Patch radac0, 0, 0 }
-//Kuchi's Sky Texture
-texture tntsky, 512, 128 { Patch DOWNITE, 0, 0 Patch DOSNITE, 256, 0 }
+// Texture definitions generated by SLADE3
+// on Mon Apr  5 03:51:43 2021
 
-//Berserker
+Graphic "HUDLEFT", 158, 66
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDLEFT", 0, 0
+}
+
+Graphic "HUDRITBB", 158, 66
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDRITBB", 0, 0
+}
+
+Graphic "HUDRITGB", 158, 66
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDRITGB", 0, 0
+}
+
+Graphic "HUDRITGG", 158, 66
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDRITGG", 0, 0
+}
+
+Graphic "HUDLTPGG", 158, 66
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDLTPGG", 0, 0
+}
+
+Graphic "HUDBAR01", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDBAR01", 0, 0
+}
+
+Graphic "HUDBAR02", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDBAR02", 0, 0
+}
+
+Graphic "HUDBAR03", 77, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDBAR03", 0, 0
+}
+
+Graphic "HUDBAR04", 77, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDBAR04", 0, 0
+}
+
+Graphic "HUDBAR05", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDBAR05", 0, 0
+}
+
+Graphic "HUDBAR11", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDBAR11", 0, 0
+}
+
+Graphic "HUDBAR12", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDBAR12", 0, 0
+}
+
+Graphic "HUDBAR13", 77, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDBAR13", 0, 0
+}
+
+Graphic "HUDBAR14", 77, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDBAR14", 0, 0
+}
+
+Graphic "HUDBAR15", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDBAR15", 0, 0
+}
+
+Graphic "HUDABIL", 123, 37
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDABIL", 0, 0
+}
+
+Graphic "HUDABRD", 142, 40
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDABRD", 0, 0
+}
+
+Graphic "HUDSLTPL", 158, 35
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDSLTPL", 0, 0
+}
+
+Graphic "HUDSLBTL", 158, 35
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDSLBTL", 0, 0
+}
+
+Graphic "HUDSBRBL", 117, 38
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDSBRBL", 0, 0
+}
+
+Graphic "HUDSBRTL", 117, 38
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDSBRTL", 0, 0
+}
+
+Graphic "DASHBAR0", 117, 38
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "DASHBAR0", 0, 0
+}
+
+Graphic "DASHBAR1", 117, 38
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "DASHBAR1", 0, 0
+}
+
+Graphic "DASHBAR2", 117, 38
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "DASHBAR2", 0, 0
+}
+
+Graphic "DASHBAR3", 117, 38
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "DASHBAR3", 0, 0
+}
+
+Graphic "HPINBRT0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HPINBRT0", 0, 0
+}
+
+Graphic "HPINBRT1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HPINBRT1", 0, 0
+}
+
+Graphic "HPINBRTA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HPINBRTA", 0, 0
+}
+
+Graphic "HPINBRB0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HPINBRB0", 0, 0
+}
+
+Graphic "HPINBRB1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HPINBRB1", 0, 0
+}
+
+Graphic "HPINBRBA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HPINBRBA", 0, 0
+}
+
+Graphic "HPINLFT0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HPINLFT0", 0, 0
+}
+
+Graphic "HPINLFT1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HPINLFT1", 0, 0
+}
+
+Graphic "HPINLFTA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HPINLFTA", 0, 0
+}
+
+Graphic "HPINACT0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HPINACT0", 0, 0
+}
+
+Graphic "HPINACT1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HPINACT1", 0, 0
+}
+
+Graphic "HPINACTA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HPINACTA", 0, 0
+}
+
+Graphic "HREDBRT0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HREDBRT0", 0, 0
+}
+
+Graphic "HREDBRT1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HREDBRT1", 0, 0
+}
+
+Graphic "HREDBRTA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HREDBRTA", 0, 0
+}
+
+Graphic "HREDTBR0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HREDTBR0", 0, 0
+}
+
+Graphic "HREDTBR1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HREDTBR1", 0, 0
+}
+
+Graphic "HREDTBRA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HREDTBRA", 0, 0
+}
+
+Graphic "HREDLFT0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HREDLFT0", 0, 0
+}
+
+Graphic "HREDLFT1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HREDLFT1", 0, 0
+}
+
+Graphic "HREDLFTA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HREDLFTA", 0, 0
+}
+
+Graphic "HREDBRB0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HREDBRB0", 0, 0
+}
+
+Graphic "HREDBRB1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HREDBRB1", 0, 0
+}
+
+Graphic "HREDBRBA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HREDBRBA", 0, 0
+}
+
+Graphic "HREDACT0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HREDACT0", 0, 0
+}
+
+Graphic "HREDACT1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HREDACT1", 0, 0
+}
+
+Graphic "HREDACTA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HREDACTA", 0, 0
+}
+
+Graphic "HBLUBRT0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HBLUBRT0", 0, 0
+}
+
+Graphic "HBLUBRT1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HBLUBRT1", 0, 0
+}
+
+Graphic "HBLUBRTA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HBLUBRTA", 0, 0
+}
+
+Graphic "HBLULFT0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HBLULFT0", 0, 0
+}
+
+Graphic "HBLULFTA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HBLULFTA", 0, 0
+}
+
+Graphic "HBLUACT0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HBLUACT0", 0, 0
+}
+
+Graphic "HBLUACT1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HBLUACT1", 0, 0
+}
+
+Graphic "HBLUACTA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HBLUACTA", 0, 0
+}
+
+Graphic "HBLUBRB0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HBLUBRB0", 0, 0
+}
+
+Graphic "HBLUBRBA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HBLUBRBA", 0, 0
+}
+
+Graphic "HBLULFB0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HBLULFB0", 0, 0
+}
+
+Graphic "HBLULFBA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HBLULFBA", 0, 0
+}
+
+Graphic "HGRNBRT0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRNBRT0", 0, 0
+}
+
+Graphic "HGRNBRT1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRNBRT1", 0, 0
+}
+
+Graphic "HGRNBRTA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRNBRTA", 0, 0
+}
+
+Graphic "HGRNBRBA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRNBRBA", 0, 0
+}
+
+Graphic "HGRNBRB0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRNBRB0", 0, 0
+}
+
+Graphic "HGRNLFT0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRNLFT0", 0, 0
+}
+
+Graphic "HGRNLFTA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRNLFTA", 0, 0
+}
+
+Graphic "HGRNLFB0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRNLFB0", 0, 0
+}
+
+Graphic "HGRNLFBA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRNLFBA", 0, 0
+}
+
+Graphic "HGRNACT0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRNACT0", 0, 0
+}
+
+Graphic "HGRNACT1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRNACT1", 0, 0
+}
+
+Graphic "HGRNACTA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRNACTA", 0, 0
+}
+
+Graphic "HYELBRT0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HYELBRT0", 0, 0
+}
+
+Graphic "HYELBRT1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HYELBRT1", 0, 0
+}
+
+Graphic "HYELBRB0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HYELBRB0", 0, 0
+}
+
+Graphic "HYELBRB1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HYELBRB1", 0, 0
+}
+
+Graphic "HYLULFB0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HYLULFB0", 0, 0
+}
+
+Graphic "HYLULFB1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HYLULFB1", 0, 0
+}
+
+Graphic "HYELACT0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HYELACT0", 0, 0
+}
+
+Graphic "HYELACT1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HYELACT1", 0, 0
+}
+
+Graphic "HGREBRT0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGREBRT0", 0, 0
+}
+
+Graphic "HGREBRT1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGREBRT1", 0, 0
+}
+
+Graphic "HGREBRTA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGREBRTA", 0, 0
+}
+
+Graphic "HGREBRTB", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGREBRTB", 0, 0
+}
+
+Graphic "HGREBRB0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGREBRB0", 0, 0
+}
+
+Graphic "HGREBRB1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGREBRB1", 0, 0
+}
+
+Graphic "HGREBRBA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGREBRBA", 0, 0
+}
+
+Graphic "HGREBRBB", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGREBRBB", 0, 0
+}
+
+Graphic "HGRELFB0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRELFB0", 0, 0
+}
+
+Graphic "HGRELFB1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRELFB1", 0, 0
+}
+
+Graphic "HGRELFBA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRELFBA", 0, 0
+}
+
+Graphic "HGRELFBB", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRELFBB", 0, 0
+}
+
+Graphic "HGRELFT0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRELFT0", 0, 0
+}
+
+Graphic "HGRELFT1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRELFT1", 0, 0
+}
+
+Graphic "HGRELFTA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRELFTA", 0, 0
+}
+
+Graphic "HGRELFTB", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGRELFTB", 0, 0
+}
+
+Graphic "HGREACT0", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGREACT0", 0, 0
+}
+
+Graphic "HGREACT1", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGREACT1", 0, 0
+}
+
+Graphic "HGREACTA", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGREACTA", 0, 0
+}
+
+Graphic "HGREACTB", 100, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HGREACTB", 0, 0
+}
+
+Graphic "HUDNONE", 48, 28
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDNONE", 0, 0
+}
+
+Graphic "HUDAMMO", 48, 28
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDAMMO", 0, 0
+}
+
+Graphic "HUDBLUE", 48, 28
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDBLUE", 0, 0
+}
+
+Graphic "HUDBSERK", 48, 28
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDBSERK", 0, 0
+}
+
+Graphic "HUDCELL", 48, 28
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDCELL", 0, 0
+}
+
+Graphic "HUDCELLP", 48, 28
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDCELLP", 0, 0
+}
+
+Graphic "HUDCLIP", 48, 28
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDCLIP", 0, 0
+}
+
+Graphic "HUDGREEN", 48, 28
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDGREEN", 0, 0
+}
+
+Graphic "HUDGREN", 26, 6
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDGREN", 0, 0
+}
+
+Graphic "HUDKNIFE", 48, 28
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDKNIFE", 0, 0
+}
+
+Graphic "HUDMDKIT", 48, 28
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDMDKIT", 0, 0
+}
+
+Graphic "HUDROCKT", 48, 28
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDROCKT", 0, 0
+}
+
+Graphic "HUDSHBOX", 48, 28
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDSHBOX", 0, 0
+}
+
+Graphic "HUDSHELL", 48, 28
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDSHELL", 0, 0
+}
+
+Graphic "HUDTHROW", 48, 28
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDTHROW", 0, 0
+}
+
+Graphic "HUDJETPK", 48, 28
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDJETPK", 0, 0
+}
+
+Graphic "HUDCHICK", 48, 28
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDCHICK", 0, 0
+}
+
+Graphic "HUDMIN", 80, 80
+{
+	XScale 3.000
+	YScale 3.000
+	Patch "HUDMIN", 0, 0
+}
+
+Graphic "HUDSERP", 80, 80
+{
+	XScale 3.000
+	YScale 3.000
+	Patch "HUDSERP", 0, 0
+}
+
+Graphic "HUDDASH", 19, 23
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDDASH", 0, 0
+}
+
+Graphic "HUDAFRIT", 80, 80
+{
+	XScale 3.000
+	YScale 3.000
+	Patch "HUDAFRIT", 0, 0
+}
+
+Graphic "HUDSMOKE", 25, 31
+{
+	XScale 3.000
+	YScale 3.000
+	Patch "HUDSMOKE", 0, 0
+}
+
+Graphic "HUDSHELD", 26, 36
+{
+	XScale 2.750
+	YScale 2.750
+	Patch "HUDSHELD", 0, 0
+}
+
+Graphic "HUDBLMAN", 28, 38
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDBLMAN", 0, 0
+}
+
+Graphic "HUDGRMAN", 32, 48
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDGRMAN", 0, 0
+}
+
+Graphic "HUDYLMAN", 32, 48
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDYLMAN", 0, 0
+}
+
+Graphic "HUDPNMAN", 32, 48
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDPNMAN", 0, 0
+}
+
+Graphic "HUDRDMAN", 32, 48
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDRDMAN", 0, 0
+}
+
+Graphic "HUDBLLST", 32, 48
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDBLLST", 0, 0
+}
+
+Graphic "HUDDETON", 32, 48
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDDETON", 0, 0
+}
+
+Graphic "HUDVANSH", 96, 56
+{
+	XScale 5.000
+	YScale 5.000
+	Patch "HUDVANSH", 0, 0
+}
+
+Graphic "HUDGUARP", 25, 25
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDGUARP", 0, 0
+}
+
+Graphic "HUDHOOK", 48, 28
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDHOOK", 0, 0
+}
+
+Graphic "HUDTELEF", 32, 48
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDTELEF", 0, 0
+}
+
+Graphic "HUDGLWB", 269, 77
+{
+	XScale 5.000
+	YScale 5.000
+	Patch "HUDGLWB", 0, 0
+}
+
+Graphic "HUDGLWT", 269, 77
+{
+	XScale 5.000
+	YScale 5.000
+	Patch "HUDGLWT", 0, 0
+}
+
+Graphic "HUDICERK", 57, 14
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDICERK", 0, 0
+}
+
+Graphic "HUDROCMI", 32, 48
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDROCMI", 0, 0
+}
+
+Graphic "HUDTECAM", 32, 48
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDTECAM", 0, 0
+}
+
+Graphic "HUDPROXM", 32, 48
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDPROXM", 0, 0
+}
+
+Graphic "HUDGUARM", 24, 24
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HUDGUARM", 0, 0
+}
+
+Graphic "huddash0", 64, 64
+{
+	XScale 4.000
+	YScale 4.000
+	Patch "huddash0", 0, 0
+}
+
+Graphic "huddash1", 64, 64
+{
+	XScale 4.000
+	YScale 4.000
+	Patch "huddash1", 0, 0
+}
+
+Graphic "huddash2", 64, 64
+{
+	XScale 4.000
+	YScale 4.000
+	Patch "huddash2", 0, 0
+}
+
+Graphic "huddash3", 64, 64
+{
+	XScale 4.000
+	YScale 4.000
+	Patch "huddash3", 0, 0
+}
+
+Graphic "hudrecal", 48, 48
+{
+	XScale 4.000
+	YScale 4.000
+	Patch "hudrecal", 0, 0
+}
+
+
+Graphic "HNSFONT0", 11, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONT0", 0, 0
+}
+
+Graphic "HNSFONT1", 7, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONT1", 0, 0
+}
+
+Graphic "HNSFONT2", 11, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONT2", 0, 0
+}
+
+Graphic "HNSFONT3", 11, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONT3", 0, 0
+}
+
+Graphic "HNSFONT4", 11, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONT4", 0, 0
+}
+
+Graphic "HNSFONT5", 11, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONT5", 0, 0
+}
+
+Graphic "HNSFONT6", 11, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONT6", 0, 0
+}
+
+Graphic "HNSFONT7", 11, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONT7", 0, 0
+}
+
+Graphic "HNSFONT8", 11, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONT8", 0, 0
+}
+
+Graphic "HNSFONT9", 11, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONT9", 0, 0
+}
+
+Graphic "HNSFONTA", 15, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTA", 0, 0
+}
+
+Graphic "HNSFONTB", 15, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTB", 0, 0
+}
+
+Graphic "HNSFONTC", 14, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTC", 0, 0
+}
+
+Graphic "HNSFONTD", 15, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTD", 0, 0
+}
+
+Graphic "HNSFONTE", 14, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTE", 0, 0
+}
+
+Graphic "HNSFONTF", 12, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTF", 0, 0
+}
+
+Graphic "HNSFONTG", 16, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTG", 0, 0
+}
+
+Graphic "HNSFONTH", 15, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTH", 0, 0
+}
+
+Graphic "HNSFONTI", 6, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTI", 0, 0
+}
+
+Graphic "HNSFONTJ", 11, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTJ", 0, 0
+}
+
+Graphic "HNSFONTK", 16, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTK", 0, 0
+}
+
+Graphic "HNSFONTL", 11, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTL", 0, 0
+}
+
+Graphic "HNSFONTM", 16, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTM", 0, 0
+}
+
+Graphic "HNSFONTN", 16, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTN", 0, 0
+}
+
+Graphic "HNSFONTO", 17, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTO", 0, 0
+}
+
+Graphic "HNSFONTP", 14, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTP", 0, 0
+}
+
+Graphic "HNSFONTQ", 17, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTQ", 0, 0
+}
+
+Graphic "HNSFONTR", 15, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTR", 0, 0
+}
+
+Graphic "HNSFONTS", 15, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTS", 0, 0
+}
+
+Graphic "HNSFONTT", 12, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTT", 0, 0
+}
+
+Graphic "HNSFONTU", 16, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTU", 0, 0
+}
+
+Graphic "HNSFONTV", 16, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTV", 0, 0
+}
+
+Graphic "HNSFONTW", 16, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTW", 0, 0
+}
+
+Graphic "HNSFONTX", 14, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTX", 0, 0
+}
+
+Graphic "HNSFONTY", 16, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTY", 0, 0
+}
+
+Graphic "HNSFONTZ", 16, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSFONTZ", 0, 0
+}
+
+Graphic "HNSSLASH", 13, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSSLASH", 0, 0
+}
+
+Graphic "HNSCOLON", 5, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSCOLON", 0, 0
+}
+
+Graphic "HNSDASH", 6, 12
+{
+	XScale 2.000
+	YScale 2.000
+	Patch "HNSDASH", 0, 0
+}
+
+Graphic "RADAB0", 16, 16
+{
+	XScale 1.500
+	YScale 1.500
+	Patch "RADAB0", 0, 0
+}
+
+Graphic "RADAC0", 16, 16
+{
+	XScale 1.500
+	YScale 1.500
+	Patch "RADAC0", 0, 0
+}
+
+Graphic "H_ARROW1", 128, 128
+{
+	XScale 8.000
+	YScale 8.000
+	Patch "H_ARROW1", 0, 0
+}
+
+Graphic "H_ARROW2", 128, 128
+{
+	XScale 8.000
+	YScale 8.000
+	Patch "H_ARROW2", 0, 0
+}
+
+Texture "TNTSKY", 512, 128
+{
+	Patch "DOWNITE", 0, 0
+	Patch "DOSNITE", 256, 0
+}
+
 Sprite "BSKRE2E8", 66, 73
 {
 	Offset 33, 69
@@ -231,3 +1502,5 @@ Sprite "BSKRJ5", 66, 73
 	Offset 33, 69
 	Patch "BSKRB5", 0, 0
 }
+
+// End of texture definitions

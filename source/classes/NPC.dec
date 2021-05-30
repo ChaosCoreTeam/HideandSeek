@@ -1,0 +1,48 @@
+ACTOR IllusionistWanderer : Peasant 
+{
+	Species "Seeeker"
+	+CANUSEWALLS
+	+PUSHABLE
+	+THRUSPECIES
+	+STANDSTILL
+   States
+  {
+  Spawn:
+    VSHP A 10 A_Look2
+    Loop
+  See:
+    VSHP AABBCCDD 5 A_Wander
+    Goto Spawn
+  Melee:
+    VSHP E 10 A_FaceTarget
+    VSHP F 8 A_CustomMeleeAttack(2*random[PeasantAttack](1, 5)+2)
+    VSHP E 8
+    Goto See
+  Pain:
+    VSHP G 3
+    VSHP G 3 A_Pain
+    Goto Melee
+  Wound:
+    VSHP G 5
+    VSHP H 10 A_GetHurt
+    VSHP I 6
+    Goto Wound+1
+  Death:
+	VSHP H 10 A_SetTranslucent(1, 0)
+	VSHP I 10 A_PlayerScream
+	VSHP J 10 A_NoBlocking
+	VSHP KLM 10
+	VSHP N -1
+    Stop
+  XDeath:
+	PLAY O 0 A_Stop
+	VSHP O 0 A_SetTranslucent(1, 0)
+	VSHP O 5 A_SpawnItemEx("BlueHumanGibs",0,0,0,0,0,0,0,128)
+	VSHP O 0 A_SkullPop("BlueHeadGib")
+	VSHP P 5 A_XScream
+	VSHP Q 5 A_NoBlocking
+	VSHP RSTUV 5
+	VSHP W -1
+	Stop
+	}
+}

@@ -25,7 +25,7 @@ gender = male
 color = "00 00 00"
 railcolor = "black"
 skin = "base"
-class = "blazer"
+class = "Blazer"
 revealed = true
 chatfrequency = 25
 accuracy = 4
@@ -37,14 +37,33 @@ perception = 4
 } 
 
 {
-name = "\cc[HnS]\cuVanisher"
+name = "\cc[HnS]\cuIllusionist"
 script = DFULTBOT
 chatlump = "chatfiles/vanisher.txt"
 gender = male
 color = "00 00 00"
 railcolor = "black"
 skin = "base"
-class = "vanisher"
+class = "Illusionist"
+revealed = true
+chatfrequency = 25
+accuracy = 4
+intelect = 4
+evade = 4
+anticipation = 4
+reactiontime = 4
+perception = 4
+} 
+
+{
+name = "\cc[HnS]\cuGuardian"
+script = DFULTBOT
+chatlump = "chatfiles/rocketeer.txt"
+gender = male
+color = "00 00 00"
+railcolor = "black"
+skin = "base"
+class = "Guardian"
 revealed = true
 chatfrequency = 25
 accuracy = 4
@@ -63,7 +82,7 @@ gender = male
 color = "00 00 00"
 railcolor = "black"
 skin = "base"
-class = "teleporter"
+class = "Teleporter"
 revealed = true
 chatfrequency = 25
 accuracy = 4
@@ -82,7 +101,7 @@ gender = male
 color = "00 00 00"
 railcolor = "black"
 skin = "base"
-class = "rocketeer"
+class = "Rocketeer"
 revealed = true
 chatfrequency = 25
 accuracy = 4

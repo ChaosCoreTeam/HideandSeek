@@ -14,12 +14,14 @@ ACTOR BerserkerClass : PlayerPawn
 	Player.StartItem "BerserkerFists", 1
 	Player.Startitem "greenarmor", 1
 	player.startitem "isSeeker", 1
+	player.startitem "isBerserker", 1
 	player.startitem "BerserkerFirstCooldown", 999
 	player.startitem "BerserkerSecondCooldown", 999
 	Player.ForwardMove 0.50, 1.25
 	Player.SideMove 0.50, 1.25
 	Player.CrouchSprite "BSKR"
 	Player.JumpZ 12
+	Species "Seeker"
 	limitedtoteam 1
 	damagefactor "rocket", 0
 	var int user_count;
@@ -27,7 +29,7 @@ ACTOR BerserkerClass : PlayerPawn
 	States
 	{
 		Spawn:
-			TNT1 A 0 A_PlaySound("dsjugstp")
+			TNT1 A 0 A_PlaySound("Berserker/Player/Step")
 			BSKR A 35
 			TNT1 A 0 ACS_NamedExecute("regenHealth",0,0)
 		Spawn2:
@@ -45,7 +47,7 @@ ACTOR BerserkerClass : PlayerPawn
 			TNT1 A 0 A_Jump(256, 2)
 			TNT1 A 0 A_SetUserVar("user_count", user_count+1)
 			TNT1 A 0 A_JumpIf(user_count == count, "Jump")
-			TNT1 A 0 A_PlaySound("dsjugstp")
+			TNT1 A 0 A_PlaySound("Berserker/Player/Step")
 			BSKR A 8
 			TNT1 A 0 A_JumpIf(momz != 0, 3)
 			TNT1 A 0 A_SetUserVar("user_count", 0)
@@ -58,7 +60,7 @@ ACTOR BerserkerClass : PlayerPawn
 			TNT1 A 0 A_Jump(256, 2)
 			TNT1 A 0 A_SetUserVar("user_count", user_count+1)
 			TNT1 A 0 A_JumpIf(user_count == count, "Jump")
-			TNT1 A 0 A_PlaySound("dsjugstp")
+			TNT1 A 0 A_PlaySound("Berserker/Player/Step")
 			BSKR C 8
 			TNT1 A 0 A_JumpIf(momz != 0, 3)
 			TNT1 A 0 A_SetUserVar("user_count", 0)
@@ -118,10 +120,10 @@ ACTOR BerserkerFists : Weapon
 			Loop
 		Fire:
 			FPCH E 0 A_JumpIfInventory("FalconPunch",1,2)
-			FPCH E 0 A_PlaysoundEx("BerserkerTaunt","SoundSlot6",0,0)
+			FPCH E 0 A_PlaysoundEx("Berserker/Player/Taunt","SoundSlot6",0,0)
 			FPCH E 0 A_GiveInventory("FalconPunch",1)
 			FPCH E 0 A_Jump(127, 15)
-			FPCH E 1 A_PlaySound("PUNCHMIS")
+			FPCH E 1 A_PlaySound("Berserker/Punch/Miss")
 			FPCH E 1 Offset(-20, 40)
 			FPCH E 1 Offset(-40, 40)
 			FPCH E 1 Offset(-80, 40)
@@ -136,7 +138,7 @@ ACTOR BerserkerFists : Weapon
 			FPCH E 1 Offset(-230, 140) A_Refire
 			FPCH A 0 A_TakeInventory("FalconPunch",1)
 			Goto Ready
-			FPCH F 1 A_PlaySound("PUNCHMIS")
+			FPCH F 1 A_PlaySound("Berserker/Punch/Miss")
 			FPCH F 1 Offset(20, 40)
 			FPCH F 1 Offset(40, 40)
 			FPCH F 1 Offset(80, 40)
@@ -144,7 +146,7 @@ ACTOR BerserkerFists : Weapon
 			FPCH F 1 Offset(160, 40) A_CustomPunch(500, 0, 0, "GauntletPuff", 96)
 			FPCH F 1 Offset(170, 50)
 			FPCH F 1 Offset(180, 60)
-			FPCH F 1 Offset(190, 70)  A_PlaySound("dsjugstp")
+			FPCH F 1 Offset(190, 70)  A_PlaySound("Berserker/Player/Step")
 			FPCH F 1 Offset(200, 80)
 			FPCH F 1 Offset(210, 100)
 			FPCH F 1 Offset(220, 120) 
@@ -213,6 +215,7 @@ ACTOR FloatingShotgun
     }
 }
 
+
 ACTOR BerserkerHammer : Weapon
 {
   Obituary "%o fell victim to %k's hammer time!!!!!!!!!!!!!!!!!!!!!"
@@ -250,7 +253,7 @@ ACTOR GauntletPuff : BulletPuff
 	{
 	Spawn:
 	Melee:
-		TNT1 A 0 A_PlaySound("PUNCHHIT")
+		TNT1 A 0 A_PlaySound("Berserker/Punch/Hit")
 		Stop
 	Crash:
 		FHFX STUVW 2

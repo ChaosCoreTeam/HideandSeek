@@ -1,7 +1,7 @@
 ACTOR TeleporterClass : PlayerPawn
 {
   Speed 1
-  Health 100
+  Health 200
   Radius 16
   Height 56
   Mass 200
@@ -19,6 +19,8 @@ ACTOR TeleporterClass : PlayerPawn
   player.startitem "lowVanishingPool", 45
   player.startitem "TeleporterFirstCooldown", 999
   player.startitem "TeleporterSecondCooldown", 999
+  player.startitem "HealthNumSpawner", 1
+  player.startitem "isHider", 1
   Player.JumpZ 12
   Species "Hider"
   damagefactor "rocket", 0

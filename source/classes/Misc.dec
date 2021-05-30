@@ -1,0 +1,122 @@
+Actor slowGiver : CustomInventory
+{
+  +Inventory.AlwaysPickup
+  States
+  {
+  Pickup:
+	TNT1 A 0 ACS_NamedExecuteAlways("actorSlowed")
+	stop
+  }
+}
+
+Actor stunGiver : CustomInventory
+{
+  +Inventory.AlwaysPickup
+  States
+  {
+  Pickup:
+	TNT1 A 0 ACS_NamedExecuteAlways("actorStunned")
+	stop
+  }
+}
+
+
+Actor isHider : Inventory { }
+Actor isSeeker : Inventory { }
+Actor getOwned : Inventory { }
+Actor isVanished : Inventory { }
+
+Actor isBanshee : Inventory { }
+Actor isBlazer : Inventory { }
+Actor isGuardian : Inventory { }
+Actor isIllusionist : Inventory { }
+Actor isRocketeer : Inventory { }
+Actor isTeleporter : Inventory { }
+
+//Teleporter Specific Checks
+Actor HasProxy : Inventory { }
+Actor isLooking : Inventory { }
+Actor OverCharge : Inventory { }
+
+Actor isHunter : Inventory { }
+Actor isScouter : Inventory { }
+Actor isBerserker : Inventory { }
+Actor isTerminator : Inventory { }
+Actor isPolymorphist : Inventory { }
+Actor isTactician : Inventory { }
+
+Actor Radar : Inventory { }
+Actor Jetpack : Inventory { }
+
+Actor isCold : Inventory {}
+Actor isStunned : Inventory {}
+Actor isSilenced : Inventory {}
+Actor onCooldown : Inventory {}
+
+Actor noReload : Inventory { }
+Actor noFootsteps : Inventory { }
+Actor noAbilities : Inventory { }
+Actor noPassives : Inventory { }
+
+Actor canBeResurreted : Inventory {}
+Actor isResurreted 	: Inventory {}
+Actor isDead 		: Inventory {}
+Actor isBot : Inventory {}
+
+Actor Speedometer    : Inventory { }
+Actor PlayHitBeep    : Inventory { }	
+Actor Health200 : Inventory { }
+Actor Health100 : Inventory { }
+
+Actor displayAllyHealth : Inventory { }
+Actor firstAbilityCooldown : Inventory { }
+Actor secondAbilityCooldown : Inventory { }
+
+
+ACTOR HSRegen : Health
+{
+  Inventory.Amount 2
+  Inventory.MaxAmount 50
+  States
+  {
+  Spawn:
+    TNT1 A -1
+    Stop
+  }
+}
+
+ACTOR HSRegen2 : Health
+{
+  Inventory.Amount 2
+  Inventory.MaxAmount 100
+  States
+  {
+  Spawn:
+    TNT1 A -1
+    Stop
+  }
+}
+
+Actor HealthCheck : Inventory
+{
+  Inventory.Amount 1
+  Inventory.MaxAmount 4
+}
+
+Actor ArmorCheck : Inventory
+{
+  Inventory.Amount 1
+  Inventory.MaxAmount 4
+}
+
+Actor AmmoCheck : Inventory
+{
+  Inventory.Amount 1
+  Inventory.MaxAmount 4
+}
+
+Actor AltAmmoCheck : Inventory
+{
+  Inventory.Amount 1
+  Inventory.MaxAmount 4
+}

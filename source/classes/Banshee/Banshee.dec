@@ -1,7 +1,7 @@
 ACTOR BansheeClass : PlayerPawn
 {
 	Speed 1
-	Health 100
+	Health 200
 	Radius 16
 	Height 56
 	Mass 100
@@ -11,11 +11,18 @@ ACTOR BansheeClass : PlayerPawn
 	Player.SoundClass "Banshee"
 	Player.CrouchSprite "RKTC"
 	player.startitem "Rejuvinator", 1
-	player.startitem "HealingEnergy", 300
+	player.startitem "HealingEnergy", 600
+	player.startitem "PurpleEnergy", 200
+	player.startitem "GreenEnergy", 200
 	player.startitem "Vanishing", 125
 	player.startitem "MedicArmor", 1
 	player.startitem "BansheeFirstCoolDown", 999
 	player.startitem "BansheeSecondCoolDown", 999
+	player.startitem "isHider", 1
+	//player.startitem "HealthNumSpawner2", 1
+	//player.startitem "HealthSlotOne", 1
+	//player.startitem "HealthSlotTwo", 1
+	//player.startitem "HealthSlotThree", 1
 	Player.CrouchSprite "CRSH"
 	player.jumpz 10
 	damagefactor "rocket", 0

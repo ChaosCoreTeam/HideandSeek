@@ -1,51 +1,389 @@
-Actor Shield : Weapon
+Actor BlueShield : Weapon
 {
+	Weapon.AmmoType1 "GuardianPower"
+	Weapon.AmmoType2 "BlueMana"
 		+WEAPON.NOALERT
 		States
 		{
-		  Ready:
+		Select:
+			TNT1 A 0 A_Raise
+			Loop
+		Deselect:
+			TNT1 A 0 A_Lower
+			Loop
+		Ready:
+			GSHE A 0 A_GunFlash("ChangeFlash")
+			GSHE AAAA 3
+			GSHE AAAAAAAA 2
+			TNT1 A 0
 			GSHE A 1 A_WeaponReady
-		    Loop
-		  Deselect:
-			GSHE A 1 A_Lower
-		    Loop
-		  Select:
-			GSHE A 1 A_Raise
-		    Loop
-		  Fire:
+			Goto Ready+14
+		Fire:
 			GSHE ABCD 4 A_GunFlash
-	        Goto Hold
-	      Hold:
 			TNT1 A 0 A_GiveInventory("ShieldUp")
-			GSHE D 1 A_TakeInventory("GuardianPower", 1)
+			Goto Hold
+		Hold:
+			SCHB ABCDCBA 2
 			GSHE A 0 A_Refire
-			GSHE A 0 A_TakeInventory("ShieldUp")
-		    Goto Ready
-	        GSHE A 0 A_FireCustomMissile("GuardianKnockbackMissileCharged")
-		    GSHE A 0 A_TakeInventory("GuardianCharge", 75)
-			GSHE A 0 A_SetMass(100)
-	        Goto Ready
+			Goto Ready+14
 		AltFire:
-			GSHE ABCD 4 A_GunFlash
+			GSHE A 4 A_GunFlash 
 			Goto AltHold
 		AltHold:
 			TNT1 A 0 A_GiveInventory("ShieldUp")
 			GSHE A 0 A_TakeInventory("GuardianPower", 35)
 			GSHE D 1 A_FireCustomMissile("GuardianKnockbackMissile")
-			Goto Ready
+			Goto Ready+14
+		ChangeFlash:
+			BLHG ABCD 3
+			TNT1 A 0 A_PlaySound("Guardian/Weapons/ShieldChange", 1, 1.0, 0, 1.0)
+			BLHG EFEFEF 2
+			Stop
+		
 		}
 }
-ACTOR ShieldUp : PowerProtection
+
+Actor RedShield : Weapon
 {
-	DamageFactor "Normal", 0.1
-	DeathSound "Guardian/Weapons/ShieldDown"
-	ActiveSound "Guardian/Weapons/ShieldUp"
+	Weapon.AmmoType1 "GuardianPower"
+	Weapon.AmmoType2 "RedMana"
+		+WEAPON.NOALERT
+		States
+		{
+			Select:
+			TNT1 A 0 A_Raise
+			Loop
+			Deselect:
+			TNT1 A 0 A_Lower
+			Loop
+			Ready:
+			GSHE A 0 A_GunFlash("ChangeFlash")
+			GSHE AAAA 3
+			GSHE AAAAAAAA 2
+			TNT1 A 0
+			GSHE A 1 A_WeaponReady
+			Goto Ready+14
+		  Fire:
+			GSHE ABCD 4 A_GunFlash
+	        Goto Hold
+	      Hold:
+			TNT1 A 0 A_JumpIfInventory("GuardianFireAlt", 1, 5)
+			GSHE D 1
+			GSHE A 0 A_Refire
+			TNT1 A 0
+			TNT1 A 0 A_TakeInventory("ShieldUp")
+			TNT1 A 0 A_TakeInventory("GuardianFireState")
+		    Goto Ready+14
+			TNT1 A 0 A_JumpIfInventory("RedMana", 0, "Hold")
+			GSHE D 0 A_GunFlash("RedFireCharge")
+			TNT1 A 1
+			TNT1 A 0 A_TakeInventory("GuardianPower", 1)
+			TNT1 A 0 A_GiveInventory("RedMana",1)
+			GSHE A 0 A_Refire
+			TNT1 A 0 A_TakeInventory("ShieldUp")
+			TNT1 A 0 A_TakeInventory("GuardianAltFireState")
+			TNT1 A 0 A_TakeInventory("GuardianAltFireAlt")
+		   Goto Ready+14
+		AltFire:
+			GSHE A 4 A_GunFlash 
+			Goto AltHold
+		AltHold:
+			TNT1 A 0 A_GiveInventory("ShieldUp")
+			GSHE A 0 A_TakeInventory("GuardianPower", 35)
+			GSHE D 1 A_FireCustomMissile("GuardianKnockbackMissile")
+			Goto Ready+14
+		ChangeFlash:
+			REHG ABCD 3
+			TNT1 A 0 A_PlaySound("Guardian/Weapons/ShieldChange", 1, 1.0, 0, 1.0)
+			REHG EFEFEFEF 2
+			Stop
+		}
 }
+
+Actor GreenShield : Weapon
+{
+	Weapon.AmmoType1 "GuardianPower"
+	Weapon.AmmoType2 "GreenMana"
+	+WEAPON.NOALERT
+		States
+		{
+		Select:
+			TNT1 A 0 A_Raise
+			Loop
+		Deselect:
+			TNT1 A 0 A_Lower
+			Loop
+		Ready:
+			GSHE A 1 A_GunFlash("ChangeFlash")
+			GSHE AAAA 3
+			GSHE AAAAAAAA 2
+			TNT1 A 0 A_JumpIfInventory("GreenMana", 100, "ManaFullReady")
+			GSHE A 1 A_WeaponReady
+			Goto Ready+14
+		ManaFullReady:
+			TNT1 A 0 A_GiveInventory("ShieldFull", 1)
+			TNT1 A 0 A_JumpIfInventory("ShieldNotFull", 1, "ShieldOff")
+			SGRD ABCDCBA 1 A_WeaponReady
+			Goto ManaFullReady+1
+		Fire:
+			GSHE ABCD 4 A_GunFlash
+			TNT1 A 0 A_GiveInventory("ShieldUp")
+			TNT1 A 0 A_GiveInventory("GuardianFireState")
+	        Goto Hold
+		FireCharged:
+			SGCH ABCD 4 A_GunFlash
+			TNT1 A 0 A_GiveInventory("ShieldUp")
+			TNT1 A 0 A_GiveInventory("GuardianFireState")
+			Goto Hold
+	    Hold:
+			TNT1 A 0 A_JumpIfInventory("GuardianFireAlt", 1, 6)
+			GSHE D 1
+			GSHE D 0 A_Refire
+			GSHE A 0 A_Light0
+			TNT1 A 0 A_TakeInventory("GuardianFireState")
+			Goto ShieldDown
+			TNT1 A 0 A_JumpIfInventory("GuardianPower", 0, "EndState")
+			GSHE D 0 A_GunFlash("GreenFireCharge")
+			TNT1 D 1
+			TNT1 A 0 A_TakeInventory("GuardianPower", 1)
+			TNT1 A 0 A_GiveInventory("GreenMana",1)
+			GSHE A 0 A_Refire
+			TNT1 A 0 A_TakeInventory("GuardianFireState")
+			TNT1 A 0 A_TakeInventory("GuardianFireAlt")
+			Goto ShieldDown
+		AltFire:
+			TNT1 A 0 A_JumpIfInventory("GreenMana", 0, "EndState")
+			GSHE A 4 A_GunFlash
+			TNT1 A 0 A_GiveInventory("ShieldUp")
+			TNT1 A 0 A_GiveInventory("GuardianAltFireState")
+			Goto AltHold
+		AltHold:
+			TNT1 A 0 A_JumpIfInventory("GreenMana", 0, "EndStateMana")
+			TNT1 A 0 A_JumpIfInventory("BasicArmor", 150, "EndStateArmor")
+			TNT1 A 0 A_JumpIfInventory("AltFirePressed", 1, 8)
+			GSHE D 0 A_GunFlash("GreenFireCharge")
+			TNT1 A 1
+			TNT1 A 0 A_TakeInventory("GreenMana", 1)
+			TNT1 A 0 A_GiveInventory("BasicArmor", 1)
+			TNT1 A 0 
+			TNT1 A 0 A_Refire
+			TNT1 A 0 A_TakeInventory("GuardianAltFireState")
+			Goto ShieldDown
+			TNT1 A 0 A_JumpIfInventory("GreenMana", 0, "EndState")
+			GSHE D 0 A_GunFlash("GreenFireCharge")
+			TNT1 A 1
+			TNT1 A 0 A_TakeInventory("GreenMana", 1)
+			TNT1 A 0 A_GiveInventory("GuardShieldHealth", 1)
+			TNT1 A 0 
+			TNT1 A 0 A_Refire
+			TNT1 A 0 A_TakeInventory("GuardianAltFireState")
+			TNT1 A 0 A_TakeInventory("GuardianAltFireAlt")
+			Goto ShieldDown
+		ChangeFlash:
+			GRHG ABCD 3
+			TNT1 A 0 A_PlaySound("Guardian/Weapons/ShieldChange", 1, 1.0, 0, 1.0)
+			GRHG EFEFEFEF 2
+			GSHE A 0 A_Light0
+			Stop
+		GreenFireCharge:
+			SCHG ABCDCBA 1
+			GSHE A 0 A_Light0
+			Stop
+		EndStateMana:
+			TNT1 A 0 A_Log("You don't have enough mana!")
+			Goto ShieldDown
+		EndStateArmor:
+			TNT1 A 0 A_Log("You have the max amount of armor!")
+			Goto ShieldDown
+		ShieldOff:
+			GSHE A 1 A_TakeInventory("ShieldNotFull")
+			Goto Ready+14
+		ShieldDown:
+			GSHE DCBA 2
+			TNT1 A 0 A_TakeInventory("ShieldUp")
+			Goto Ready+14
+		}
+}
+
+ACTOR GuardShieldHealth : Health
+{
+  Inventory.Amount 5
+  Inventory.MaxAmount 100
+  States
+  {
+  Spawn:
+    TNT1 A -1
+    Stop
+  }
+}
+
+Actor YellowShield : Weapon
+{
+	Weapon.AmmoType1 "GuardianPower"
+	Weapon.AmmoType2 "YellowMana"
+		+WEAPON.NOALERT
+		States
+		{
+			Select:
+			TNT1 A 0 A_Raise
+			Loop
+			Deselect:
+			TNT1 A 0 A_Lower
+			Loop
+			Ready:
+			GSHE A 1 A_GunFlash("ChangeFlash")
+			GSHE AAAA 3
+			GSHE AAAAAAAA 2
+			TNT1 A 0
+			GSHE A 1 A_WeaponReady
+			Goto Ready+14
+		  Fire:
+			GSHE ABCD 4 A_GunFlash
+	        Goto Hold
+	      Hold:
+			TNT1 A 0 A_JumpIfInventory("GuardianFireAlt", 1, 6)
+			GSHE D 1
+			GSHE A 0 A_Refire
+			TNT1 A 0
+			TNT1 A 0 A_TakeInventory("ShieldUp")
+			TNT1 A 0 A_TakeInventory("GuardianAltFireState")
+		    Goto Ready+14
+			TNT1 A 0 A_JumpIfInventory("YellowMana", 0, "Hold")
+			GSHE D 0 A_GunFlash("YellowFireCharge")
+			TNT1 A 1
+			TNT1 A 0 A_TakeInventory("GuardianPower", 1)
+			TNT1 A 0 A_GiveInventory("YellowMana",1)
+			GSHE A 0 A_Refire
+			TNT1 A 0 A_TakeInventory("ShieldUp")
+			TNT1 A 0 A_TakeInventory("GuardianAltFireState")
+			TNT1 A 0 A_TakeInventory("GuardianAltFireAlt")
+			Goto Ready+12
+		AltFire:
+			GSHE A 4 A_GunFlash 
+			Goto AltHold
+		AltHold:
+			TNT1 A 0 A_GiveInventory("ShieldUp")
+			GSHE A 0 A_TakeInventory("GuardianPower", 35)
+			GSHE D 1 A_FireCustomMissile("GuardianKnockbackMissile")
+			Goto Ready+14
+		ChangeFlash:
+			YLHG ABCD 3
+			TNT1 A 0 A_PlaySound("Guardian/Weapons/ShieldChange", 1, 1.0, 0, 1.0)
+			YLHG EFEFEFEF 2
+			Stop
+		}
+}
+
+Actor PinkShield : Weapon
+{
+		Weapon.AmmoType1 "GuardianPower"
+		Weapon.AmmoType2 "PinkMana"
+		+WEAPON.NOALERT
+		States
+		{
+			Select:
+			TNT1 A 0 A_Raise
+			Loop
+			Deselect:
+			TNT1 A 0 A_Lower
+			Loop
+			Ready:
+			GSHE A 1 A_GunFlash("ChangeFlash")
+			GSHE AAAA 3
+			GSHE AAAAAAAA 2
+			TNT1 A 0
+			GSHE A 1 A_WeaponReady
+			Goto Ready+12
+		  Fire:
+			GSHE ABCD 4 A_GunFlash
+	        Goto Hold
+	      Hold:
+			TNT1 A 0 A_JumpIfInventory("GuardianFireAlt", 1, 6)
+			GSHE D 1
+			GSHE A 0 A_Refire
+			TNT1 A 0
+			TNT1 A 0 A_TakeInventory("ShieldUp")
+			TNT1 A 0 A_TakeInventory("GuardianAltFireState")
+		    Goto Ready+12
+			TNT1 A 0 A_JumpIfInventory("PinkMana", 0, "Hold")
+			GSHE D 0 A_GunFlash("PinkFireCharge")
+			TNT1 A 1
+			TNT1 A 0 A_TakeInventory("GuardianPower", 1)
+			TNT1 A 0 A_GiveInventory("PinkMana",1)
+			GSHE A 0 A_Refire
+			TNT1 A 0 A_TakeInventory("ShieldUp")
+			TNT1 A 0 A_TakeInventory("GuardianAltFireState")
+			TNT1 A 0 A_TakeInventory("GuardianAltFireAlt")
+			Goto Ready+12
+		AltFire:
+			GSHE A 4 A_GunFlash 
+			Goto AltHold
+		AltHold:
+			TNT1 A 0 A_GiveInventory("ShieldUp")
+			GSHE A 0 A_TakeInventory("GuardianPower", 35)
+			GSHE D 1 A_FireCustomMissile("GuardianKnockbackMissile")
+			Goto Ready+12
+		ChangeFlash:
+			PNHG ABCD 3
+			TNT1 A 0 A_PlaySound("Guardian/Weapons/ShieldChange", 1, 1.0, 0, 1.0)
+			PNHG EFEFEFEF 2
+			Stop
+		}
+}
+
+Actor RedShieldCharge : Inventory { }
+Actor GreenShieldCharge : Inventory { }
+Actor BlueShieldCharge : Inventory { }
+Actor YellowShieldCharge : Inventory { }
+Actor PinkShieldCharge : Inventory { }
+Actor GuardianFireAlt : Inventory { }
+Actor GuardianAltFireAlt : Inventory { }
+Actor GuardianFireState : Inventory { }
+Actor GuardianAltFireState : Inventory { }
+Actor ShieldNotFull : Inventory { }
+Actor ShieldFull : Inventory { }
+
+ACTOR ShieldUp : Inventory { }
 
 ACTOR GuardianPower : Ammo
 {
-	Inventory.MaxAmount 500
-	Inventory.Amount 500
+	Inventory.MaxAmount 600
+	Inventory.Amount 600
+}
+
+ACTOR BlueMana : Ammo
+{
+	Inventory.MaxAmount 100
+	Inventory.Amount 100
+	Inventory.Icon "BMANA0"
+}
+
+ACTOR RedMana : Ammo
+{
+	Inventory.MaxAmount 100
+	Inventory.Amount 100
+	Inventory.Icon "RMANA0"
+}
+
+ACTOR GreenMana : Ammo
+{
+	Inventory.MaxAmount 100
+	Inventory.Amount 100
+	Inventory.Icon "GMANA0"
+}
+
+ACTOR YellowMana : Ammo
+{
+	Inventory.MaxAmount 100
+	Inventory.Amount 100
+	Inventory.Icon "YMANA0"
+}
+
+ACTOR PinkMana : Ammo
+{
+	Inventory.MaxAmount 100
+	Inventory.Amount 100
+	Inventory.Icon "PMANA0"
 }
 
 ACTOR GuardianCharge : Ammo
@@ -76,15 +414,5 @@ ACTOR GuardianKnockbackMissileCharged : GuardianKnockbackMissile
     TNT1 A 0 A_RadiusThrust(3000, 64, RTF_NOIMPACTDAMAGE)
 	TNT1 A 0 A_RadiusGive("StunGiver", 64, RGF_PLAYERS)
     Stop
-  }
-}
-Actor StunGiver : CustomInventory
-{
-  +Inventory.AlwaysPickup
-  States
-  {
-  Pickup:
-	TNT1 A 0 ACS_NamedExecuteAlways("GuardianStunner")
-	stop
   }
 }

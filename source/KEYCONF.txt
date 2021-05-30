@@ -16,11 +16,11 @@ addplayerclass TacticianClass
 
 //What are you doing here go away!!!!!!!
 weaponsection HideAndSeek
-setslot 1 Blazerfist BerserkerFists ScoutKnife TeleporterGun TerminatorGrenade HunterChaingun NoDamageRocketLauncher Tactician_Machinegun IllusionistBansheeDecoy
-setslot 2 ScoutPistol TerminatorPlasmaRifle HunterShotgun Tactician_Pipebomb ProxLauncher IllusionistBlazerDecoy
-setslot 3 TerminatorDevastators IllusionistGuardianDecoy
-setslot 4 IllusionistIllusionistDecoy
-setslot 5 IllusionistRocketeerDecoy
+setslot 1 Blazerfist BlueShield BerserkerFists ScoutKnife TeleporterGun TerminatorGrenade HunterChaingun NoDamageRocketLauncher Tactician_Machinegun IllusionistBansheeDecoy
+setslot 2 RedShield ScoutPistol TerminatorPlasmaRifle HunterShotgun Tactician_Pipebomb ProxLauncher IllusionistBlazerDecoy
+setslot 3 GreenShield TerminatorDevastators IllusionistGuardianDecoy
+setslot 4 YellowShield IllusionistIllusionistDecoy
+setslot 5 PinkShield IllusionistRocketeerDecoy
 setslot 6 IllusionistTeleporterDecoy
 
 
